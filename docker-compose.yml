@@ -1,0 +1,21 @@
+version: "3.3"
+services: 
+  splash:
+    image: scrapinghub/splash
+    ports: 
+      - "8050:8050"
+  
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    container_name: mongodb
+    # environment: 
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: 51133940fad47d03ae61c3bbe4e5f67c7af65fda47301de532dbeed094a63c7b
+    ports: 
+      - 27018:27017
+    volumes: 
+      - mongo-database:/data/db
+
+volumes: 
+  mongo-database:
