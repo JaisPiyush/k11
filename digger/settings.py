@@ -1,9 +1,9 @@
 
 
-BOT_NAME = 'scraper'
+BOT_NAME = 'digger'
 
-SPIDER_MODULES = ['scraper.spiders']
-NEWSPIDER_MODULE = 'scraper.spiders'
+SPIDER_MODULES = ['digger.spiders']
+NEWSPIDER_MODULE = 'digger.spiders'
 ROBOTSTXT_OBEY = False
 
 SPIDER_MIDDLEWARES = {

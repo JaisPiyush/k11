@@ -1,14 +1,14 @@
 import pytest
 from sqlalchemy.sql.schema import Column, Table
 from sqlalchemy import String, Integer
-from vault.app import CONNECTIONS, register_digger
+from ..app import CONNECTIONS, register_digger
 
 
 def test_database_postgres_connection():
     # Checking digger database registration
     register_digger()
     assert CONNECTIONS.postgres_connection != None, "Connection is failed to load"
-    assert CONNECTIONS.postgres_db == 'postgres-digger', 'Register function failed to load database'
+    assert CONNECTIONS.postgres_db == 'postgres_digger', 'Register function failed to load database'
 
 
 
@@ -21,7 +21,7 @@ def create_test_table():
     Column('id', Integer, primary_key=True),
     Column('name', String(75)) 
     )
-    student.create(CONNECTIONS.postgres_engine)
+    # student.create(CONNECTIONS.postgres_engine)
     return student
 
 

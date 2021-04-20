@@ -17,14 +17,26 @@ based on service used.
 class DatabaseConnection():
     sql_serviecs = ['postgresql']
     no_sql_services = ['mongodb']
-    def __init__(self, **configs) -> None:
-        self.configs: Dict[str, DatabaseConfiguration] = {key: DatabaseConfiguration.from_dict(**value) for key, value in configs.items()}
-        self.postgres_connection = None
-        self.postgres_engine: Engine = None
-        self.mongo_client = None
-        self.meta_data = None
-        self.postgres_db = None
-        self.postgres_session = None
+
+    __instance__ = None
+    _configs = None
+
+    def __init__(self, **configs):
+
+        # Singleton Implementation, the implementation will work if configs file changes
+        if DatabaseConnection.__instance__ == None or (DatabaseConnection._configs != None and DatabaseConnection._configs == configs):
+            self._configs = configs
+            self.configs: Dict[str, DatabaseConfiguration] = {key: DatabaseConfiguration.from_dict(**value) for key, value in configs.items()}
+            self.postgres_connection = None
+            self.postgres_engine: Engine = None
+            self.mongo_client = None
+            self._mongodb_name = None
+            self.mongo_db = None
+            self.meta_data = None
+            self.postgres_db = None
+            self.postgres_session = None
+            DatabaseConnection.__instance__ = self
+        
     
     def connect_db(self, db: str) -> Union[Engine, MongoClient]:
         config = self.configs[db]
@@ -36,14 +48,23 @@ class DatabaseConnection():
     def register(self, database):
         if self.configs[database].service in self.sql_serviecs:
             self._register_postgres_connection(database)
+        elif self.configs[database].service in self.no_sql_services:
+            self._register_mongo_connection(database_name=database)
     
     def _register_postgres_connection(self, database_name):
         if self.postgres_connection is None or self.postgres_db != database_name:
             self.postgres_engine = self.connect_db(database_name)
             self.meta_data: MetaData = MetaData(bind=self.postgres_engine) if self.meta_data is None else self.meta_data
+            self.postgres_db = database_name
             self.postgres_connection: Connection = self.postgres_engine.connect()
             self.postgres_session = scoped_session(sessionmaker())
             self.postgres_session.configure(bind=self.postgres_engine,autoflush=False, expire_on_commit=False)
+    
+    def _register_mongo_connection(self, database_name):
+        if self.mongodb is None or self._mongodb_name != database_name:
+            self.mongo_client = self.connect_db(database_name)
+            self._mongodb_name = database_name
+            self.mongodb = self.mongo_client[self.configs[database_name].database]
             
        
 
@@ -73,8 +94,12 @@ DATABASES = {
 
 CONNECTIONS = DatabaseConnection(**DATABASES)
 
-def register_digger():
-    CONNECTIONS.register('postgres_digger')
+def register_digger(postgres=True):
+    if postgres:
+        CONNECTIONS.register('postgres_digger')
+        
+    else:
+        CONNECTIONS.register('mongo_digger')
     return CONNECTIONS
 
 

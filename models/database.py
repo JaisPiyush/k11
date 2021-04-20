@@ -35,7 +35,7 @@ class DatabaseConfiguration:
         return  
 
     def parse(self) -> str:
-        return f"{self.service}{self.get_driver()}://{self._get_user()}:{self._get_password()}@{self.host}:{self.port}/{self.database}"
+        return f"{self.service}{self.get_driver()}://{self._get_user()}{self._get_password()}@{self.host}:{self.port}/{self.database}"
     
     @classmethod
     def from_dict(cls, **kwargs):

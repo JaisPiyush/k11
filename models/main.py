@@ -1,9 +1,10 @@
-from dataclasses import dataclass
-from typing import Dict, List,Optional, Any
+from dataclasses import dataclass, field
+from typing import Dict, List,Optional, Any, Union
 from datetime import datetime
 from datetime import datetime
 import json
 from bson.objectid import ObjectId
+from hashlib import sha256
 
 
 @dataclass
@@ -20,31 +21,6 @@ class Selection:
             "type": self.type,
             "parent": self.parent
         }
-    
-    @classmethod
-    def from_dict(cls, **kwargs):
-        return cls(**kwargs)
-
-
-@dataclass
-class CollectionFormatStructure:
-    collection: Dict[str, Selection] = {}
-    def __getitem__(self, key):
-        return self.collection[key]
-
-    def __delattr__(self, name: str) -> None:
-        del self.collection[name]
-
-    def __setattr__(self, name: str, value: Any) -> None:
-        self.collection[name] = value
-    
-    def __getattribute__(self, name: str) -> Any:
-        return self.collection[name]
-
-    def to_dict(self):
-        return  {key: value.to_dict() for key, value in self.collection.items()} if self.collection != None else None,
-            
-        
     
     @classmethod
     def from_dict(cls, **kwargs):
@@ -75,22 +51,36 @@ class LinkStore:
 
 @dataclass
 class Format:
+    __collection_name__ = 'collection_formats'
+
     source_name: str
-    _id: Optional[ObjectId]
     xml_collection_format: Optional[Dict] = None
     html_collection_format: Optional[Dict] = None
     html_article_format: Optional[Dict] = None
     created_on: datetime = datetime.now()
+    extra_formats: Optional[Dict[str, List[Dict]]] = None
+    format_id: str = sha256(source_name+'_formats').hexdigest()
+    primary_key: str = 'format_id'
+    
 
     def to_dict(self) -> Dict:
-        return {
+        return  {
             "source_name": self.source_name,
-            "_id": self._id,
             "xml_collection_format": self.xml_collection_format,
             "html_collection_format": self.html_collection_format,
             "html_article_format": self.html_article_format,
-            "created_on": self.created_on
+            "created_on": self.created_on,
+            'format_id': self.format_id
+            
         }
+    
+    def get_format(self, format_: str) -> Dict:
+        if hasattr(self, format_):
+            return self.__getattribute__(format_)
+        elif self.extra_formats is not None:
+            return self.extra_formats[format_]
+        else:
+            raise KeyError()
     
     def to_json(self):
         return json.dumps(self.to_dict())
@@ -102,34 +92,37 @@ class Format:
 
 @dataclass
 class SourceMap:
+    __collection_name__ = "collection_source_maps"
     source_name: str
-    _id: Optional[ObjectId]
-    source_id: str
     formatter: str
     assumed_tags: str
     compulsory_tags: List[str]
     is_rss: bool
     is_collection: bool
     links: List[LinkStore]
+    watermarks: List[str] = field(default_factory=list)
+    source_id: str = sha256(source_name).digest()
+    primary_key: str = 'source_id'
 
     def to_dict(self) -> Dict:
-        return {
+        return  {
             "source_name": self.source_name,
             "source_id": self.source_id,
-            "_id": self._id,
             "formatter": self.formatter,
             "assumed_tags": self.assumed_tags,
             "is_rss": self.is_rss,
             "is_collection": self.is_collection,
             "links": [link.to_dict() for link in self.links],
-            "compulsory_tags": self.compulsory_tags
+            "compulsory_tags": self.compulsory_tags,
+            "watermarks": self.watermarks
         }
-    
+       
     def to_json(self):
         return json.dumps(self.to_dict())
     
     @classmethod
     def from_dict(cls, **kwargs):
+        kwargs['links'] = [LinkStore.from_dict(link) for link in kwargs['links']]
         return cls(**kwargs)
 
 
@@ -142,6 +135,7 @@ class DataLinkContainer:
     formatter: str
     scraped_on: datetime
     link: str
+    primary_key: str = "link"
 
     def get_collection_name(self) -> str:
         return self.__collection_name__
