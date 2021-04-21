@@ -46,13 +46,8 @@ def test_execute_in_postgres_connection():
             "name": "Tanmay"
         }
     ]
-    CONNECTIONS.postgres_session.bulk_insert_mappings(student, vals)
+    # CONNECTIONS.postgres_session.bulk_insert_mappings(student, vals)
     CONNECTIONS.postgres_session.commit()
     assert CONNECTIONS.postgres_connection.execute(student.count()) == 4, "Insert commend isn't working"
 
 
-
-        
-
-def test_execute_in_mongo_connection():
-    pass

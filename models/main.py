@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 from bson.objectid import ObjectId
 from hashlib import sha256
-
+from .database import MongoModels
 
 @dataclass
 class Selection:
@@ -50,9 +50,9 @@ class LinkStore:
 
 
 @dataclass
-class Format:
+class Format(MongoModels):
     __collection_name__ = 'collection_formats'
-
+    __database__ = "digger"
     source_name: str
     xml_collection_format: Optional[Dict] = None
     html_collection_format: Optional[Dict] = None
@@ -61,19 +61,7 @@ class Format:
     extra_formats: Optional[Dict[str, List[Dict]]] = None
     format_id: str = sha256(source_name+'_formats').hexdigest()
     primary_key: str = 'format_id'
-    
 
-    def to_dict(self) -> Dict:
-        return  {
-            "source_name": self.source_name,
-            "xml_collection_format": self.xml_collection_format,
-            "html_collection_format": self.html_collection_format,
-            "html_article_format": self.html_article_format,
-            "created_on": self.created_on,
-            'format_id': self.format_id
-            
-        }
-    
     def get_format(self, format_: str) -> Dict:
         if hasattr(self, format_):
             return self.__getattribute__(format_)
@@ -81,18 +69,11 @@ class Format:
             return self.extra_formats[format_]
         else:
             raise KeyError()
-    
-    def to_json(self):
-        return json.dumps(self.to_dict())
-    
-    @classmethod
-    def from_dict(cls, **kwargs):
-        return cls(**kwargs)
-
 
 @dataclass
-class SourceMap:
+class SourceMap(MongoModels):
     __collection_name__ = "collection_source_maps"
+    __database__ = "digger"
     source_name: str
     formatter: str
     assumed_tags: str
@@ -103,7 +84,8 @@ class SourceMap:
     watermarks: List[str] = field(default_factory=list)
     source_id: str = sha256(source_name).digest()
     primary_key: str = 'source_id'
-
+    
+    # Overriding default `to_dict` method
     def to_dict(self) -> Dict:
         return  {
             "source_name": self.source_name,
@@ -116,19 +98,11 @@ class SourceMap:
             "compulsory_tags": self.compulsory_tags,
             "watermarks": self.watermarks
         }
-       
-    def to_json(self):
-        return json.dumps(self.to_dict())
-    
-    @classmethod
-    def from_dict(cls, **kwargs):
-        kwargs['links'] = [LinkStore.from_dict(link) for link in kwargs['links']]
-        return cls(**kwargs)
-
 
 @dataclass
-class DataLinkContainer:
+class DataLinkContainer(MongoModels):
     __collection_name__ = "data_link_containers"
+    __database__ = "digger"
     container: Dict
     source_name: str
     source_id: str
@@ -140,16 +114,6 @@ class DataLinkContainer:
     def get_collection_name(self) -> str:
         return self.__collection_name__
 
-    def to_dict(self) -> Dict:
-        return {
-            "container": self.container,
-            "source_name": self.source_name,
-            "source_id": self.source_id,
-            "formatter": self.formatter,
-            "scraped_on": self.scraped_on,
-            "link": self.link
-        }
-    
     @classmethod
     def from_dict(cls, **kwargs):
         return cls(**kwargs)
