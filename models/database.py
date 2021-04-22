@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from typing import List, Dict, Optional, Union
+from typing import Any, List, Dict, Optional, Union
 from vault.adapter import MongoAdapter
-from bson.objectid import ObjectId
+# from vault.adapter import MongoAdapter
 
 from pymongo.operations import IndexModel
 
@@ -53,7 +53,6 @@ class DatabaseConfiguration:
         return cls(**kwargs)
 
 
-
 @dataclass
 class MongoModels:
     __collection_name__ = None
@@ -63,6 +62,8 @@ class MongoModels:
     primary_key = "_id"
     non_dictables = []
     _non_dictables = ["__service__","__database__","__collection_name__", "indexes", "primary_key", "non_dictables"]
+    _adapter = MongoAdapter()
+
     
     def get_non_dictables(self) -> List[str]:
         return self._non_dictables + self.non_dictables
@@ -80,11 +81,10 @@ class MongoModels:
         return self.__database__
     
     @classmethod
-    def _adapter(cls) -> MongoAdapter:
-        return MongoAdapter(cls)
-
-    def adapter() -> MongoAdapter:
-        return MongoModels._adapter()
+    def adapter(cls):
+        if cls._adapter.model_cls is None:
+            cls._adapter.contribute_to_class(cls)
+        return cls._adapter
     
     @staticmethod
     def gen_index_name(key: str, dirc) -> str:

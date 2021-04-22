@@ -20,13 +20,16 @@ class MongoAdapterTestModel(MongoModels):
         "dir": pymongo.ASCENDING,
         "unique": True
     }]
+    _adapter = MongoAdapter()
 
     @classmethod
-    def _adapter(cls) -> MongoAdapter:
-        return MongoAdapter(cls)
+    def adapter(cls) -> MongoAdapter:
+        if cls._adapter.model_cls is None:
+            cls._adapter.contribute_to_class(cls)
+        return cls._adapter
 
-    def adapter() -> MongoAdapter:
-        return MongoAdapterTestModel._adapter()
+    
+    
 
 @pytest.fixture
 def adapter_models() -> List[Dict]:
@@ -50,6 +53,7 @@ def test_mongo_model_creation(adapter_models):
     try:
         for model in adapter_models:
             cls = MongoAdapterTestModel.adapter().create(**model)
+            print(cls)
             assert isinstance(cls, MongoAdapterTestModel), "Create model failing to create instances"
     except Exception as e:
         raise e

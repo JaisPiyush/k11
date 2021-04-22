@@ -1,4 +1,5 @@
 import pymongo
+from pymongo import collection
 from pymongo.operations import IndexModel
 from sqlalchemy.orm import mapper
 from typing import List, NoReturn, Sequence, Union
@@ -15,6 +16,7 @@ class TableAdapter:
     
     def map(self):
         mapper(self.model, self.table)
+
 
     """
     Inserts data into database
@@ -35,10 +37,14 @@ class TableAdapter:
     
 
 class MongoAdapter:
-    def __init__(self, model) -> None:
-        self.model_cls = model
-        self.collection_name = model.__collection_name__
+    def __init__(self) -> None:
+        self.model_cls = None
+        self.collection_name = None
     
+    def contribute_to_class(self, model_cls) -> None:
+        print(model_cls, "from contribution")
+        self.model_cls = model_cls
+        self.collection_name = model_cls.__collection_name__
 
     
 
@@ -52,6 +58,8 @@ class MongoAdapter:
     >>> collection = db['collection_name']
     """
     def _connect(self):
+        if self.model_cls == None:
+            return None
         connection = register_digger(postgres=False)
         collection = connection.mongo_db[self.collection_name]
         return collection
@@ -78,6 +86,8 @@ class MongoAdapter:
     >>> return model
     """
     def create(self, **model):
+        if self.model_cls == None:
+            return None
         collection = self._connect()
         collection.insert_one(model)
         print(model)
@@ -88,10 +98,21 @@ class MongoAdapter:
         if self.model_cls.primary_key != '_id':
             self.create_single_field_index(collection, [model_cls.create_primary_key_index()])
         return model_cls
+    
 
-        
+    """
+    Base find implementation
 
-        
+    >>> collection.find({})
+    """
+    def find(self, filter, **kwargs):
+        collection = self._connect()
+        for value in collection.find(filter,**kwargs):
+            yield self.model_cls(**value)
+    
+    def count(self, filter, **kwargs):
+        collection = self._connect()
+        collection.count_documents(filter, **kwargs)
 
         
        

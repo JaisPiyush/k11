@@ -21,11 +21,7 @@ class RSSFeedSpider(XMLFeedSpider):
     Insert all data into self.source_maps, which later will be used to iterate
     """
     def pull_rss_sources_from_db(self) -> List[SourceMap]:
-        return [SourceMap(source_name='listverse',_id = "ad", source_id="test", formatter="xml_collection_format",
-                assumed_tags=[], compulsory_tags=[], is_rss=True, is_collection=True, links=[
-                    LinkStore(link='https://listverse.com/entertainment/movies-and-tv/feed/')
-                ],
-         )]
+        return  SourceMap.adapter().find({"is_rss": True})
     
 
     """
