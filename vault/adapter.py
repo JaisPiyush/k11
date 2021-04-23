@@ -1,39 +1,67 @@
+from sqlalchemy.orm.session import Session
+from sqlalchemy.sql.expression import distinct, select
+from sqlalchemy.sql.functions import func
+from sqlalchemy.sql.schema import Index
+from ..common_errors import NoDocumentExists
 import pymongo
-from pymongo import collection
 from pymongo.operations import IndexModel
 from sqlalchemy.orm import mapper
-from typing import List, NoReturn, Sequence, Union
+from typing import Generator, List, NoReturn, Sequence, Union
 from .app import register_digger
 
 
+
 class TableAdapter:
+    def __init__(self, model_cls) -> None:
+        self.model_cls = model_cls
     
-    def __init__(self, model) -> NoReturn:
-        self.model = model
-        connection = register_digger()
-        self.table = self.model.to_table(connection.meta_data)
-        # self.map()
+    def get_connection(self):
+        return register_digger()
     
-    def map(self):
-        mapper(self.model, self.table)
-
-
+    @property
+    def session(self) -> Session:
+        return self.get_connection().postgres_session
+    
     """
-    Inserts data into database
+    Create Table in the given database
+    >>> Base.metadata.create_all(engine)
     """
+
+    def create_table(self):
+        self.model_cls.metadata.create_all(self.get_connection().postgres_engine)
+    
     def create(self, **kwargs):
-        connection = register_digger()
-        data = self.model(**kwargs)
-        connection.postgres_session.add(data)
-        connection.postgres_session.commit()
-        return data
+        model = self.model_cls(**kwargs)
+        self.session.add(self.model_cls(**kwargs))
+        self.session.commit()
+        setattr(model, "adapter", self)
+        return model
     
-    """
-    Create Table method calls to_table, and creates new Table
-    """
-    def create_table(self) -> NoReturn:
-        connection = register_digger()
-        connection.meta_data.create_all(self.model.to_table(connection.meta_data))
+    def _instance_create(self,  model):
+        self.session.add(model)
+        self.session.commit()
+    
+    def bulk_create(self, ls: List):
+        self.session.add_all(ls)
+        self.session.commit()
+        for model in ls:
+            setattr(model, "adapter", self)
+            yield model
+    
+    def count(self) -> int:
+        query = self.session.query(func.count(distinct(self.model_cls.get_primary_key())))
+        return self.session.execute(query).scalar()
+    
+    def exists(self, *criterion) -> bool:
+        stmt = self.session.query(self.model_cls).filter(*criterion)
+        return self.session.query(stmt.exists()).scalar()
+
+
+
+
+     
+    
+
     
 
 class MongoAdapter:
@@ -77,6 +105,15 @@ class MongoAdapter:
         except pymongo.errors.OperationFailure:
             pass
     
+
+   
+    def _create_index(self,collection, model_cls):
+        if self.model_cls.indexes is not None and len(self.model_cls.indexes) > 0:
+            # print([MongoAdapter.create_index_model(index) if not isinstance(index, IndexModel) else index for index in self.model_cls.indexes])
+            self.create_single_field_index(collection, model_cls.create_indexes())
+        if self.model_cls.primary_key != '_id':
+            self.create_single_field_index(collection, [model_cls.create_primary_key_index()])
+
     """
     Inserting document into collection
 
@@ -89,15 +126,20 @@ class MongoAdapter:
         if self.model_cls == None:
             return None
         collection = self._connect()
-        collection.insert_one(model)
-        print(model)
+        _id = collection.insert_one(model).inserted_id
         model_cls = self.model_cls.from_dict(**model)
-        if self.model_cls.indexes is not None and len(self.model_cls.indexes) > 0:
-            # print([MongoAdapter.create_index_model(index) if not isinstance(index, IndexModel) else index for index in self.model_cls.indexes])
-            self.create_single_field_index(collection, model_cls.create_indexes())
-        if self.model_cls.primary_key != '_id':
-            self.create_single_field_index(collection, [model_cls.create_primary_key_index()])
+        setattr(model_cls, "adapter", self)
+        setattr(model_cls, "_id", _id)
+        self._create_index(collection, model_cls)
         return model_cls
+    
+
+    def bulk_insert(self, ls) -> Generator:
+        if self.model_cls == None:
+            return None
+        collection = self._connect()
+        collection.insert_many([model.to_dcit() for model in ls])
+        return ls      
     
 
     """
@@ -109,6 +151,13 @@ class MongoAdapter:
         collection = self._connect()
         for value in collection.find(filter,**kwargs):
             yield self.model_cls(**value)
+    
+    def find_one(self, filter, *args, **kwargs):
+        collection = self._connect()
+        docs = collection.find_one(filter, *args, **kwargs)
+        if docs is None or len(docs) == 0:
+            raise NoDocumentExists(collection, query=filter)
+        return self.model_cls(**docs)
     
     def count(self, filter, **kwargs):
         collection = self._connect()

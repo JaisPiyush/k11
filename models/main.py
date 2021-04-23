@@ -2,10 +2,8 @@ from dataclasses import dataclass, field
 from typing import Dict, List,Optional, Any, Union
 from datetime import datetime
 from datetime import datetime
-import json
-from bson.objectid import ObjectId
 from hashlib import sha256
-from .database import MongoModels
+from .mongo import MongoModels
 
 @dataclass
 class Selection:
@@ -69,6 +67,10 @@ class Format(MongoModels):
             return self.extra_formats[format_]
         else:
             raise KeyError()
+    
+    @staticmethod
+    def get_default_rss_format():
+        return Format.adapter().find_one({"format_id": "default_rss_format"})
 
 @dataclass
 class SourceMap(MongoModels):
@@ -98,6 +100,10 @@ class SourceMap(MongoModels):
             "compulsory_tags": self.compulsory_tags,
             "watermarks": self.watermarks
         }
+    
+    @staticmethod
+    def pull_all_rss_models():
+        yield SourceMap.adapter().find({"$and": [{"is_rss": True}, {"is_collection": True}]})
 
 @dataclass
 class DataLinkContainer(MongoModels):
@@ -108,8 +114,9 @@ class DataLinkContainer(MongoModels):
     source_id: str
     formatter: str
     scraped_on: datetime
-    link: str
-    primary_key: str = "link"
+    link: str = None
+    watermarks: List[str] = []
+    primary_key = "link"
 
     def get_collection_name(self) -> str:
         return self.__collection_name__

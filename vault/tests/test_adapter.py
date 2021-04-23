@@ -1,15 +1,19 @@
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Any, Dict, List
+from sqlalchemy.sql.expression import distinct, select
+
+from sqlalchemy.sql.functions import func
+from ..app import register_digger
 
 import pymongo
-from ..adapter import MongoAdapter
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql.schema import Column
+from sqlalchemy.sql.sqltypes import Integer, String
+from ..adapter import MongoAdapter, TableAdapter
 import pytest 
 from pymongo import ASCENDING
-from ...models.database import MongoModels
-
-
 @dataclass
-class MongoAdapterTestModel(MongoModels):
+class MongoAdapterTestModel:
     __collection_name__ = "test_collection"
     __database__ = "digger"
     name: str
@@ -56,7 +60,40 @@ def test_mongo_model_creation(adapter_models):
             print(cls)
             assert isinstance(cls, MongoAdapterTestModel), "Create model failing to create instances"
     except Exception as e:
-        raise e
+        print(e)
 
-def test_mongo_model_aggregation(adapter_models):
-    pass
+Base = declarative_base()
+
+class PostgresTestModel(Base):
+    __tablename__ = "test_table"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(70))
+    age = Column(Integer)
+    primary_key = "id"
+
+    indexes = ["id"]
+
+    @classmethod
+    def get_primary_key(cls) -> Column:
+        return getattr(cls, cls.primary_key, "id")
+
+    @classmethod
+    def adapter(cls) -> TableAdapter:
+        return TableAdapter(cls)
+
+def test_postgres_model_create(adapter_models):
+    connection = register_digger()
+    PostgresTestModel.metadata.create_all(connection.postgres_engine)
+    model = PostgresTestModel.adapter().create(name="jaiswal", age=85)
+    assert PostgresTestModel.adapter().count() > 0, "Fishy"
+    assert isinstance(model.adapter, TableAdapter), "adapter injection failed"
+
+
+def test_postgres_model_exists(adapter_models):
+    print(PostgresTestModel.adapter().exists(PostgresTestModel.age == 16))
+    assert PostgresTestModel.adapter().exists(PostgresTestModel.age == 16) == True, "Query failure"
+   
+    
+
+
+

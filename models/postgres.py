@@ -1,31 +1,27 @@
-from dataclasses import dataclass
-from typing import Dict, List, Optional, Any
+
 from datetime import datetime
+from vault.adapter import TableAdapter
 from sqlalchemy import Table, Column, DateTime, MetaData, String
-from sqlalchemy.engine.base import Engine
+from sqlalchemy.ext.declarative import declarative_base
 
+   
+Base = declarative_base()
 
-@dataclass
-class IndexableLink:
-    __collection_name__ = "indexable_links"
-    link: str
-    scraped_on: Optional[datetime] = datetime.now()
+class IndexableLinks(Base):
+    __tablename__ = "indexable_links"
+    link = Column(String(2000), primary_key=True, index=True)
+    scraped_on = Column(DateTime, default=datetime.now())
+    source_name = Column(String(50))
+    primary_key = "link"
 
-    @staticmethod
-    def to_table(meta_data: MetaData) -> Table:
-        return Table(IndexableLink.__collection_name__, meta_data,
-              Column("link", String, primary_key= True, index=True),
-              Column("scraped_on", DateTime, default=datetime.now())
-         )
-     
     @classmethod
-    def from_dict(cls, **kwargs):
-        return cls(**kwargs)
+    def adapter(cls) -> TableAdapter:
+        return TableAdapter(cls)
     
-
-    def to_dict(self,) -> Dict[str, Any]:
-        return {
-            "link": self.link,
-            "scraped_on": self.scraped_on
-        }
+    @classmethod
+    def get_primary_key(cls) -> Column:
+        return getattr(cls, cls.primary_key)
+    
+    def create(self):
+        self.adapter()._instance_create(self)
     
