@@ -42,6 +42,7 @@ class CollectionItemDuplicateFilterPiepline:
     def process_item(self, item: DataLinkContainer, spider):
         if item.link != None and len(item.link) > 0 and not self.link_already_exist_in_db(item.link):
             return item
+        raise DropItem("Item already exists")
         
 
             

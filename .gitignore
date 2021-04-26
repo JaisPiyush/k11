@@ -1,14 +1,14 @@
 # created by virtualenv automatically
 
-.vault/__pycache__
-.vault/tests/__pycache__
+.vault/__pycache__/
+.vault/tests/__pycache__/
 
-.models/__pycache__
-.models/tests/__pycache__
-.models/.pytest_cache
-.pytest_cache
+.models/__pycache__/
+.models/tests/__pycache__/
+.models/.pytest_cache/
+.pytest_cache/
 
-.digger/__pycache__
-.digger/spiders/__pycache__
+.digger/__pycache__/
+.digger/spiders/__pycache__/
 
-.workers/__pycache__
+.workers/__pycache__/

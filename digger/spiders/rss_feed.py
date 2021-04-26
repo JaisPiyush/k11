@@ -1,21 +1,23 @@
 from datetime import datetime
-from ...common_errors import NoDocumentExists
+from utils import is_url_valid
+from vault.exceptions import NoDocumentExists
 from typing import Dict, Generator, List
 from scrapy import Request
 from scrapy.spiders import XMLFeedSpider
 from scrapy.utils.spider import iterate_spider_output
-from models.main import LinkStore, SourceMap, Format, DataLinkContainer
+from models.main import  LinkStore, SourceMap, Format, DataLinkContainer
 
 
 class RSSFeedSpider(XMLFeedSpider):
     name = "rss_feed_spider"
-    source_maps: List[SourceMap] = None
     itertag = 'item'
-    formats = None
     non_formattable_tags = ['itertag']
     current_source: SourceMap = None
-    current_source_formatters: Format = None
+    current_source_formatter: Format = None
     namespaces = [('dc', 'http://purl.org/dc/elements/1.1/')]
+    format_ : Dict = None
+    assumed_tags: str = None
+    compulsory_tags: str = None
 
     custom_settings = {
         "ITEM_PIPELINES": {
@@ -30,8 +32,8 @@ class RSSFeedSpider(XMLFeedSpider):
     Insert all data into self.source_maps, which later will be used to iterate
     """
 
-    def pull_rss_sources_from_db(self) -> Generator[SourceMap]:
-        yield SourceMap.pull_all_rss_models()
+    def pull_rss_sources_from_db(self) -> Generator[SourceMap, None, None]:
+        return SourceMap.pull_all_rss_models()
 
     """
     This method will return existing rss format attached with source, otherwise
@@ -39,7 +41,7 @@ class RSSFeedSpider(XMLFeedSpider):
 
     """
 
-    def _get_xml_format_exists_in_db(self, format_id: str) -> Format:
+    def _get_xml_source_format_in_db(self, format_id: str) -> Format:
         try:
             return Format.adapter().find_one({"$and": [{"format_id": format_id}, {"xml_collection_format": {"$exist": True}}]})
         except NoDocumentExists:
@@ -49,17 +51,26 @@ class RSSFeedSpider(XMLFeedSpider):
     """
 
     def pull_rss_source_formatters(self, format_id: str) -> Format:
-        return self._get_xml_format_exists_in_db(format_id)
+        return self._get_xml_source_format_in_db(format_id)
 
     """
     This function will get the formatter according to link
     """
 
-    def get_formatter(self, link: str) -> Dict:
-        for link_in_source in self.current_source.links:
-            if link_in_source.__getattribute__('link') == link and (hasattr(link_in_source, "formatter") and link_in_source.__getattribute__('formatter') is not None):
-                return self.current_source_formatters[link_in_source.__getattribute__('formatter')]
-        return self.current_source_formatters.__getattribute__(self.current_source.formatter)
+    def set_formatter(self, link_store: LinkStore) -> None:
+        if link_store.formatter != None and len(link_store.formatter) > 0 and link_store.formatter != self.current_source.formatter:
+            self.format_ = self.current_source_formatter.extra_formats[link_store.formatter]
+        self.format_ =  getattr(self.current_source_formatter, self.current_source.formatter)
+    
+    def set_tags(self, link_store: LinkStore) -> None:
+        if link_store.assumed_tags != None and len(link_store.assumed_tags) > 0:
+            self.assumed_tags = link_store.assumed_tags
+        else:
+            self.assumed_tags = self.current_source.assumed_tags
+        if link_store.compulsory_tags != None and len(link_store.compulsory_tags) > 0:
+            self.compulsory_tags = link_store.compulsory_tags
+        else:
+            self.compulsory_tags = link_store.compulsory_tags
 
     """
     Every Source Map contains links, which are LinkStore containing link and optionaly assumed_tags, and other params.
@@ -68,18 +79,24 @@ class RSSFeedSpider(XMLFeedSpider):
     """
 
     def start_requests(self):
-        sources: List[SourceMap] = self.pull_rss_sources_from_db()
-        for source in sources:
+        for source in self.pull_rss_sources_from_db():
             self.current_source = source
-            self.current_source_formatters = self.pull_rss_source_formatters(
+            self.current_source_formatter = self.pull_rss_source_formatters(
                 source.source_id)
-            for link in self.current_source.links:
-                yield Request(link.__getattribute__('link'))
+            for link_store in self.current_source.links:
+                if link_store.link != None and len(link_store.link) > 0 and is_url_valid(link_store.link):
+                    self.set_formatter(link_store)
+                    self.set_tags(link_store)
+                    if "itertag" in self.format_:
+                        self.itertag = self.format_["itertag"]
+                    yield Request(getattr(link_store, "link"))
+                else:
+                    pass
 
     def parse_nodes(self, response, nodes):
         for selector in nodes:
             ret = iterate_spider_output(self.parse_single_node(
-                response, selector, self.get_formatter(response.request.url)))
+                response, selector, self.format_))
             for result_item in self.process_results(response, ret):
                 yield result_item
 
@@ -94,13 +111,16 @@ class RSSFeedSpider(XMLFeedSpider):
             if key not in self.non_formattable_tags:
                 try:
                     collected_data[key] = node.xpath(
-                        f"///{self.itertag}{value['parent']}{value['param']}").get()
+                        f"///{self.itertag}//{value['parent']}/{value['param']}").get()
                 except Exception as e:
                     self.error_handling(e)
                     pass
         # if "link" in collected_data and len(collected_data['link']) > 0:
+        assumed_tags, compulsory_tags = self.current_source.get_tags()
         yield DataLinkContainer(container=collected_data, source_name=self.current_source.source_name, source_id=self.current_source.source_id,
-                                formatter=self.current_source_formatters.format_id, scraped_on=datetime.now(), link=collected_data['link'] if 'link' in collected_data else None,
+                                formatter=self.current_source_formatter.format_id, scraped_on=datetime.now(), 
+                                link=collected_data['link'] if 'link' in collected_data else None,
+                                assumend_tags=assumed_tags, compulsory_tags=compulsory_tags,
                                 watermarks=self.current_source.watermarks)
         # else:
         #     pass

@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from sqlalchemy.engine.base import Connection, Engine
 from sqlalchemy.sql.base import NO_ARG
 from sqlalchemy.sql.schema import MetaData
-from ..models.database import DatabaseConfiguration
+from models.database import DatabaseConfiguration
 from sqlalchemy.orm import scoped_session, sessionmaker
 from typing import Dict, Union
 
@@ -43,7 +43,7 @@ class DatabaseConnection():
         if config.service in self.sql_serviecs:
             return create_engine(config.parse())
         elif config.service in self.no_sql_services:
-            print(config.parse())
+            # print(config.parse())
             return MongoClient(config.parse())
     
     def register(self, database):

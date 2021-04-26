@@ -2,7 +2,7 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import distinct, select
 from sqlalchemy.sql.functions import func
 from sqlalchemy.sql.schema import Index
-from ..common_errors import NoDocumentExists
+from .exceptions import NoDocumentExists
 import pymongo
 from pymongo.operations import IndexModel
 from sqlalchemy.orm import mapper
@@ -70,7 +70,7 @@ class MongoAdapter:
         self.collection_name = None
     
     def contribute_to_class(self, model_cls) -> None:
-        print(model_cls, "from contribution")
+        # print(model_cls, "from contribution")
         self.model_cls = model_cls
         self.collection_name = model_cls.__collection_name__
 
@@ -150,14 +150,14 @@ class MongoAdapter:
     def find(self, filter, **kwargs):
         collection = self._connect()
         for value in collection.find(filter,**kwargs):
-            yield self.model_cls(**value)
+            yield self.model_cls.from_dict(**value)
     
     def find_one(self, filter, *args, **kwargs):
         collection = self._connect()
         docs = collection.find_one(filter, *args, **kwargs)
         if docs is None or len(docs) == 0:
             raise NoDocumentExists(collection, query=filter)
-        return self.model_cls(**docs)
+        return self.model_cls.from_dict(**docs)
     
     def count(self, filter, **kwargs):
         collection = self._connect()
