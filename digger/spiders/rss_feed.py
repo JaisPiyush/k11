@@ -58,7 +58,7 @@ class RSSFeedSpider(XMLFeedSpider):
     """
 
     def set_formatter(self, link_store: LinkStore) -> None:
-        if link_store.formatter != None and len(link_store.formatter) > 0 and link_store.formatter != self.current_source.formatter:
+        if link_store.formatter != None and len(link_store.formatter) > 0 and link_store.formatter != self.current_source.formatter and link_store.formatter in self.current_source_formatter.extra_formats:
             self.format_ = self.current_source_formatter.extra_formats[link_store.formatter]
         self.format_ =  getattr(self.current_source_formatter, self.current_source.formatter)
     
@@ -83,6 +83,8 @@ class RSSFeedSpider(XMLFeedSpider):
             self.current_source = source
             self.current_source_formatter = self.pull_rss_source_formatters(
                 source.source_id)
+            if self.current_source_formatter == None:
+                continue
             for link_store in self.current_source.links:
                 if link_store.link != None and len(link_store.link) > 0 and is_url_valid(link_store.link):
                     self.set_formatter(link_store)
@@ -115,12 +117,11 @@ class RSSFeedSpider(XMLFeedSpider):
                 except Exception as e:
                     self.error_handling(e)
                     pass
-        # if "link" in collected_data and len(collected_data['link']) > 0:
-        assumed_tags, compulsory_tags = self.current_source.get_tags()
+        # if "link" in collected_data and len(collected_data['link']) > 0:s
         yield DataLinkContainer(container=collected_data, source_name=self.current_source.source_name, source_id=self.current_source.source_id,
                                 formatter=self.current_source_formatter.format_id, scraped_on=datetime.now(), 
                                 link=collected_data['link'] if 'link' in collected_data else None,
-                                assumend_tags=assumed_tags, compulsory_tags=compulsory_tags,
+                                assumend_tags=self.assumed_tags, compulsory_tags=self.compulsory_tags,
                                 watermarks=self.current_source.watermarks)
         # else:
         #     pass

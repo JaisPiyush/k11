@@ -2,7 +2,7 @@
 """
 NoDocumentExist class signifies no existance of document in the collection or Table
 """
-class NoDocumentExists(Exception):
+class NoDocumentExists(Exception,):
     def __init__(self, collection, query=None) -> None:
         super().__init__(self.get_document_erro_str(collection, filter_=query))
     

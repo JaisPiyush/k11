@@ -74,7 +74,6 @@ class Format(MongoModels):
     @staticmethod
     def get_default_rss_format():
         return Format.adapter().find_one({"format_id": "default_rss_format"})
-
 @dataclass
 class SourceMap(MongoModels):
     __collection_name__ = "collection_source_maps"
@@ -123,7 +122,7 @@ class SourceMap(MongoModels):
     @staticmethod
     def pull_all_html_collections() -> Generator:
         return SourceMap.adapter().find({"$and": [{"is_rss": False}, {"is_collection":True}]})
-
+    
 
 
 @dataclass

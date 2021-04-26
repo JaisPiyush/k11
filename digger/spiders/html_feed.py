@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Dict, Generator
+from vault.exceptions import NoDocumentExists
 from scrapy.spiders import Spider
 from models.main import LinkStore, SourceMap, Format, DataLinkContainer
 from scrapy_splash import SplashRequest
@@ -29,7 +30,9 @@ class HTMLFeedSpider(Spider):
     """
 
     def _get_html_source_fromat_in_db(self, format_id: str) -> Format:
-        pass
+        return Format.adapter().find_one({"$and": [{"format_id": format_id}, {"html_collection_format": {"$exist": True}}]})
+       
+
 
     """
     This function will decide which formatting rules to be used for the current link,
@@ -39,7 +42,9 @@ class HTMLFeedSpider(Spider):
     """
 
     def set_suitable_formatter(self, link_store: LinkStore) -> Dict:
-        pass
+        if link_store.formatter != None and len(link_store.formatter) > 0 and link_store.formatter != self.current_source.formatter and link_store.formatter in self.current_source_formatter.extra_formats:
+            return self.current_source_fromatter.extra_formats[link_store.formatter]
+        return self.current_source_fromatter[self.current_source.formatter]
 
     """
     Nice wrapper for private api
@@ -48,8 +53,15 @@ class HTMLFeedSpider(Spider):
     def pull_html_source_formatter(self, format_id: str) -> Format:
         return self._get_html_source_fromat_in_db(format_id)
 
-    def set_tag(self, link_store: LinkStore):
-        pass
+    def set_tags(self, link_store: LinkStore) -> None:
+        if link_store.assumed_tags != None and len(link_store.assumed_tags) > 0:
+            self.assumed_tags = link_store.assumed_tags
+        else:
+            self.assumed_tags = self.current_source.assumed_tags
+        if link_store.compulsory_tags != None and len(link_store.compulsory_tags) > 0:
+            self.compulsory_tags = link_store.compulsory_tags
+        else:
+            self.compulsory_tags = link_store.compulsory_tags
 
     """
     Each source will be iterated using for loop and each link of the source will be iterated
@@ -63,11 +75,13 @@ class HTMLFeedSpider(Spider):
             self.current_source = source
             self.current_source_fromatter = self.pull_html_source_formatter(
                 source.source_id)
+            if self.current_source_fromatter == None:
+                continue
             for link_store in self.current_source.links:
                 self.format_ = self.get_suitable_formatter(link_store)
                 if link_store.link != None and len(link_store.link) > 0 and is_url_valid(link_store.link):
                     self.set_suitable_formatter(link_store)
-                    self.set_tag(link_store)
+                    self.set_tags(link_store)
                     if "itertag" in self.format_:
                         self.itertag = self.format_["itertag"]
                     yield SplashRequest(url=link_store.link,
@@ -81,7 +95,7 @@ class HTMLFeedSpider(Spider):
     a packed `DataLinkContainer`
     """
 
-    def parse_without_itertag(self, response, **kwargs):
+    def parse_without_itertag(self, response, **kwargs) -> Generator[DataLinkContainer, None, None]:
         collected_data = {}
         length = 0
         for key, value in self.format_.items():
@@ -104,13 +118,22 @@ class HTMLFeedSpider(Spider):
                                  compulsory_tags=self.compulsory_tags, watermarks=self.current_source.watermarks,
                                  )
 
-    def parse_nodes(self, response, node):
-        pass
+    def parse_nodes(self, response, node) -> DataLinkContainer:
+        data = {}
+        for key, value in self.format_.items():
+            if key in self.non_formatables:
+                pass
+            data[key] = node.xpath(
+                f'//{value["parent"]}/{value["param"]}').get()
+        return self.pack_data_in_container(data)
+            
+
 
     """
     Parser should extract all the itertag elemetns using `get_all()` and pass it to
     `parse_nodes` function to extract and pack data according to format
     """
 
-    def parse_with_itertag(self, response, **kwargs):
-        pass
+    def parse_with_itertag(self, response, **kwargs) -> Generator[DataLinkContainer, None, None]:
+       for node in response.xpath(self.itertag).getall():
+           yield self.parse_nodes(response, node)
