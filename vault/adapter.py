@@ -2,6 +2,7 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import distinct, select
 from sqlalchemy.sql.functions import func
 from sqlalchemy.sql.schema import Index
+from sqlalchemy.inspection import inspect
 from .exceptions import NoDocumentExists
 import pymongo
 from pymongo.operations import IndexModel
@@ -14,13 +15,15 @@ from .app import register_digger
 class TableAdapter:
     def __init__(self, model_cls) -> None:
         self.model_cls = model_cls
-    
     def get_connection(self):
         return register_digger()
     
     @property
     def session(self) -> Session:
-        return self.get_connection().postgres_session
+        connection = self.get_connection()
+        if not connection.postgres_engine.dialect.has_table(connection.postgres_connection, self.model_cls.__tablename__):
+            self.create_table()
+        return connection.postgres_session
     
     """
     Create Table in the given database
@@ -90,6 +93,7 @@ class MongoAdapter:
             return None
         connection = register_digger(postgres=False)
         collection = connection.mongo_db[self.collection_name]
+        # print(collection, "printing collection name")
         return collection
 
     """
@@ -154,10 +158,10 @@ class MongoAdapter:
     
     def find_one(self, filter, *args, **kwargs):
         collection = self._connect()
-        docs = collection.find_one(filter, *args, **kwargs)
-        if docs is None or len(docs) == 0:
+        doc = collection.find_one(filter, *args, **kwargs)
+        if doc is None:
             raise NoDocumentExists(collection, query=filter)
-        return self.model_cls.from_dict(**docs)
+        return self.model_cls.from_dict(**doc)
     
     def count(self, filter, **kwargs):
         collection = self._connect()

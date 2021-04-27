@@ -36,8 +36,10 @@ class MongoModels:
     
     @classmethod
     def adapter(cls):
-        if cls._adapter.model_cls is None:
+        # print(cls)
+        if cls._adapter.model_cls is None or cls._adapter.model_cls != cls:
             cls._adapter.contribute_to_class(cls)
+        # print(cls, cls._adapter, cls._adapter.collection_name)
         return cls._adapter
     
     @staticmethod

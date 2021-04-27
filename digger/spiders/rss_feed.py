@@ -42,8 +42,9 @@ class RSSFeedSpider(XMLFeedSpider):
     """
 
     def _get_xml_source_format_in_db(self, format_id: str) -> Format:
+        # print(format_id, "from get_xml_source")
         try:
-            return Format.adapter().find_one({"$and": [{"format_id": format_id}, {"xml_collection_format": {"$exist": True}}]})
+            return Format.adapter().find_one({"format_id": format_id})
         except NoDocumentExists:
             return Format.get_default_rss_format()
     """
@@ -70,7 +71,7 @@ class RSSFeedSpider(XMLFeedSpider):
         if link_store.compulsory_tags != None and len(link_store.compulsory_tags) > 0:
             self.compulsory_tags = link_store.compulsory_tags
         else:
-            self.compulsory_tags = link_store.compulsory_tags
+            self.compulsory_tags = self.current_source.compulsory_tags
 
     """
     Every Source Map contains links, which are LinkStore containing link and optionaly assumed_tags, and other params.
@@ -81,6 +82,7 @@ class RSSFeedSpider(XMLFeedSpider):
     def start_requests(self):
         for source in self.pull_rss_sources_from_db():
             self.current_source = source
+            # print(source)
             self.current_source_formatter = self.pull_rss_source_formatters(
                 source.source_id)
             if self.current_source_formatter == None:
@@ -89,6 +91,7 @@ class RSSFeedSpider(XMLFeedSpider):
                 if link_store.link != None and len(link_store.link) > 0 and is_url_valid(link_store.link):
                     self.set_formatter(link_store)
                     self.set_tags(link_store)
+                    # print(link_store.link, self.format_)
                     if "itertag" in self.format_:
                         self.itertag = self.format_["itertag"]
                     yield Request(getattr(link_store, "link"))

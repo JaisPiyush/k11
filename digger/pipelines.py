@@ -5,8 +5,6 @@
 
 
 # useful for handling different item types with a single interface
-from datetime import datetime
-from os import link
 from models.main import DataLinkContainer
 from models.postgres import IndexableLinks
 from scrapy.exceptions import DropItem
@@ -96,7 +94,7 @@ class CollectionItemVaultPipeline:
     Insert Link container document in mongodb
     """
     def insert_cotainer_in_db(self, item: DataLinkContainer) -> DataLinkContainer:
-        return DataLinkContainer.adapter().create(item.to_dict())
+        return DataLinkContainer.adapter().create(**item.to_dict())
 
     def index_link_into_db(self, item: DataLinkContainer):
         IndexableLinks.adapter().create(link=item.link, scraped_on=item.scraped_on,

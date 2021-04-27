@@ -17,6 +17,14 @@ class HTMLFeedSpider(Spider):
     assumed_tags: str = None
     compulsory_tags: str = None
 
+    custom_settings = {
+        "ITEM_PIPELINES": {
+            "digger.pipelines.CollectionItemDuplicateFilterPiepline": 300,
+            "digger.pipelines.CollectionItemSanitizingPipeline": 356,
+            "digger.pipelines.CollectionItemVaultPipeline": 412
+        }
+    }
+
     """
     Pull out all documents which are collection of content links embedded inside html page.
     The find engine will select documents whose `is_rss == False` and `is_collection == True`
@@ -30,7 +38,7 @@ class HTMLFeedSpider(Spider):
     """
 
     def _get_html_source_fromat_in_db(self, format_id: str) -> Format:
-        return Format.adapter().find_one({"$and": [{"format_id": format_id}, {"html_collection_format": {"$exist": True}}]})
+        return Format.adapter().find_one({"$and": [{"format_id": format_id}, {"html_collection_format": {"$exists": True}}]})
        
 
 
@@ -41,10 +49,10 @@ class HTMLFeedSpider(Spider):
 
     """
 
-    def set_suitable_formatter(self, link_store: LinkStore) -> Dict:
+    def get_suitable_formatter(self, link_store: LinkStore) -> Dict:
         if link_store.formatter != None and len(link_store.formatter) > 0 and link_store.formatter != self.current_source.formatter and link_store.formatter in self.current_source_formatter.extra_formats:
             return self.current_source_fromatter.extra_formats[link_store.formatter]
-        return self.current_source_fromatter[self.current_source.formatter]
+        return getattr(self.current_source_fromatter, self.current_source.formatter)
 
     """
     Nice wrapper for private api
@@ -78,9 +86,8 @@ class HTMLFeedSpider(Spider):
             if self.current_source_fromatter == None:
                 continue
             for link_store in self.current_source.links:
-                self.format_ = self.get_suitable_formatter(link_store)
                 if link_store.link != None and len(link_store.link) > 0 and is_url_valid(link_store.link):
-                    self.set_suitable_formatter(link_store)
+                    self.format_ = self.get_suitable_formatter(link_store)
                     self.set_tags(link_store)
                     if "itertag" in self.format_:
                         self.itertag = self.format_["itertag"]
@@ -121,10 +128,11 @@ class HTMLFeedSpider(Spider):
     def parse_nodes(self, response, node) -> DataLinkContainer:
         data = {}
         for key, value in self.format_.items():
+            print(value)
             if key in self.non_formatables:
-                pass
+                continue
             data[key] = node.xpath(
-                f'//{value["parent"]}/{value["param"]}').get()
+                f'.//{value["parent"]}/{value["param"]}').get()
         return self.pack_data_in_container(data)
             
 
@@ -135,5 +143,5 @@ class HTMLFeedSpider(Spider):
     """
 
     def parse_with_itertag(self, response, **kwargs) -> Generator[DataLinkContainer, None, None]:
-       for node in response.xpath(self.itertag).getall():
+       for node in response.xpath(self.itertag):
            yield self.parse_nodes(response, node)

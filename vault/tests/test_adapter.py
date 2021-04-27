@@ -57,7 +57,7 @@ def test_mongo_model_creation(adapter_models):
     try:
         for model in adapter_models:
             cls = MongoAdapterTestModel.adapter().create(**model)
-            print(cls)
+            # print(cls)
             assert isinstance(cls, MongoAdapterTestModel), "Create model failing to create instances"
     except Exception as e:
         print(e)

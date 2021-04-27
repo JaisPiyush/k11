@@ -52,16 +52,14 @@ class Format(MongoModels):
     __collection_name__ = 'collection_formats'
     __database__ = "digger"
     source_name: str
+    format_id: str   # format_id = source_map.source_id
     xml_collection_format: Optional[Dict] = None
     html_collection_format: Optional[Dict] = None
     html_article_format: Optional[Dict] = None
     created_on: datetime = datetime.now()
     extra_formats: Optional[Dict[str, List[Dict]]] = None
-    format_id = None   # format_id = source_map.source_id
+    
     primary_key: str = 'format_id'
-
-    def __post_init__(self) -> None:
-        self.format_id = sha256(self.source_name+'_formats').hexdigest()
 
     def get_format(self, format_: str) -> Dict:
         if hasattr(self, format_):
@@ -90,9 +88,11 @@ class SourceMap(MongoModels):
     # source_id: str = sha256(source_name).digest()
     primary_key: str = 'source_id'
 
-    def process_kwargs(self, **kwargs):
+    
+    @staticmethod
+    def process_kwargs(**kwargs):
         if "links" in kwargs:
-            kwargs["links"] = [LinkStore.from_dict(link) for link in kwargs['links']]
+            kwargs["links"] = [LinkStore.from_dict(**link) for link in kwargs['links']]
         return kwargs
     
     # Overriding default `to_dict` method
