@@ -10,5 +10,6 @@
 
 .digger/__pycache__/
 .digger/spiders/__pycache__/
+.digger/w_files/
 
 .workers/__pycache__/

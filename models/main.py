@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Dict, Generator, List,Optional, Any, Tuple, Union
 from datetime import datetime
 from datetime import datetime
-from hashlib import sha256
+import json
 from .mongo import MongoModels
 
 @dataclass
@@ -44,6 +44,89 @@ class LinkStore:
         return cls(**kwargs)
 
 
+@dataclass
+class QuerySelector:
+    tag: Optional[str] = None
+    id: Optional[str] = None
+    class_list: Optional[List[str]] = None
+    exact_class: Optional[str] = None
+
+    def to_dict(self) -> Dict:
+        return {
+            "tag": self.tag,
+            "id": self.id,
+            "class_list": self.class_list,
+            "exact_class": self.exact_class
+        }
+    
+
+
+@dataclass
+class ContainerIdentity:
+    param: str
+    is_multiple: Optional[bool] = None
+
+    def to_dict(self, default=False) -> Dict:
+        return {
+            "param": self.param,
+            "is_multiple": self.is_multiple if self.is_multiple is not None else default
+        }
+    
+
+
+"""
+Container(
+    idens = [
+        {
+            "param": "a",
+            "is_multiple": True
+        },
+        {
+            "param": "b",
+        }
+    ],
+    ignorables = ['a', 'script']
+    terminations = ['figure']
+    is_multiple = False
+
+)
+"""
+@dataclass
+class ContainerFormat:
+    idens: List[ContainerIdentity]
+    ignorables: List[QuerySelector] = field(default_factory=list)
+    terminations: List[QuerySelector] = field(default_factory=list)
+    default_ignorables = [QuerySelector(tag="script")]
+    is_multiple:bool = False
+
+    def get_ignorables(self) -> List[str]:
+        return self.default_ignorables + self.ignorables
+    
+    @classmethod
+    def from_dict(cls, **kwargs):
+        for index, iden in enumerate(kwargs['idens']):
+            kwargs['idens'][index] = ContainerIdentity(**iden)
+
+        for index, query in enumerate(kwargs['ignorables']):
+            kwargs['ignorables'][index] = QuerySelector(**query)
+        
+        for index, query in enumerate(kwargs['termination']):
+            kwargs['termination'][index] = QuerySelector(**query)
+        
+        return cls(**kwargs)
+    
+    def to_dict(self) -> Dict:
+        return {
+            "idens": [iden.to_dict(default=self.is_multiple) for iden in self.idens],
+            "ignorables": [query.to_dict() for query in self.ignorables],
+            "terminations": [query.to_dict() for query in self.terminations],
+            "is_multiple": self.is_multiple
+        }
+
+    def to_json_str(self) -> str:
+        return json.dumps(self.to_dict())
+
+
 
 
 
@@ -53,11 +136,12 @@ class Format(MongoModels):
     __database__ = "digger"
     source_name: str
     format_id: str   # format_id = source_map.source_id
+    source_home_link: str  #source_home_link
     xml_collection_format: Optional[Dict] = None
     html_collection_format: Optional[Dict] = None
-    html_article_format: Optional[Dict] = None
+    html_article_format: Optional[ContainerFormat] = None
     created_on: datetime = datetime.now()
-    extra_formats: Optional[Dict[str, List[Dict]]] = None
+    extra_formats: Optional[Dict[str, Union[Dict, List[Dict]]]] = None
     
     primary_key: str = 'format_id'
 
@@ -70,14 +154,38 @@ class Format(MongoModels):
             raise KeyError()
     
     @staticmethod
+    def process_kwargs(**kwargs) -> Dict:
+        if "html_article_format" in kwargs:
+            kwargs["html_article_format"] = ContainerFormat.from_dict(**kwargs["html_article_format"])
+        return kwargs
+    
+    @staticmethod
     def get_default_rss_format():
         return Format.adapter().find_one({"format_id": "default_rss_format"})
+
+"""
+Source Map is source links storing format for database
+    - source_name: A string compulsory input is the name of source site. 
+            for e.g YouTube, Expert Photography, etc.
+    - source_id: A string compulsory input which works as unique identifier,
+            because existance of different sources from same website is possible.
+    - source_home_link: A string compulsory input containing home link to the website.
+    - formatter: Key name of formating rules stored inside the source formatter
+    - assumed_tags: Each source is associated with some assumed tags, written in definit structure
+    - compulsory_tags: These tags are must to be carried unlike assumed tags, 
+            they couldn't washed off in any step untill it's overriden
+    - links: Array of LinkStore
+    - watermarks: Array of possible watermarks in the website content, which must be removed
+    - is_structured_aggregator: A boolean which signifies whether we have any respectable article formatter for the content of not,
+        if no, then the data_link_container.is_formattable = False, which will force scraper to extract all possible text and rely on webview
+"""
 @dataclass
 class SourceMap(MongoModels):
     __collection_name__ = "collection_source_maps"
     __database__ = "digger"
-    source_name: str
+    source_name: str 
     source_id: str
+    source_home_link: str
     formatter: str
     assumed_tags: str
     compulsory_tags: List[str]
@@ -85,8 +193,9 @@ class SourceMap(MongoModels):
     is_collection: bool
     links: List[LinkStore]
     watermarks: List[str] = field(default_factory=list)
-    # source_id: str = sha256(source_name).digest()
-    primary_key: str = 'source_id'
+    is_structured_aggregator: bool = True
+    datetime_format: str = ""
+    primary_key = 'source_id'
 
     
     @staticmethod
@@ -106,7 +215,9 @@ class SourceMap(MongoModels):
             "is_collection": self.is_collection,
             "links": [link.to_dict() for link in self.links],
             "compulsory_tags": self.compulsory_tags,
-            "watermarks": self.watermarks
+            "watermarks": self.watermarks,
+            "is_structured_aggregator": self.is_structured_aggregator,
+            "source_hom_link": self.source_home_link
         }
     
     def get_tags(self, li: str) -> Tuple[str, str]:
@@ -138,7 +249,44 @@ class DataLinkContainer(MongoModels):
     watermarks: List[str] = field(default_factory=list)
     assumend_tags: Optional[str] = None
     compulsory_tags: Optional[str] = None
+    is_formattable: bool = True
     primary_key = "link"
 
 
 
+"""
+Dataclass for storing all the information of article into mongo(treasury)
+"""
+
+@dataclass
+class ArticleContainer(MongoModels):
+    __collection_name__ = "article_container"
+    __database__ = "treasure"
+    article_id: str
+    title: Optional[str]
+    creator: Optional[str]
+    article_link: Optional[str]
+    source_name: Optional[str]
+    source_id: Optional[str]
+    home_link: str
+    site_name: str
+    pub_date: Optional[datetime]
+    scraped_on: datetime
+    text: Optional[str]
+    content: Optional[str]
+    images: List[str] = field(default_factory=list)
+    videos: List[str] = field(default_factory=list)
+    tags: List[str] = field(default_factory=list)
+    sentiments: int = field(default_factory= lambda x: 0)
+    dates: List[str] = field(default_factory=list)
+    names: List[str] = field(default_factory=list)
+    places: List[str] = field(default_factory=list)
+    organisations: List[str] = field(default_factory=list)
+    keywords: List[str] = field(default_factory=list)
+    is_source_present_in_db: bool = False
+    redirection_required: bool = False
+    coords: List[Tuple[float]] = field(default_factory=list)
+    primary_key = "article_id"
+
+    
+    

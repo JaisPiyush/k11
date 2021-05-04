@@ -92,7 +92,9 @@ class HTMLFeedSpider(Spider):
                     if "itertag" in self.format_:
                         self.itertag = self.format_["itertag"]
                     yield SplashRequest(url=link_store.link,
-                                        callback=self.parse_without_itertag if self.itertag == None or len(self.itertag) == 0 else self.parse_with_itertag)
+                                        callback=self.parse_without_itertag if self.itertag == None or len(self.itertag) == 0 else self.parse_with_itertag,
+                                        splash_headers={'User-Agent': "Mozilla/5.0 (Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"}
+                                        )
                 else:
                     pass
 
@@ -123,6 +125,7 @@ class HTMLFeedSpider(Spider):
                                  link=data['link'] if 'link' in data else None,
                                  assumend_tags=self.assumed_tags,
                                  compulsory_tags=self.compulsory_tags, watermarks=self.current_source.watermarks,
+                                 is_formattable=self.current_source.is_structured_aggregator
                                  )
 
     def parse_nodes(self, response, node) -> DataLinkContainer:

@@ -1,9 +1,20 @@
 version: "3.3"
+
 services: 
+  torprivoxy:
+    image: rdsubhas/tor-privoxy-alpine
+    networks: 
+      - torProxyNetwork
+    ports: 
+      - 8118:9050
   splash:
     image: scrapinghub/splash
+    networks: 
+      - splashNetwork
     ports: 
-      - "8050:8050"
+      - 8050:8050
+    volumes: 
+      - ./splash/proxy-profiles:/etc/splash/proxy-profiles:root
   
   # mongo:
   #   image: mongo
@@ -19,3 +30,7 @@ services:
 
 # volumes: 
 #   mongo-database:
+
+networks:
+  torProxyNetwork:
+  splashNetwork:

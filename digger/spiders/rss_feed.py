@@ -125,7 +125,7 @@ class RSSFeedSpider(XMLFeedSpider):
                                 formatter=self.current_source_formatter.format_id, scraped_on=datetime.now(), 
                                 link=collected_data['link'] if 'link' in collected_data else None,
                                 assumend_tags=self.assumed_tags, compulsory_tags=self.compulsory_tags,
-                                watermarks=self.current_source.watermarks)
+                                watermarks=self.current_source.watermarks,is_formattable=self.current_source.is_structured_aggregator)
         # else:
         #     pass
 
