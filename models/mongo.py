@@ -7,7 +7,7 @@ from pymongo import IndexModel
 
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class MongoModels:
     __collection_name__ = None
     __database__ = None
@@ -36,10 +36,8 @@ class MongoModels:
     
     @classmethod
     def adapter(cls):
-        # print(cls)
         if cls._adapter.model_cls is None or cls._adapter.model_cls != cls:
             cls._adapter.contribute_to_class(cls)
-        # print(cls, cls._adapter, cls._adapter.collection_name)
         return cls._adapter
     
     @staticmethod
@@ -60,7 +58,6 @@ class MongoModels:
     
     @staticmethod
     def create_index_model(dics: Dict) -> IndexModel:
-        unique = False
         if "dir" not in dics:
             dics['dir'] = 1
         if "name" not in dics:
@@ -73,7 +70,7 @@ class MongoModels:
         return [self.create_index_model(index) for index in self.indexes]
     
     def create_primary_key_index(self) -> IndexModel:
-        return self.create_index_model({"key": self.primary_key})
+        return self.create_index_model({"key": self.primary_key, "unique": True})
     
     @staticmethod
     def process_kwargs(**kwargs) -> Dict:

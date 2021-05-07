@@ -3,6 +3,8 @@ from typing import Dict, Generator, List,Optional, Any, Tuple, Union
 from datetime import datetime
 from datetime import datetime
 import json
+
+from sqlalchemy.sql.sqltypes import Enum
 from .mongo import MongoModels
 
 @dataclass
@@ -85,8 +87,16 @@ Container(
             "param": "b",
         }
     ],
-    ignorables = ['a', 'script']
-    terminations = ['figure']
+    ignorables = [{
+        "tag": "a"
+    }, {
+        "tag": "script"
+    },
+    
+    ]
+    terminations = [{
+        "tag": "figure"
+    }]
     is_multiple = False
 
 )
@@ -96,7 +106,14 @@ class ContainerFormat:
     idens: List[ContainerIdentity]
     ignorables: List[QuerySelector] = field(default_factory=list)
     terminations: List[QuerySelector] = field(default_factory=list)
-    default_ignorables = [QuerySelector(tag="script")]
+    default_ignorables = [QuerySelector(tag="script"), 
+                          QuerySelector(tag="noscript"),
+                          QuerySelector(tag="style"),
+                          QuerySelector(tag="input"),
+                          QuerySelector(tag="footer"),
+                          QuerySelector(tag="form"),
+                          QuerySelector(tag="header")
+                          ]
     is_multiple:bool = False
 
     def get_ignorables(self) -> List[str]:
@@ -106,19 +123,20 @@ class ContainerFormat:
     def from_dict(cls, **kwargs):
         for index, iden in enumerate(kwargs['idens']):
             kwargs['idens'][index] = ContainerIdentity(**iden)
-
-        for index, query in enumerate(kwargs['ignorables']):
-            kwargs['ignorables'][index] = QuerySelector(**query)
         
-        for index, query in enumerate(kwargs['termination']):
-            kwargs['termination'][index] = QuerySelector(**query)
+        if "ignorables" in kwargs:
+            for index, query in enumerate(kwargs['ignorables']):
+                kwargs['ignorables'][index] = QuerySelector(**query)
+        if "terminations" in kwargs:
+            for index, query in enumerate(kwargs['terminations']):
+                kwargs['terminations'][index] = QuerySelector(**query)
         
         return cls(**kwargs)
     
     def to_dict(self) -> Dict:
         return {
             "idens": [iden.to_dict(default=self.is_multiple) for iden in self.idens],
-            "ignorables": [query.to_dict() for query in self.ignorables],
+            "ignorables": [query.to_dict() for query in self.ignorables + self.default_ignorables],
             "terminations": [query.to_dict() for query in self.terminations],
             "is_multiple": self.is_multiple
         }
@@ -133,7 +151,7 @@ class ContainerFormat:
 @dataclass
 class Format(MongoModels):
     __collection_name__ = 'collection_formats'
-    __database__ = "digger"
+    __database__ = "mongo_digger"
     source_name: str
     format_id: str   # format_id = source_map.source_id
     source_home_link: str  #source_home_link
@@ -182,7 +200,7 @@ Source Map is source links storing format for database
 @dataclass
 class SourceMap(MongoModels):
     __collection_name__ = "collection_source_maps"
-    __database__ = "digger"
+    __database__ = "mongo_digger"
     source_name: str 
     source_id: str
     source_home_link: str
@@ -239,20 +257,29 @@ class SourceMap(MongoModels):
 @dataclass
 class DataLinkContainer(MongoModels):
     __collection_name__ = "data_link_containers"
-    __database__ = "digger"
-    container: Dict
+    __database__ = "mongo_digger" 
     source_name: str
     source_id: str
     formatter: str
-    scraped_on: datetime
-    link: str = None
+    link: str
+    container: dict
     watermarks: List[str] = field(default_factory=list)
     assumend_tags: Optional[str] = None
     compulsory_tags: Optional[str] = None
     is_formattable: bool = True
+    scraped_on: datetime = datetime.now()
     primary_key = "link"
 
+    @staticmethod
+    def get_all() -> Generator:
+        return DataLinkContainer.adapter().find({})
 
+
+
+class ContentType(Enum):
+    Article = "article"
+    Image = "image"
+    Video = "video"
 
 """
 Dataclass for storing all the information of article into mongo(treasury)
@@ -260,8 +287,8 @@ Dataclass for storing all the information of article into mongo(treasury)
 
 @dataclass
 class ArticleContainer(MongoModels):
-    __collection_name__ = "article_container"
-    __database__ = "treasure"
+    __collection_name__ = "article_containers"
+    __database__ = "mongo_treasure"
     article_id: str
     title: Optional[str]
     creator: Optional[str]
@@ -277,14 +304,16 @@ class ArticleContainer(MongoModels):
     images: List[str] = field(default_factory=list)
     videos: List[str] = field(default_factory=list)
     tags: List[str] = field(default_factory=list)
-    sentiments: int = field(default_factory= lambda x: 0)
+    compulsory_tags: List[str] = field(default_factory=list)
+    sentiments: int = field(default=0)
     dates: List[str] = field(default_factory=list)
     names: List[str] = field(default_factory=list)
     places: List[str] = field(default_factory=list)
     organisations: List[str] = field(default_factory=list)
     keywords: List[str] = field(default_factory=list)
     is_source_present_in_db: bool = False
-    redirection_required: bool = False
+    majority_content_type: Optional[str] = field(default=ContentType.Article)  # property tell app about content type values can be articel/image/video
+    #redirection_required: bool = False
     coords: List[Tuple[float]] = field(default_factory=list)
     primary_key = "article_id"
 

@@ -5,11 +5,13 @@ function main(splash)
         [[
         function(container_str){  
         var container = JSON.parse(container_str)  
+
+
         function isSimilarElement(el, query) {
-            console.log(el, el.className, query);
+            if (el == undefined) {return false;}
             let isSimilar;
             if (query["tag"] != null && query["tag"].length > 0) {
-              isSimilar = el.tagName.toLowerCase() == query["tag"];
+              isSimilar = el.nodeName.toLowerCase() == query["tag"];
             }
             if (query["id"] != null && el.id.length > 0) {
               isSimilar =
@@ -17,14 +19,14 @@ function main(splash)
                   ? el.id == query["id"]
                   : isSimilar && el.id == query["id"];
             }
-            if (query["class_list"] != null && query["class_list"].length > 0) {
+            if (el.className != undefined && query["class_list"] != null && query["class_list"].length > 0) {
               let classExist =
                 query["class_list"].filter((e) => {
                   return el.className.split(" ").indexOf(e) > -1;
                 }).length > 0;
               isSimilar = isSimilar == undefined ? classExist : isSimilar && classExist;
             }
-            if (query["exact_class"] != null && query["exact_class"].length > 0) {
+            if (el.className != undefined && query["exact_class"] != null && query["exact_class"].length > 0) {
               isSimilar =
                 isSimilar == undefined
                   ? el.className == query["exact_class"]
@@ -57,8 +59,6 @@ function main(splash)
               if(element.data != undefined && (element.data.indexOf("\n") != -1 || element.data.indexOf("\t") != -1)){
                   continue;
               }
-              // print("Elements are", element.data)
-              console.log("Inside Element Node",container["ignorables"].filter((ign) => isSimilarElement(element, ign)), container["terminations"].filter((ign) => isSimilarElement(element, ign)));
               if (
                 container["terminations"] != null &&
                 container["terminations"].length > 0 &&
@@ -96,10 +96,8 @@ function main(splash)
               is_multiple = iden["is_multiple"];
             }
             parents = document.querySelectorAll(iden["param"]);
-            if(is_multiple){
-
-            }
-            let div = is_multiple? [] :document.createElement("div");
+            // console.log(parents)
+            let div = is_multiple? [] : document.createElement("div");
             if (parents.length > 0) {
               for (let ind = 0; ind < parents.length; ind++) {
                 let node = parse_node(parents[ind], iden["param"]);
@@ -117,7 +115,7 @@ function main(splash)
           }
 
         let nodes = [];
-        if(container.length == 0){
+        if(container == undefined || container.length === 0 || container["idens"] == undefined){
           return JSON.stringify(document.body.outerHTML)
         }
         for (let j = 0; j < container["idens"].length; j++) {

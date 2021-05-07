@@ -131,7 +131,7 @@ class HTMLFeedSpider(Spider):
     def parse_nodes(self, response, node) -> DataLinkContainer:
         data = {}
         for key, value in self.format_.items():
-            print(value)
+            # print(value)
             if key in self.non_formatables:
                 continue
             data[key] = node.xpath(

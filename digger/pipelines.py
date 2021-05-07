@@ -5,10 +5,10 @@
 
 
 # useful for handling different item types with a single interface
-from models.main import DataLinkContainer
-from models.postgres import IndexableLinks
+from models.main import ArticleContainer, ContentType, DataLinkContainer
+from models.postgres import IndexableArticle, IndexableLinks
 from scrapy.exceptions import DropItem
-
+from bs4 import BeautifulSoup
 
 
 
@@ -107,4 +107,57 @@ class CollectionItemVaultPipeline:
             self.index_link_into_db(item)
             return item
         raise DropItem("Previous pipeline is sending lose data")
-        
+
+
+
+"""
+Remove duplicate items and define major content type.
+Article :- Includes Text, Video, Image
+Images :- One or more Images, page transition will not happen if len(text) < 51 or content == None
+Videos :- One or more Images, page transition will not happen if source is youtube or len(text) < 51 or content == None
+"""
+
+class ArticleDuplicateAndContentTypeFilter:
+
+    def is_article_present_in_db(self, article_id: str) -> bool:
+        return IndexableArticle.adapter().exists(IndexableArticle.article_id == article_id)
+    
+    def estimate_major_content(self, content: str) -> str:
+        soup = BeautifulSoup(content)
+        body = soup.find('body')
+        if self.is_content_image(body):
+            return ContentType.Image
+        elif  self.is_content_video(body):
+            return ContentType.Video
+        return ContentType.Article
+    
+    def is_content_image(self, content) -> bool:
+        tags = ['img', 'picture']
+        for child in content.children:
+            return child.name.lower() in tags
+    
+    def is_content_video(self, content) -> bool:
+        tags = ['video']
+        for child in content.children:
+            return child.name.lower() in tags
+    
+    def process_item(self, item: ArticleContainer, spider):
+        if not self.is_article_present_in_db(item):
+            item.majority_content_type = self.estimate_major_content(item.content)
+            return item
+        raise DropItem("Content already exists.")
+
+"""
+If content is not None and source_is_present in db, then the Transformer
+will transform html to flutter_dynamic_widget
+"""
+class ArticleContentToWidgetTransformer:
+    pass
+
+
+"""
+This pipeline will store the content in treasure(mongo) db and create and
+index of each article in postgres for maintaining duplicacy 
+"""
+class ArticleVaultPipeline:
+    pass

@@ -89,6 +89,21 @@ DATABASES = {
         "driver": "psycopg2",
         "username": "postgres",
         "password": "piyush@103"
+    },
+    "mongo_treasure": {
+        "service": "mongodb",
+        "database": "treasure",
+        "host": "localhost",
+        "port": 27017
+    },
+    "postgres_treasure": {
+        "service": "postgresql",
+        "database": "treasure",
+        "host": "localhost",
+        "port": 5432,
+        "driver": "psycopg2",
+        "username": "postgres",
+        "password": "piyush@103"
     }
 }
 
@@ -101,6 +116,18 @@ def register_digger(postgres=True):
         
     else:
         CONNECTIONS.register('mongo_digger')
+    return CONNECTIONS
+
+
+def register_treasure(postgres=True):
+    if postgres:
+        CONNECTIONS.register('postgres_treasure')
+    else:
+        CONNECTIONS.register('mongo_treasure')
+    return CONNECTIONS
+
+def register_connection(db):
+    CONNECTIONS.register(db)
     return CONNECTIONS
 
 

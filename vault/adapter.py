@@ -7,20 +7,22 @@ from .exceptions import NoDocumentExists
 import pymongo
 from pymongo.operations import IndexModel
 from sqlalchemy.orm import mapper
-from typing import Generator, List, NoReturn, Sequence, Union
-from .app import register_digger
+from typing import Any, Generator, List, NoReturn, Sequence, Union
+from .app import register_digger, register_treasure, register_connection
 
 
 
 class TableAdapter:
     def __init__(self, model_cls) -> None:
         self.model_cls = model_cls
-    def get_connection(self):
+    def get_connection(self, db=None):
+        if db is not None:
+            return register_connection(db)
         return register_digger()
     
     @property
     def session(self) -> Session:
-        connection = self.get_connection()
+        connection = self.get_connection(db=self.model_cls.__database__ if hasattr(self.model_cls, "__database__") else 'digger')
         if not connection.postgres_engine.dialect.has_table(connection.postgres_connection, self.model_cls.__tablename__):
             self.create_table()
         return connection.postgres_session
@@ -73,9 +75,15 @@ class MongoAdapter:
         self.collection_name = None
     
     def contribute_to_class(self, model_cls) -> None:
-        # print(model_cls, "from contribution")
         self.model_cls = model_cls
         self.collection_name = model_cls.__collection_name__
+    
+    def __hash__(self) -> int:
+        return hash((self.model_cls, self.collection_name))
+    
+    def __eq__(self, o: object) -> bool:
+        return(hasattr(o, "model_cls") and getattr(o,"model_cls") != None
+         and o.model_cls == self.model_cls and o.collection_name == self.collection_name)
 
     
 
@@ -91,7 +99,11 @@ class MongoAdapter:
     def _connect(self):
         if self.model_cls == None:
             return None
-        connection = register_digger(postgres=False)
+        connection = None
+        if hasattr(self.model_cls, "__database__") and (db := getattr(self.model_cls, "__database__")) != None:
+            connection = register_connection(db)
+        else:
+            connection = register_digger(postgres=False)
         collection = connection.mongo_db[self.collection_name]
         # print(collection, "printing collection name")
         return collection
@@ -151,15 +163,17 @@ class MongoAdapter:
 
     >>> collection.find({})
     """
-    def find(self, filter, **kwargs):
+    def find(self, filter, **kwargs) -> Generator[Any, None, None]:
         collection = self._connect()
         for value in collection.find(filter,**kwargs):
             yield self.model_cls.from_dict(**value)
     
-    def find_one(self, filter, *args, **kwargs):
+    def find_one(self, filter,silent=False, *args, **kwargs):
         collection = self._connect()
         doc = collection.find_one(filter, *args, **kwargs)
         if doc is None:
+            if silent == True:
+                return None
             raise NoDocumentExists(collection, query=filter)
         return self.model_cls.from_dict(**doc)
     
