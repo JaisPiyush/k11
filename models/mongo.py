@@ -22,8 +22,13 @@ class MongoModels:
     def get_non_dictables(self) -> List[str]:
         return self._non_dictables + self.non_dictables
     
+    @staticmethod
+    def process_cls(dic) -> Dict:
+        return dic
+    
     def _to_dict(self) -> Dict:
-        return {key: self.__getattribute__(key) for key in self.__dict__ if key not in self.get_non_dictables()}
+        data = {key: self.__getattribute__(key) for key in self.__dict__ if key not in self.get_non_dictables()}
+        return self.process_cls(data)
 
     def to_dict(self) -> Dict:
         return self._to_dict()

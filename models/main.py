@@ -71,7 +71,7 @@ class ContainerIdentity:
     def to_dict(self, default=False) -> Dict:
         return {
             "param": self.param,
-            "is_multiple": self.is_multiple if self.is_multiple is not None else default
+            "is_multiple": self.is_multiple if self.is_multiple is not None else default,
         }
     
 
@@ -115,6 +115,9 @@ class ContainerFormat:
                           QuerySelector(tag="header")
                           ]
     is_multiple:bool = False
+    title_selector: Optional[str] = None
+    creator_selector: Optional[str] = None
+
 
     def get_ignorables(self) -> List[str]:
         return self.default_ignorables + self.ignorables
@@ -133,12 +136,19 @@ class ContainerFormat:
         
         return cls(**kwargs)
     
+    @staticmethod
+    def from_dict_to_json(**kwargs) -> str:
+        model  = ContainerFormat.from_dict(**kwargs)
+        return model.to_json_str()
+    
     def to_dict(self) -> Dict:
         return {
             "idens": [iden.to_dict(default=self.is_multiple) for iden in self.idens],
             "ignorables": [query.to_dict() for query in self.ignorables + self.default_ignorables],
             "terminations": [query.to_dict() for query in self.terminations],
-            "is_multiple": self.is_multiple
+            "is_multiple": self.is_multiple,
+            "title_selector": self.title_selector,
+            "creator_selector": self.creator_selector
         }
 
     def to_json_str(self) -> str:
@@ -299,8 +309,9 @@ class ArticleContainer(MongoModels):
     site_name: str
     pub_date: Optional[datetime]
     scraped_on: datetime
-    text: Optional[str]
+    text_set: Optional[List[str]]
     content: Optional[str]
+    disabled: List[str]
     images: List[str] = field(default_factory=list)
     videos: List[str] = field(default_factory=list)
     tags: List[str] = field(default_factory=list)
@@ -311,11 +322,20 @@ class ArticleContainer(MongoModels):
     places: List[str] = field(default_factory=list)
     organisations: List[str] = field(default_factory=list)
     keywords: List[str] = field(default_factory=list)
+    next_frame_required: bool = True
     is_source_present_in_db: bool = False
     majority_content_type: Optional[str] = field(default=ContentType.Article)  # property tell app about content type values can be articel/image/video
     #redirection_required: bool = False
     coords: List[Tuple[float]] = field(default_factory=list)
+    meta: Optional[dict] = field(default_factory=dict)
     primary_key = "article_id"
+
+    @staticmethod
+    def process_cls(kwargs) -> Dict:
+        del kwargs['text']
+        del kwargs['content']
+        return kwargs
+    
 
     
     
