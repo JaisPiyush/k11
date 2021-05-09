@@ -123,7 +123,7 @@ class HTMLFeedSpider(Spider):
                                  source_name=self.current_source.source_name, source_id=self.current_source.source_id,
                                  formatter=self.current_source_fromatter.format_id, scraped_on=datetime.now(),
                                  link=data['link'] if 'link' in data else None,
-                                 assumend_tags=self.assumed_tags,
+                                 assumed_tags=self.assumed_tags,
                                  compulsory_tags=self.compulsory_tags, watermarks=self.current_source.watermarks,
                                  is_formattable=self.current_source.is_structured_aggregator
                                  )

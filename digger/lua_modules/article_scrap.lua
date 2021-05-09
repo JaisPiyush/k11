@@ -88,7 +88,8 @@ function main(splash)
                   return desiredNode;
             }
             function main(){
-              node = ""
+              let node = ""
+              let iden;
               if(container === undefined || container.length == 0 || container['idens'] == undefined || container['idens'].length === 0){
                   node = document.querySelector('body').outerHTML;
               }else{
@@ -98,7 +99,7 @@ function main(splash)
                     if(idenNodes != null && idenNodes.length > 0){
                         if(iden["is_multiple"] === true && idenNodes.length > 1){
                           node = [];
-                          Array.prototype.forEach.call(query, (el)=>{
+                          Array.prototype.forEach.call(idenNodes, (el)=>{
                             node.push(el.outerHTML)
                           });                       
                         }else{
@@ -118,9 +119,11 @@ function main(splash)
             }
             return JSON.stringify({
                 html: node,
-                disabled: disabled
+                disabled: disabled,
+                iden: iden
             })
           }
+          return main()
         }
     ]])
 

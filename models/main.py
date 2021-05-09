@@ -7,6 +7,15 @@ import json
 from sqlalchemy.sql.sqltypes import Enum
 from .mongo import MongoModels
 
+
+
+
+
+class ContentType(Enum):
+    Article = "article"
+    Image = "image"
+    Video = "video"
+
 @dataclass
 class Selection:
     param: str
@@ -67,13 +76,25 @@ class QuerySelector:
 class ContainerIdentity:
     param: str
     is_multiple: Optional[bool] = None
+    content_type: Optional[str] = ContentType.Article
+    is_bakeable: Optional[bool] = False
 
     def to_dict(self, default=False) -> Dict:
         return {
             "param": self.param,
             "is_multiple": self.is_multiple if self.is_multiple is not None else default,
+            "content_type": self.content_type,
+            "is_bakeable": self.is_bakable
         }
     
+    def __eq__(self, o: object) -> bool:
+        return (hasattr(o, "param") and getattr(o, "param") == self.param and
+                hasattr(o, "is_multiple") and getattr(o, "is_multiple") == self.is_multiple and
+                hasattr(o, "content_type") and getattr(o, "content_type") == self.content_type and
+                hasattr(o, "is_bakeable") and getattr(o,"is_bakeable" ) == self.is_bakeable
+                  )
+    
+
 
 
 """
@@ -115,8 +136,9 @@ class ContainerFormat:
                           QuerySelector(tag="header")
                           ]
     is_multiple:bool = False
-    title_selector: Optional[str] = None
-    creator_selector: Optional[str] = None
+    title_selectors: Optional[List[str]] = None
+    creator_selectors: Optional[List[str]] = None
+    body_selectors: Optional[List[str]] = None
 
 
     def get_ignorables(self) -> List[str]:
@@ -147,8 +169,9 @@ class ContainerFormat:
             "ignorables": [query.to_dict() for query in self.ignorables + self.default_ignorables],
             "terminations": [query.to_dict() for query in self.terminations],
             "is_multiple": self.is_multiple,
-            "title_selector": self.title_selector,
-            "creator_selector": self.creator_selector
+            "title_selectors": self.title_selectors,
+            "creator_selectors": self.creator_selectors,
+            "body_selectors": self.body_selectors
         }
 
     def to_json_str(self) -> str:
@@ -274,7 +297,7 @@ class DataLinkContainer(MongoModels):
     link: str
     container: dict
     watermarks: List[str] = field(default_factory=list)
-    assumend_tags: Optional[str] = None
+    assumed_tags: Optional[str] = None
     compulsory_tags: Optional[str] = None
     is_formattable: bool = True
     scraped_on: datetime = datetime.now()
@@ -284,12 +307,6 @@ class DataLinkContainer(MongoModels):
     def get_all() -> Generator:
         return DataLinkContainer.adapter().find({})
 
-
-
-class ContentType(Enum):
-    Article = "article"
-    Image = "image"
-    Video = "video"
 
 """
 Dataclass for storing all the information of article into mongo(treasury)
@@ -310,7 +327,7 @@ class ArticleContainer(MongoModels):
     pub_date: Optional[datetime]
     scraped_on: datetime
     text_set: Optional[List[str]]
-    content: Optional[str]
+    body: Optional[str]
     disabled: List[str]
     images: List[str] = field(default_factory=list)
     videos: List[str] = field(default_factory=list)
@@ -330,11 +347,6 @@ class ArticleContainer(MongoModels):
     meta: Optional[dict] = field(default_factory=dict)
     primary_key = "article_id"
 
-    @staticmethod
-    def process_cls(kwargs) -> Dict:
-        del kwargs['text']
-        del kwargs['content']
-        return kwargs
     
 
     

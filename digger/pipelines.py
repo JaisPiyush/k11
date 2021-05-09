@@ -5,16 +5,17 @@
 
 
 # useful for handling different item types with a single interface
-from typing import List
-from models.main import ArticleContainer, ContentType, DataLinkContainer
+from dataclasses import replace
+from hashlib import sha256
+from typing import Dict, List, Union
+from urllib.parse import urlparse
+from models.main import ArticleContainer, ContainerFormat, ContainerIdentity, ContentType, DataLinkContainer, Format
 from models.postgres import IndexableArticle, IndexableLinks
 from scrapy.exceptions import DropItem
 from bs4 import BeautifulSoup
 import re
-
-
-
-from bs4 import BeautifulSoup
+from scrapy.selector import Selector
+from w3lib.html import remove_comments, remove_tags_with_content, replace_escape_chars, replace_tags
 
 
 """
@@ -110,38 +111,84 @@ class CollectionItemVaultPipeline:
         raise DropItem("Previous pipeline is sending lose data")
 
 
+"""
+This program handles the extraction, cleansing and packaging part
+The program workflows like
+1. process_item (item: {"iden", "data", "container", "format", "url"})
+    if every data is not None:
+        if data["html"] is str: Single Big article
+            process_article
+            if iden["is_bakable"]:
+                process_baking
+        elif data['html'] is list:
+            process_multiple_articles
+2. process_article(body, disabled , container, format_, url) | pr
+
 
 """
-Remove duplicate items and define major content type and also remove urls and emojis, '#' from text.
-Article :- Includes Text, Video, Image
-Images :- One or more Images, page transition will not happen if len(text) < 51 or content == None
-Videos :- One or more Images, page transition will not happen if source is youtube or len(text) < 51 or content == None
-"""
 
-class ArticleDuplicateAndContentTypeFilter:
+class ArticleSanitizer:
 
-    def is_article_present_in_db(self, article_id: str) -> bool:
-        return ArticleContainer.adapter().find_one({"article_id": article_id}, silent=True) != None
+    container: DataLinkContainer = None
+    format_: ContainerFormat = None
+    iden: ContainerIdentity = None
+    original_iden: ContainerIdentity = None
+    url: str = None
+    content: str = None
+    disabled: List[str] = []
+
+    def process_attrs(self, item: Dict):
+        self.container = item["container"]
+        self.format_  = item['format']
+        self.iden = item['iden']
+        self.original_iden = item["iden"]
+        self.content = item['content']
+        self.disabled = item['disabled']
+        self.url = item['url']
+
+    @staticmethod
+    def select_property(key:str, selector: Selector, container: DataLinkContainer = None,format_: ContainerFormat = None, format_key: str = None, default: str = None) -> str:
+        value = None
+        if format_ is not None and format_key is not None and hasattr(format_, format_key) and len(properties := getattr(format_, format_key)) > 0:
+            for prop in properties:
+                value = selector.xpath(prop).get()
+                if value is not None:
+                    break
+        if value is None and container is not None and container.container is not None and key in container.container:
+            value = container.container[key]
+        else:
+            return default
+        return value
     
-    def estimate_major_content(self, content: str) -> str:
-        soup = BeautifulSoup(content)
-        body = soup.find('body')
-        if self.is_content_image(body):
-            return ContentType.Image
-        elif  self.is_content_video(body):
-            return ContentType.Video
-        return ContentType.Article
+    """
+    Different methods to extract title, if format has title_selectors, then extract title based on that if any matches,
+    else go for containers default title
+    """
+    def get_title(self, selector: Selector) -> str:
+        return self.select_property("title", selector, container=self.container, format_=self.format_, 
+                                    format_key="title_selectors", default="")
     
-    def is_content_image(self, content) -> bool:
-        tags = ['img', 'picture']
-        for child in content.children:
-            return child.name.lower() in tags
-    
-    def is_content_video(self, content) -> bool:
-        tags = ['video']
-        for child in content.children:
-            return child.name.lower() in tags
-    
+    """
+    Does similary thing as done above
+    """
+    def get_creator(self, selector: Selector) -> str:
+        return self.select_property("creator", selector, container=self.container, format_=self.format_,
+                                    format_key="creator_selectors", default="")
+        
+    """
+    This function is specially made for bakeable articles, which are broken articles from onee big article,
+    it basically scrap out text from that piece
+    """
+    def get_body(self, selector: Selector) -> Union[str, None]:
+        if self.format_ is not None and self.format_.body_selectors is not None and len(self.format_.body_selectors) > 0:
+            for body_selector in self.format_.body_selectors:
+                # must return string not html
+                value = selector.xpath(body_selector).get()
+                if value is not None:
+                    return value
+        return None
+
+
     def find_urls(self, text: str) -> List[str]:
         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
         return [x[0] for x in re.findall(regex, text)]
@@ -165,17 +212,145 @@ class ArticleDuplicateAndContentTypeFilter:
         for match in matches:
             text = text.replace(match, "")
         return text.replace('#',"")
-         
+    
+    def flush_unrequited(self, text_set: List[str]) -> List[str]:
+        return [self.flush_emojis_and_hastag(self.flush_urls(text)) for text in text_set]
+     
+
+    
+    """
+    Removes comment, script, noscript, style and b tags and striping all'\n\,\t,\r
+    
+    """
+    def simple_cleansing(self, body:str) -> str:
+        body = remove_comments(body)
+        body = remove_tags_with_content(body, which_ones=('script', 'noscript', 'style'))
+        body = replace_escape_chars(body)
+        return body
+    
+    """
+    This is differed cleaning that is the html object is not longer and html
+    """
+    def deferd_cleaning(self, body: str) -> str:
+        return replace_tags(body)
+
+    
+    """
+    Extract contents like images, videos, text_set, title, creator, and body
+    """
+    def extract_contents(self, body: Selector) -> Dict:
+        data = {"images": [], "videos": [], "text_set": None, "disabled": self.disabled, "body": None}
+        data["images"] = body.css('img::attr(src)').getall()
+        data["images"] += body.xpath('///picture//source/@src').getall()
+        data["videos"] = body.css('video::attr(src').getall()
+        if len(texts := body.xpath('///text()').getall()) > 0:
+            _steps = 245
+            data["text_set"] = []
+            if len(texts) < _steps:
+                data["text_set"].append(self.deferd_cleaning(texts))
+            else:
+                for chunk in range(0, len(texts), _steps):
+                    if chunk + _steps < len(texts):
+                        data["text_set"].append(self.deferd_cleaning(texts[chunk: chunk + _steps]))
+                    else:
+                        data["text_set"].append(self.deferd_cleaning(texts[chunk:]))
+            data["text_set"] = self.flush_unrequited(data["text_set"])
+        data['title'] = self.get_title(body, container=self.container, format_= self.format_)
+        data["creator"] = self.get_creator(body, container=self.container, format_=self.format_)
+        if self.iden.is_multiple and self.original_iden.is_bakeable and (sub_body := self.get_body(body)) != None:
+            data['body'] = self.deferd_cleaning(self.simple_cleansing(sub_body))
+        return data
+    
+    @staticmethod
+    def is_source_present_in_db(home_link: str) -> bool:
+        return Format.adapter().find_one({"source_home_link": home_link}, silent=True) != None
+
+
+    """
+    This function has all the responsibility to pack all the messed data into neat and clean article container
+    """
+    def pack_container(self, url: str,title:str = "", creator: str = "",images: List[str] = [],
+                        disabled: List[str]= [], videos: List[str]= [],
+                        text_set: List[str] = [], body: str= None, index: int = 0, tags: List[str] = []) -> ArticleContainer:
+        parsed = urlparse(url)
+        return ArticleContainer(
+            article_id=sha256(url).hexdigest() + str(index),
+            title=title,
+            source_name=self.container.source_name,
+            source_id=self.container.source_id,
+            article_link=url,
+            creator=creator,
+            home_link=f"{parsed.scheme}://{parsed.netloc}",
+            site_name=self.container.container['site_name'] if 'site_name' in self.container.container else self.container.source_name,
+            scraped_on=self.container.scraped_on,
+            pub_date=self.container.container['pub_date'] if 'pub_date' in self.container.container else None,
+            disabled=disabled,
+            is_source_present_in_db=self.is_source_present_in_db(f"{parsed.scheme}://{parsed.netloc}"),
+            tags=tags,
+            compulsory_tags=self.container.compulsory_tags.split(" ") if self.container.compulsory_tags is not None else [],
+            images=images,
+            videos=videos,
+            text_set=text_set,
+            body=body,
+            majority_content_type=self.iden.content_type,
+            next_frame_required=self.iden.content_type == ContentType.Article
+        )
+
+    
+    def process_article(self, body:str, url: str, index=0) -> ArticleContainer:
+        data = self.extract_contents(Selector(text=body), disabled=self.disabled, container=self.container, format_=self.format_)
+        data["index"] = index
+        data["assumed_tags"] = self.container.assumed_tags.split(" ") if self.container is not None and self.container.assumed_tags is not None else ""
+        return self.pack_container(self.container, url, **data)
+    
+    """
+    This method search for another iden in format which has is_mulitple = True and is available ont the current site
+    """
+    def process_baking(self,url: str, body: str) -> List[ArticleContainer]:
+        _selector = Selector(text=body)
+        for iden in self.format_.idens:
+            if iden != self.original_iden and iden.is_multiple:
+                self.iden = iden
+                return [self.process_article(semi_articles, url, index=index + 1) for index, semi_articles in enumerate(_selector.css(iden['param']).getall())]
+        return []  
+
+
+    
+    def process_multiple_article(self, url: str, body: List[str],) -> List[ArticleContainer]:
+        return [self.process_article(content, url, index=index) for index, content in enumerate(body)]
+
+    def process_item(self, item: Dict, spider) -> Union[ArticleContainer, List[ArticleContainer]]:
+        self.process_attrs(item)
+        articles: List[ArticleContainer] = []
+        if isinstance(self.content, str):
+            # Single article with possibility of being bakeable
+            # First task is to create the giant article
+            articles.append(self.process_article(self.url,self.content))
+            if self.iden.is_bakeable:
+                articles += self.process_baking(self.url, self.content)
+        else:
+            articles = self.process_multiple_article(self, self.content)
+        if len(articles) == 0:
+            DropItem("No item came out eventually.")
+        return articles
+        
+
+"""
+Remove duplicate items and define major content type and also remove urls and emojis, '#' from text.
+Article :- Includes Text, Video, Image
+Images :- One or more Images, page transition will not happen if len(text) < 51 or content == None
+Videos :- One or more Images, page transition will not happen if source is youtube or len(text) < 51 or content == None
+"""
+
+class ArticleDuplicateFilter:
+
+    def is_article_present_in_db(self, article_id: str) -> bool:
+        return ArticleContainer.adapter().find_one({"article_id": article_id}, silent=True) != None
+    
+    
     
     def process_item(self, item: ArticleContainer, spider):
-        if not self.is_article_present_in_db(item):
-            item.next_frame_required = True
-            if item.content is not None and item.majority_content_type is None:
-                item.majority_content_type = self.estimate_major_content(item.content)
-                if item.majority_content_type == ContentType.Video or item.majority_content_type == ContentType.Image:
-                    item.next_frame_required = False          
-            if item.text is not None and len(item.text) > 0:
-                item.text = self.flush_emojis_and_hastag(self.flush_urls(item.text))
+        if not self.is_article_present_in_db(item.article_id):
             return item
         raise DropItem("Content already exists.")
 
@@ -190,7 +365,7 @@ class ArticleVaultPipeline:
     Data Inserted into postgres treasure are highly optimized
     id -> AutoIncremented[PKey]
     mongo_article_id -> same as mongo_db
-    title -> String
+    title -> String 
     creator -> String
     site_name -> String
     pub_date -> DateTime
@@ -220,12 +395,8 @@ class ArticleVaultPipeline:
     """
 
     def process_item(self, item: ArticleContainer, spider):
+        print(item.content)
         ArticleContainer.adapter().create(**item.to_dict())
         print(item.article_id)
+        return item
 
-"""
-The class basically filters third party articles, i.e articles not scraped by the spiders
-"""
-class ThirdPartyArticlesDuplicateFilter(ArticleDuplicateAndContentTypeFilter):
-    def process_item(self, item: ArticleContainer, spider=None):
-        return super().process_item(item, spider)
