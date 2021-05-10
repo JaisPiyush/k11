@@ -154,7 +154,7 @@ class MongoAdapter:
         if self.model_cls == None:
             return None
         collection = self._connect()
-        collection.insert_many([model.to_dcit() for model in ls])
+        collection.insert_many([model.to_dict() for model in ls])
         return ls      
     
 

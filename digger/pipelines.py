@@ -140,7 +140,7 @@ class ArticleSanitizer:
     def process_attrs(self, item: Dict):
         self.container = item["container"]
         self.format_  = item['format']
-        self.iden = item['iden']
+        self.iden = ContainerIdentity(**item['iden'])
         self.original_iden = item["iden"]
         self.content = item['content']
         self.disabled = item['disabled']
@@ -149,7 +149,7 @@ class ArticleSanitizer:
     @staticmethod
     def select_property(key:str, selector: Selector, container: DataLinkContainer = None,format_: ContainerFormat = None, format_key: str = None, default: str = None) -> str:
         value = None
-        if format_ is not None and format_key is not None and hasattr(format_, format_key) and len(properties := getattr(format_, format_key)) > 0:
+        if format_ is not None and format_key is not None and hasattr(format_, format_key) and (properties := getattr(format_, format_key)) != None:
             for prop in properties:
                 value = selector.xpath(prop).get()
                 if value is not None:
@@ -214,7 +214,8 @@ class ArticleSanitizer:
         return text.replace('#',"")
     
     def flush_unrequited(self, text_set: List[str]) -> List[str]:
-        return [self.flush_emojis_and_hastag(self.flush_urls(text)) for text in text_set]
+        # return [self.flush_emojis_and_hastag(self.flush_urls(text)) for text in text_set]
+        return [self.flush_urls(txt) for txt in text_set]
      
 
     
@@ -225,40 +226,48 @@ class ArticleSanitizer:
     def simple_cleansing(self, body:str) -> str:
         body = remove_comments(body)
         body = remove_tags_with_content(body, which_ones=('script', 'noscript', 'style'))
-        body = replace_escape_chars(body)
+        body = replace_escape_chars(body, which_ones=('\n', '\t','\r'))
         return body
     
     """
-    This is differed cleaning that is the html object is not longer and html
+    This is differed cleaning that is the html tags will be removed completely
     """
     def deferd_cleaning(self, body: str) -> str:
-        return replace_tags(body)
+        # body = replace_tags(body)
+        return body
 
     
     """
     Extract contents like images, videos, text_set, title, creator, and body
     """
-    def extract_contents(self, body: Selector) -> Dict:
+    def extract_contents(self, body_unselected: str) -> Dict:
+        body = Selector(text=body_unselected)
         data = {"images": [], "videos": [], "text_set": None, "disabled": self.disabled, "body": None}
-        data["images"] = body.css('img::attr(src)').getall()
+        data["images"] = body.xpath('///img/@src').getall()
         data["images"] += body.xpath('///picture//source/@src').getall()
-        data["videos"] = body.css('video::attr(src').getall()
-        if len(texts := body.xpath('///text()').getall()) > 0:
+        data["videos"] = body.xpath('///video/@src').getall()
+        cleaned_body = Selector(text=self.simple_cleansing(body_unselected))
+        if len(texts := "".join(cleaned_body.xpath('///text()').getall())) > 0:
+            print("\n*20",texts,)
             _steps = 245
             data["text_set"] = []
             if len(texts) < _steps:
-                data["text_set"].append(self.deferd_cleaning(texts))
+                data["text_set"] = [self.deferd_cleaning(txt) for txt in texts]
             else:
                 for chunk in range(0, len(texts), _steps):
                     if chunk + _steps < len(texts):
+                        print(texts[chunk: chunk + _steps])
                         data["text_set"].append(self.deferd_cleaning(texts[chunk: chunk + _steps]))
                     else:
+                        print(texts[chunk:])
                         data["text_set"].append(self.deferd_cleaning(texts[chunk:]))
-            data["text_set"] = self.flush_unrequited(data["text_set"])
-        data['title'] = self.get_title(body, container=self.container, format_= self.format_)
-        data["creator"] = self.get_creator(body, container=self.container, format_=self.format_)
-        if self.iden.is_multiple and self.original_iden.is_bakeable and (sub_body := self.get_body(body)) != None:
+            print(data['text_set'])
+            # data["text_set"] = self.flush_unrequited(data["text_set"])
+        data['title'] = self.get_title(body)
+        data["creator"] = self.get_creator(body)
+        if self.iden['is_multiple'] and self.original_iden.is_bakeable and (sub_body := self.get_body(body)) != None:
             data['body'] = self.deferd_cleaning(self.simple_cleansing(sub_body))
+        print(data)
         return data
     
     @staticmethod
@@ -274,7 +283,7 @@ class ArticleSanitizer:
                         text_set: List[str] = [], body: str= None, index: int = 0, tags: List[str] = []) -> ArticleContainer:
         parsed = urlparse(url)
         return ArticleContainer(
-            article_id=sha256(url).hexdigest() + str(index),
+            article_id=sha256(url.encode()).hexdigest() + str(index),
             title=title,
             source_name=self.container.source_name,
             source_id=self.container.source_id,
@@ -292,16 +301,16 @@ class ArticleSanitizer:
             videos=videos,
             text_set=text_set,
             body=body,
-            majority_content_type=self.iden.content_type,
-            next_frame_required=self.iden.content_type == ContentType.Article
+            majority_content_type=self.iden['content_type'],
+            next_frame_required=self.iden['content_type'] == ContentType.Article
         )
 
     
     def process_article(self, body:str, url: str, index=0) -> ArticleContainer:
-        data = self.extract_contents(Selector(text=body), disabled=self.disabled, container=self.container, format_=self.format_)
+        data = self.extract_contents(body_unselected=body)
         data["index"] = index
-        data["assumed_tags"] = self.container.assumed_tags.split(" ") if self.container is not None and self.container.assumed_tags is not None else ""
-        return self.pack_container(self.container, url, **data)
+        data["tags"] = self.container.assumed_tags.split(" ") if self.container is not None and self.container.assumed_tags is not None else ""
+        return self.pack_container(url=url, **data)
     
     """
     This method search for another iden in format which has is_mulitple = True and is available ont the current site
@@ -311,7 +320,7 @@ class ArticleSanitizer:
         for iden in self.format_.idens:
             if iden != self.original_iden and iden.is_multiple:
                 self.iden = iden
-                return [self.process_article(semi_articles, url, index=index + 1) for index, semi_articles in enumerate(_selector.css(iden['param']).getall())]
+                return [self.process_article(content=semi_articles, url=url, index=index + 1) for index, semi_articles in enumerate(_selector.css(iden['param']).getall())]
         return []  
 
 
@@ -325,11 +334,11 @@ class ArticleSanitizer:
         if isinstance(self.content, str):
             # Single article with possibility of being bakeable
             # First task is to create the giant article
-            articles.append(self.process_article(self.url,self.content))
-            if self.iden.is_bakeable:
-                articles += self.process_baking(self.url, self.content)
+            articles.append(self.process_article(body=self.content, url=self.url))
+            if self.iden['is_bakeable']:
+                articles += self.process_baking(ulr=self.url, body=self.content)
         else:
-            articles = self.process_multiple_article(self, self.content)
+            articles = self.process_multiple_article(url=self.url, body=self.content)
         if len(articles) == 0:
             DropItem("No item came out eventually.")
         return articles
@@ -347,12 +356,11 @@ class ArticleDuplicateFilter:
     def is_article_present_in_db(self, article_id: str) -> bool:
         return ArticleContainer.adapter().find_one({"article_id": article_id}, silent=True) != None
     
-    
-    
-    def process_item(self, item: ArticleContainer, spider):
-        if not self.is_article_present_in_db(item.article_id):
-            return item
-        raise DropItem("Content already exists.")
+    def process_item(self, items: List[ArticleContainer], spider):
+        if len(items) == 0:
+            raise DropItem("No One came in")
+        return list(filter(lambda item : not self.is_article_present_in_db(item.article_id), items))
+        
 
 
 """
@@ -394,9 +402,8 @@ class ArticleVaultPipeline:
     
     """
 
-    def process_item(self, item: ArticleContainer, spider):
-        print(item.content)
-        ArticleContainer.adapter().create(**item.to_dict())
-        print(item.article_id)
-        return item
+    def process_item(self, items: List[ArticleContainer], spider):
+        if len(items) > 0:
+            ArticleContainer.adapter().bulk_insert(items)
+        return items
 

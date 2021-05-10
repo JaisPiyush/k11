@@ -70,6 +70,9 @@ class QuerySelector:
             "exact_class": self.exact_class
         }
     
+    def __getitem__(self, key):
+        return getattr(self, key)
+    
 
 
 @dataclass
@@ -84,7 +87,7 @@ class ContainerIdentity:
             "param": self.param,
             "is_multiple": self.is_multiple if self.is_multiple is not None else default,
             "content_type": self.content_type,
-            "is_bakeable": self.is_bakable
+            "is_bakeable": self.is_bakeable
         }
     
     def __eq__(self, o: object) -> bool:
@@ -93,6 +96,9 @@ class ContainerIdentity:
                 hasattr(o, "content_type") and getattr(o, "content_type") == self.content_type and
                 hasattr(o, "is_bakeable") and getattr(o,"is_bakeable" ) == self.is_bakeable
                   )
+    
+    def __getitem__(self, key):
+        return getattr(self, key)
     
 
 
@@ -178,6 +184,16 @@ class ContainerFormat:
         return json.dumps(self.to_dict())
 
 
+@dataclass
+class XMLContainerFormat:
+    struct: Dict
+    content_type: str
+
+    def to_dict(self) -> Dict:
+        return {
+            "struct": self.struct,
+            "content_typ": self.content_type
+        }
 
 
 
@@ -191,6 +207,7 @@ class Format(MongoModels):
     xml_collection_format: Optional[Dict] = None
     html_collection_format: Optional[Dict] = None
     html_article_format: Optional[ContainerFormat] = None
+    xml_article_format: Optional[XMLContainerFormat] = None
     created_on: datetime = datetime.now()
     extra_formats: Optional[Dict[str, Union[Dict, List[Dict]]]] = None
     
@@ -208,6 +225,8 @@ class Format(MongoModels):
     def process_kwargs(**kwargs) -> Dict:
         if "html_article_format" in kwargs:
             kwargs["html_article_format"] = ContainerFormat.from_dict(**kwargs["html_article_format"])
+        if "xml_article_format" in kwargs:
+            kwargs["xml_article_format"] = XMLContainerFormat(**kwargs['xml_article_format'])
         return kwargs
     
     @staticmethod

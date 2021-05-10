@@ -1,5 +1,4 @@
 function main(splash)
-
     local renderToHTML = splash:jsfunc([[
         function (containerBytes){
             let container = JSON.parse(containerBytes);
@@ -73,7 +72,7 @@ function main(splash)
                       cNode.nodeName != "#text"
                     ) {
                       let str = "";
-                      Array.prototype.forEach.call(cNode.classList,(el) => {
+                      Array.prototype.forEach.call(cNode.classList == undefined ? []: cNode.classList,(el) => {
                         str += "." + el;
                       });
                       let id = "";
@@ -94,7 +93,7 @@ function main(splash)
                   node = document.querySelector('body').outerHTML;
               }else{
                   for(let j = 0; j < container["idens"].length; j++){
-                    let iden = container['idens'][j];
+                    iden = container['idens'][j];
                     let idenNodes = document.querySelectorAll(iden["param"]);
                     if(idenNodes != null && idenNodes.length > 0){
                         if(iden["is_multiple"] === true && idenNodes.length > 1){
@@ -129,6 +128,7 @@ function main(splash)
 
     assert(splash:go(splash.args.url))
     splash:wait(0.5)
+
     return {
         url=splash.args.url,
         html=renderToHTML(splash.args.format)
