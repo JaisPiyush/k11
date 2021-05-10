@@ -71,7 +71,7 @@ class HTMLArticleSpider(Spider):
     Pull out all scrappable data link containers out of the database
     """
     def get_scrappable_links(self) -> Generator[DataLinkContainer, None, None]:
-        return DataLinkContainer.adapter().find({})
+        return DataLinkContainer.adapter().find({"source_name":"pedro_n_the_world"})
 
     def start_requests(self):
         for container in list(self.get_scrappable_links()):

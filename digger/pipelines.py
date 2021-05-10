@@ -141,7 +141,7 @@ class ArticleSanitizer:
         self.container = item["container"]
         self.format_  = item['format']
         self.iden = ContainerIdentity(**item['iden'])
-        self.original_iden = item["iden"]
+        self.original_iden = ContainerIdentity(**item["iden"])
         self.content = item['content']
         self.disabled = item['disabled']
         self.url = item['url']
@@ -301,7 +301,7 @@ class ArticleSanitizer:
             videos=videos,
             text_set=text_set,
             body=body,
-            majority_content_type=self.iden['content_type'],
+            majority_content_type=self.iden['content_type'] if hasattr(self.iden, 'content_type') else ContentType.Article,
             next_frame_required=self.iden['content_type'] == ContentType.Article
         )
 

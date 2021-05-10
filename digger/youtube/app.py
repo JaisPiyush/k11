@@ -1,4 +1,5 @@
 from models.youtube import YouTubeVideoModel, YoutubeVideoCategory
+from models.main import ArticleContainer, SourceMap, ThirdPartyDigger
 import json
 from typing import Generator, List
 import requests
@@ -60,3 +61,41 @@ class YoutubeApi:
     def fetch_all_trending_videos(self) -> Generator[List[YouTubeVideoModel], None, None]:
         for category in self.fetch_video_categories():
             yield self.fetch_trending_video_of_category(category)
+
+
+class YoutubeDigger(ThirdPartyDigger):
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.yt_api = YoutubeApi(key="AIzaSyBVEJjoudsni8HTaZ7nEUZZmb5Wb9MHUC4")
+    
+    @staticmethod
+    def is_video_present_in_db(article_id:str) -> bool:
+        return ArticleContainer.adapter().find_one({"article_id": article_id}, silent=True) != None
+
+    
+    def store_articles_in_db(self, videos: List[YouTubeVideoModel]):
+        for video in videos:
+            if not self.is_video_present_in_db(video.article_id):
+                ArticleContainer.adapter().create(**(video.to_article()).to_dict())
+    
+    def store_all_trending_videos(self):
+        for videos in self.yt_api.fetch_all_trending_videos():
+            self.store_articles_in_db(videos)
+    
+    def pull_source_from_database(self) -> Generator[SourceMap, None, None]:
+        return SourceMap.pull_all_youtube_collections()
+    
+    def store_all_channel_videos(self):
+        for source in self.pull_source_from_database():
+            for link in source.links:
+                self.store_articles_in_db(self.yt_api.fetch_all_videos_of_channel(link.link))
+        
+    
+    def run(self, **kwargs):
+        try:
+            self.store_all_trending_videos()
+            self.store_all_channel_videos()
+        except Exception as e:
+            if "log" in kwargs:
+                kwargs['log'](e)

@@ -64,6 +64,10 @@ class YouTubeVideoModel:
     def duration_secs(self) -> int:
         return self.get_duration_in_secs(self.duration_str)
     
+    @property
+    def article_id(self) -> str:
+        return f"youtube-{self.id}"
+    
     @staticmethod
     def get_duration_in_secs(duration_str) -> int:
         secs = 0
@@ -119,7 +123,7 @@ class YouTubeVideoModel:
     
     def to_article(self) -> ArticleContainer:
         return ArticleContainer(
-            article_id=f"youtube-{self.id}",
+            article_id=self.article_id,
             title=self.title,
             creator=self.channel_title,
             article_link=self.link,
@@ -129,7 +133,7 @@ class YouTubeVideoModel:
             site_name="Youtube",
             pub_date=self.pub_date,
             scraped_on=datetime.now(),
-            text=self.description + " ".join(self.tags),
+            text_set=[self.description] + self.tags,
             content=None,
             images=self.thumbnails[ThumbnailKeys.Standard],
             videos=[self.link],

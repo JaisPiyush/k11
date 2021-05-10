@@ -79,7 +79,7 @@ class QuerySelector:
 class ContainerIdentity:
     param: str
     is_multiple: Optional[bool] = None
-    content_type: Optional[str] = ContentType.Article
+    content_type: Optional[str] = field(default=ContentType.Article)
     is_bakeable: Optional[bool] = False
 
     def to_dict(self, default=False) -> Dict:
@@ -102,32 +102,6 @@ class ContainerIdentity:
     
 
 
-
-"""
-Container(
-    idens = [
-        {
-            "param": "a",
-            "is_multiple": True
-        },
-        {
-            "param": "b",
-        }
-    ],
-    ignorables = [{
-        "tag": "a"
-    }, {
-        "tag": "script"
-    },
-    
-    ]
-    terminations = [{
-        "tag": "figure"
-    }]
-    is_multiple = False
-
-)
-"""
 @dataclass
 class ContainerFormat:
     idens: List[ContainerIdentity]
@@ -253,7 +227,7 @@ Source Map is source links storing format for database
 class SourceMap(MongoModels):
     __collection_name__ = "collection_source_maps"
     __database__ = "mongo_digger"
-    source_name: str 
+    source_name: str                    # Youtube
     source_id: str
     source_home_link: str
     formatter: str
@@ -265,6 +239,7 @@ class SourceMap(MongoModels):
     watermarks: List[str] = field(default_factory=list)
     is_structured_aggregator: bool = True
     datetime_format: str = ""
+    is_third_party: bool = False
     primary_key = 'source_id'
 
     
@@ -298,11 +273,15 @@ class SourceMap(MongoModels):
     
     @staticmethod
     def pull_all_rss_models() -> Generator:
-        return SourceMap.adapter().find({"$and": [{"is_rss": True}, {"is_collection": True}]})
+        return SourceMap.adapter().find({"$and": [{"is_rss": True}, {"is_collection": True}, {"is_third_party": False}]})
     
     @staticmethod
     def pull_all_html_collections() -> Generator:
-        return SourceMap.adapter().find({"$and": [{"is_rss": False}, {"is_collection":True}]})
+        return SourceMap.adapter().find({"$and": [{"is_rss": False}, {"is_collection":True}, {"is_third_party": False}]})
+    
+    @staticmethod
+    def pull_all_youtube_collections() -> Generator:
+        return SourceMap.adapter().find({"$and": [{"source_id": "youtube"}, {"is_third_party": True}]})
     
 
 
@@ -360,13 +339,21 @@ class ArticleContainer(MongoModels):
     keywords: List[str] = field(default_factory=list)
     next_frame_required: bool = True
     is_source_present_in_db: bool = False
-    majority_content_type: Optional[str] = field(default=ContentType.Article)  # property tell app about content type values can be articel/image/video
+    majority_content_type: Optional[str] = field(default=ContentType.Article)  # property tell app about content type values can be article/image/video
     #redirection_required: bool = False
     coords: List[Tuple[float]] = field(default_factory=list)
     meta: Optional[dict] = field(default_factory=dict)
     primary_key = "article_id"
 
-    
+
+"""
+ThirdPartyDigger contains all non scrapy spiders.
+The run(self,**kwargs) function will be called by our PilotClass
+"""
+class ThirdPartyDigger:
+
+    def run(self, **kwargs): ...
+
 
     
     
