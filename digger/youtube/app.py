@@ -3,6 +3,7 @@ from models.main import ArticleContainer, SourceMap, ThirdPartyDigger
 import json
 from typing import Generator, List
 import requests
+import os
 
 class YoutubeApi:
     def __init__(self, key=None) -> None:
@@ -67,8 +68,7 @@ class YoutubeDigger(ThirdPartyDigger):
 
     def __init__(self) -> None:
         super().__init__()
-        #TODO: Secure api key
-        self.yt_api = None
+        self.yt_api = os.getenv('GOOGLE_API')
 
     
     @staticmethod
