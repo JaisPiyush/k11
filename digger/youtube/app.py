@@ -67,7 +67,9 @@ class YoutubeDigger(ThirdPartyDigger):
 
     def __init__(self) -> None:
         super().__init__()
-        self.yt_api = YoutubeApi(key="AIzaSyBVEJjoudsni8HTaZ7nEUZZmb5Wb9MHUC4")
+        #TODO: Secure api key
+        self.yt_api = None
+
     
     @staticmethod
     def is_video_present_in_db(article_id:str) -> bool:
