@@ -125,7 +125,8 @@ class HTMLFeedSpider(Spider):
                                  link=data['link'] if 'link' in data else None,
                                  assumed_tags=self.assumed_tags,
                                  compulsory_tags=self.compulsory_tags, watermarks=self.current_source.watermarks,
-                                 is_formattable=self.current_source.is_structured_aggregator
+                                 is_formattable=self.current_source.is_structured_aggregator,
+                                 is_transient=True,
                                  )
 
     def parse_nodes(self, response, node) -> DataLinkContainer:

@@ -289,6 +289,7 @@ class ArticleSanitizer:
             source_id=self.container.source_id,
             article_link=url,
             creator=creator,
+            scraped_from=self.container.link,
             home_link=f"{parsed.scheme}://{parsed.netloc}",
             site_name=self.container.container['site_name'] if 'site_name' in self.container.container else self.container.source_name,
             scraped_on=self.container.scraped_on,
@@ -405,5 +406,6 @@ class ArticleVaultPipeline:
     def process_item(self, items: List[ArticleContainer], spider):
         if len(items) > 0:
             ArticleContainer.adapter().bulk_insert(items)
+            DataLinkContainer.delete_containers([item.scraped_from for item in items if item.scraped_from is not None])
         return items
 

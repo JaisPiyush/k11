@@ -6,9 +6,13 @@ from typing import Dict, Generator, List, Union
 from models.main import  ContainerFormat, ContainerIdentity, DataLinkContainer, Format, QuerySelector
 from scrapy.spiders import Spider
 from scrapy_splash import SplashRequest
-from utils import get_lua_script
 from urllib.parse import ParseResult, urlparse
+import os.path
 
+
+def get_lua_script(name):
+    with open(os.path.dirname(__file__) + f'/../lua_modules/{name}', "r") as f:
+        return f.read()
 SPLASH_ENDPOINT = 'execute'
 SPLASH_ARGS = {
     'lua_source': get_lua_script('article_scrap.lua'),
@@ -61,7 +65,7 @@ class HTMLArticleSpider(Spider):
                         self.current_format = ContainerFormat.from_dict(**format_.extra_formats[key])
             else:
                 self.current_format = format_.html_article_format
-            return self.current_format.to_json_str()
+            return self.current_format.to_json_str() if self.current_format is not None else json.dump({})
         except NoDocumentExists as e:
             return json.dumps({})
 
@@ -71,7 +75,7 @@ class HTMLArticleSpider(Spider):
     Pull out all scrappable data link containers out of the database
     """
     def get_scrappable_links(self) -> Generator[DataLinkContainer, None, None]:
-        return DataLinkContainer.adapter().find({"source_name":"pedro_n_the_world"})
+        return DataLinkContainer.adapter().find({})
 
     def start_requests(self):
         for container in list(self.get_scrappable_links()):

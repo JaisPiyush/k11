@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from time import asctime
 from typing import Dict, Generator, List,Optional, Any, Tuple, Union
 from datetime import datetime
 from datetime import datetime
@@ -298,12 +299,17 @@ class DataLinkContainer(MongoModels):
     assumed_tags: Optional[str] = None
     compulsory_tags: Optional[str] = None
     is_formattable: bool = True
+    is_transient: bool = True
     scraped_on: datetime = datetime.now()
     primary_key = "link"
 
     @staticmethod
     def get_all() -> Generator:
         return DataLinkContainer.adapter().find({})
+    
+    @staticmethod
+    def delete_containers(links: str):
+        DataLinkContainer.adapter().delete_many({"$and": [{"link":{"$in": links}}, {"is_transient": True}]})
 
 
 """
@@ -320,6 +326,7 @@ class ArticleContainer(MongoModels):
     article_link: Optional[str]
     source_name: Optional[str]
     source_id: Optional[str]
+    scraped_from: Optional[str]
     home_link: str
     site_name: str
     pub_date: Optional[datetime]
@@ -339,7 +346,7 @@ class ArticleContainer(MongoModels):
     keywords: List[str] = field(default_factory=list)
     next_frame_required: bool = True
     is_source_present_in_db: bool = False
-    majority_content_type: Optional[str] = field(default=ContentType.Article)  # property tell app about content type values can be article/image/video
+    majority_content_type: str = field(default=ContentType.Article)  # property tell app about content type values can be article/image/video
     #redirection_required: bool = False
     coords: List[Tuple[float]] = field(default_factory=list)
     meta: Optional[dict] = field(default_factory=dict)
@@ -355,5 +362,14 @@ class ThirdPartyDigger:
     def run(self, **kwargs): ...
 
 
-    
+
+
+@dataclass
+class ErrorLogger(MongoModels):
+    __collection_name__ = "error_logger"
+    __database__ = "mongo_treasure"
+    time: str
+    name: str
+    levelname: str
+    message: str
     

@@ -12,7 +12,7 @@ class YoutubeApi:
     def _create_request(self, path: str, **kwargs) -> str:
         url = self.url + path + "?"
         for key, value in kwargs.items():
-            if value is not None and len(value) > 0:
+            if value is not None:
                 url += f"{key}={value}&"
         url += f"key={self.key}"
         return url
@@ -21,12 +21,12 @@ class YoutubeApi:
         return requests.get(url)
     
 
-    def fetch_videos(self, url: str) -> List[YouTubeVideoModel]:
+    def fetch_videos(self, url: str, video_category: YoutubeVideoCategory = None) -> List[YouTubeVideoModel]:
         try:
             response = self.request_server(url)
             data = json.loads(response.content)
             if "items" in data:
-                return YouTubeVideoModel.from_bulk(data['items'])
+                return YouTubeVideoModel.from_bulk(data['items'], video_category=video_category)
             else:
                 return None
         except Exception as e:
@@ -45,10 +45,10 @@ class YoutubeApi:
         except Exception as e:
             return None
     
-    def fetch_video_using_category(self, category: YoutubeVideoCategory, part="snippet,contentDetals,statistics", **kwargs ) -> List[YouTubeVideoModel]:
+    def fetch_video_using_category(self, category: YoutubeVideoCategory, part="snippet,contentDetails,statistics", **kwargs ) -> List[YouTubeVideoModel]:
         kwargs['videoCategiryId'] = category.id
         url = self._create_request("videos",part=part, **kwargs)
-        return self.fetch_videos(url)
+        return self.fetch_videos(url, video_category=category)
     
     def fetch_all_videos_of_channel(self,channel_id: str, part="snippet", **kwargs) -> List[YouTubeVideoModel]:
         kwargs['channelId'] = channel_id

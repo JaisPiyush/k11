@@ -6,6 +6,7 @@ from scrapy import Request
 from scrapy.spiders import XMLFeedSpider
 from scrapy.utils.spider import iterate_spider_output
 from models.main import  LinkStore, SourceMap, Format, DataLinkContainer
+from scrapy_splash import SplashRequest
 
 
 class RSSFeedSpider(XMLFeedSpider):
@@ -80,6 +81,7 @@ class RSSFeedSpider(XMLFeedSpider):
     """
 
     def start_requests(self):
+        print(self.pull_rss_sources_from_db())
         for source in self.pull_rss_sources_from_db():
             self.current_source = source
             # print(source)
@@ -94,7 +96,7 @@ class RSSFeedSpider(XMLFeedSpider):
                     # print(link_store.link, self.format_)
                     if "itertag" in self.format_:
                         self.itertag = self.format_["itertag"]
-                    yield Request(getattr(link_store, "link"))
+                    yield SplashRequest(getattr(link_store, "link"))
                 else:
                     pass
 
@@ -124,7 +126,7 @@ class RSSFeedSpider(XMLFeedSpider):
         yield DataLinkContainer(container=collected_data, source_name=self.current_source.source_name, source_id=self.current_source.source_id,
                                 formatter=self.current_source_formatter.format_id, scraped_on=datetime.now(), 
                                 link=collected_data['link'] if 'link' in collected_data else None,
-                                assumed_tags=self.assumed_tags, compulsory_tags=self.compulsory_tags,
+                                assumed_tags=self.assumed_tags, compulsory_tags=self.compulsory_tags,is_transient=True,
                                 watermarks=self.current_source.watermarks,is_formattable=self.current_source.is_structured_aggregator)
         # else:
         #     pass

@@ -43,6 +43,7 @@ class YouTubeVideoModel:
     channel_title: str
     title: str
     category_id: Optional[str]
+    video_category: Optional[YoutubeVideoCategory]
     duration_str: Optional[str] = None
     tags: List[str] = field(default_factory=list)
     view_count: Optional[int] = field(default=0)
@@ -90,9 +91,6 @@ class YouTubeVideoModel:
                 digit += char
         return secs
     
-    def __post_init__(self):
-        if self.duration_str is not None:
-            self.duration_secs = self.get_duration_in_secs(self.duration_str)
     
     @classmethod
     def from_dict(cls, json, video_category: YoutubeVideoCategory = None, channel_id = None):
@@ -129,13 +127,15 @@ class YouTubeVideoModel:
             article_link=self.link,
             source_name="Youtube",
             source_id="youtube-api",
+            scraped_from=f"https://www.youtube.com/watch?v={self.id}",
+            disabled=[],
             home_link=self.channel_link,
             site_name="Youtube",
             pub_date=self.pub_date,
             scraped_on=datetime.now(),
             text_set=[self.description] + self.tags,
-            content=None,
-            images=self.thumbnails[ThumbnailKeys.Standard],
+            body=None,
+            images=self.thumbnails[ThumbnailKeys.Standard]['url'],
             videos=[self.link],
             tags=self.tags,
             compulsory_tags=[self.video_category.title],

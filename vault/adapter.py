@@ -180,6 +180,10 @@ class MongoAdapter:
     def count(self, filter, **kwargs):
         collection = self._connect()
         collection.count_documents(filter, **kwargs)
+    
+    def delete_many(self, filter, **kwargs):
+        collection = self._connect()
+        collection.delete_many(filter, **kwargs)
 
         
        
