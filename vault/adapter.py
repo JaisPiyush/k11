@@ -7,7 +7,7 @@ from .exceptions import NoDocumentExists
 import pymongo
 from pymongo.operations import IndexModel
 from sqlalchemy.orm import mapper
-from typing import Any, Generator, List, NoReturn, Sequence, Union
+from typing import Any, Collection, Generator, List, NoReturn, Sequence, Union
 from .app import register_digger, register_treasure, register_connection
 
 
@@ -184,6 +184,10 @@ class MongoAdapter:
     def delete_many(self, filter, **kwargs):
         collection = self._connect()
         collection.delete_many(filter, **kwargs)
+    
+    def update_one(self, filter, **kwargs):
+        collection = self._connect()
+        collection.update_one(filter=filter, update={"$set": kwargs})
 
         
        

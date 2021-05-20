@@ -4,6 +4,7 @@ from typing import Dict, Generator, List,Optional, Any, Tuple, Union
 from datetime import datetime
 from datetime import datetime
 import json
+from fastapi import FastAPI
 
 from sqlalchemy.sql.sqltypes import Enum
 from .mongo import MongoModels
@@ -46,7 +47,7 @@ class LinkStore:
     def to_dict(self):
         return {
             "link": self.link,
-            "assumed_section": self.assumed_tags,
+            "assumed_tags": self.assumed_tags,
             "compulsory_tags": self.compulsory_tags,
             "formatter": self.formatter,
         }
@@ -54,6 +55,12 @@ class LinkStore:
     @classmethod
     def from_dict(cls, **kwargs):
         return cls(**kwargs)
+    
+    def __hash__(self) -> int:
+        return hash(self.link)
+    
+    def __eq__(self, o: object) -> bool:
+        return self.link == o.link
 
 
 @dataclass
@@ -73,6 +80,8 @@ class QuerySelector:
     
     def __getitem__(self, key):
         return getattr(self, key)
+    
+    
     
 
 
@@ -167,7 +176,7 @@ class XMLContainerFormat:
     def to_dict(self) -> Dict:
         return {
             "struct": self.struct,
-            "content_typ": self.content_type
+            "content_type": self.content_type
         }
 
 
@@ -198,9 +207,9 @@ class Format(MongoModels):
     
     @staticmethod
     def process_kwargs(**kwargs) -> Dict:
-        if "html_article_format" in kwargs:
+        if "html_article_format" in kwargs and kwargs['html_article_format'] is not None:
             kwargs["html_article_format"] = ContainerFormat.from_dict(**kwargs["html_article_format"])
-        if "xml_article_format" in kwargs:
+        if "xml_article_format" in kwargs and kwargs['xml_article_format'] is not None :
             kwargs["xml_article_format"] = XMLContainerFormat(**kwargs['xml_article_format'])
         return kwargs
     
@@ -231,17 +240,20 @@ class SourceMap(MongoModels):
     source_name: str                    # Youtube
     source_id: str
     source_home_link: str
-    formatter: str
     assumed_tags: str
     compulsory_tags: List[str]
     is_rss: bool
     is_collection: bool
     links: List[LinkStore]
+    formatter: Optional[str] = None
     watermarks: List[str] = field(default_factory=list)
     is_structured_aggregator: bool = True
     datetime_format: str = ""
     is_third_party: bool = False
     primary_key = 'source_id'
+
+    def link_dicts(self) -> List[Dict]:
+        return list(set([link.to_dict() for link in self.links]))
 
     
     @staticmethod
@@ -372,4 +384,5 @@ class ErrorLogger(MongoModels):
     name: str
     levelname: str
     message: str
-    
+
+

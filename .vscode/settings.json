@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/home/jarden/Desktop/k11/bin/python3.8"
+    "python.pythonPath": "/home/jarden/Desktop/k11/bin/python3.8",
+    "jupyter.jupyterServerType": "local"
 }
