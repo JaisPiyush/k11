@@ -1,13 +1,13 @@
-from dataclasses import dataclass
 
+# from pydantic import BaseModel
+from dataclasses import dataclass
 from pymongo.operations import IndexModel
 from vault.adapter import MongoAdapter
 from typing import List, Dict
 from pymongo import IndexModel
 
 
-
-@dataclass(unsafe_hash=True)
+@dataclass
 class MongoModels:
     __collection_name__ = None
     __database__ = None
@@ -41,10 +41,9 @@ class MongoModels:
     
     @classmethod
     def adapter(cls):
-        if cls._adapter.model_cls is None or cls._adapter.model_cls != cls:
-            cls._adapter.contribute_to_class(cls)
-        return cls._adapter
-    
+        return cls._adapter.create_class(cls, cls.__collection_name__)
+
+
     @staticmethod
     def gen_index_name(key: str, dirc) -> str:
         if isinstance(dirc, int):
@@ -79,6 +78,9 @@ class MongoModels:
     
     @staticmethod
     def process_kwargs(**kwargs) -> Dict:
+        """
+        Implement changes for from_dict classmethod
+        """
         return kwargs
     
     def set_id(self, id_):

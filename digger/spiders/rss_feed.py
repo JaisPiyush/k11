@@ -1,32 +1,88 @@
 from datetime import datetime
+from digger.spiders.base import BaseCollectionScraper
+
+from scrapy.exceptions import NotConfigured, NotSupported
+from scrapy.selector.unified import Selector
 from utils import is_url_valid
 from vault.exceptions import NoDocumentExists
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Tuple, Union
 from scrapy import Request
 from scrapy.spiders import XMLFeedSpider
 from scrapy.utils.spider import iterate_spider_output
 from models.main import  LinkStore, SourceMap, Format, DataLinkContainer
 from scrapy_splash import SplashRequest
 
+class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper):
 
-class RSSFeedSpider(XMLFeedSpider):
+    def parse_node(self, response, selector, **kwargs):
+        """This method must be overriden with your custom spider functionality"""
+        if hasattr(self, 'parse_item'):  # backward compatibility
+            return self.parse_item(response, selector, **kwargs)
+        raise NotImplementedError
+
+    def parse_nodes(self, response, nodes, **kwargs):
+        """This method is called for the nodes matching the provided tag name
+        (itertag). Receives the response and an Selector for each node.
+        Overriding this method is mandatory. Otherwise, you spider won't work.
+        This method must return either an item, a request, or a list
+        containing any of them.
+        """
+
+        for selector in nodes:
+            ret = iterate_spider_output(self.parse_node(response, selector, **kwargs))
+            for result_item in self.process_results(response, ret):
+                yield result_item
+
+
+    def _parse(self, response, **kwargs):
+        if not hasattr(self, 'parse_node'):
+            raise NotConfigured('You must define parse_node method in order to scrape this XML feed')
+
+        response = self.adapt_response(response)
+        if self.iterator == 'iternodes':
+            nodes = self._iternodes(response)
+        elif self.iterator == 'xml':
+            selector = Selector(response, type='xml')
+            self._register_namespaces(selector)
+            nodes = selector.xpath(f'//{self.itertag}')
+        elif self.iterator == 'html':
+            selector = Selector(response, type='html')
+            self._register_namespaces(selector)
+            nodes = selector.xpath(f'//{self.itertag}')
+        else:
+            raise NotSupported('Unsupported node iterator')
+
+        return self.parse_nodes(response, nodes, **kwargs)
+
+
+
+
+
+class RSSFeedSpider(XMLCustomImplmentation):
     name = "rss_feed_spider"
     itertag = 'item'
-    non_formattable_tags = ['itertag']
-    current_source: SourceMap = None
-    current_source_formatter: Format = None
-    namespaces = [('dc', 'http://purl.org/dc/elements/1.1/')]
-    format_ : Dict = None
-    assumed_tags: str = None
-    compulsory_tags: str = None
+    non_formattable_tags = ['itertag', 'namespaces']
+    namespaces = (('dc', 'http://purl.org/dc/elements/1.1/'), ('media', "http://search.yahoo.com/mrss/"))
 
     custom_settings = {
+
         "ITEM_PIPELINES": {
             "digger.pipelines.CollectionItemDuplicateFilterPiepline": 300,
             "digger.pipelines.CollectionItemSanitizingPipeline": 356,
             "digger.pipelines.CollectionItemVaultPipeline": 412
         }
     }
+
+    """
+    Reset all configurations of class instance to default as new Instance.
+    Reset configs functions resets configuration after each source in start_request function,
+    so, to avoid mismatch of source and formatters of link
+    """
+
+    def reset_configs(self):
+        self.non_formattable_tags = ['itertag', 'namespaces']
+        self.itertag = 'item'
+        self.namespaces = (('dc', 'http://purl.org/dc/elements/1.1/'), ('media', "http://search.yahoo.com/mrss/"))
 
     """
     Fetch all the sources from digger(db) and sources (collection) where is_rss = True
@@ -55,24 +111,7 @@ class RSSFeedSpider(XMLFeedSpider):
     def pull_rss_source_formatters(self, format_id: str) -> Format:
         return self._get_xml_source_format_in_db(format_id)
 
-    """
-    This function will get the formatter according to link
-    """
-
-    def set_formatter(self, link_store: LinkStore) -> None:
-        if link_store.formatter != None and len(link_store.formatter) > 0 and link_store.formatter != self.current_source.formatter and link_store.formatter in self.current_source_formatter.extra_formats:
-            self.format_ = self.current_source_formatter.extra_formats[link_store.formatter]
-        self.format_ =  getattr(self.current_source_formatter, self.current_source.formatter)
-    
-    def set_tags(self, link_store: LinkStore) -> None:
-        if link_store.assumed_tags != None and len(link_store.assumed_tags) > 0:
-            self.assumed_tags = link_store.assumed_tags
-        else:
-            self.assumed_tags = self.current_source.assumed_tags
-        if link_store.compulsory_tags != None and len(link_store.compulsory_tags) > 0:
-            self.compulsory_tags = link_store.compulsory_tags
-        else:
-            self.compulsory_tags = self.current_source.compulsory_tags
+  
 
     """
     Every Source Map contains links, which are LinkStore containing link and optionaly assumed_tags, and other params.
@@ -81,55 +120,39 @@ class RSSFeedSpider(XMLFeedSpider):
     """
 
     def start_requests(self):
-        print(self.pull_rss_sources_from_db())
         for source in self.pull_rss_sources_from_db():
-            self.current_source = source
-            # print(source)
-            self.current_source_formatter = self.pull_rss_source_formatters(
+            formats = self.pull_rss_source_formatters(
                 source.source_id)
-            if self.current_source_formatter == None:
+            if formats == None:
                 continue
-            for link_store in self.current_source.links:
+            for link_store in source.links:
                 if link_store.link != None and len(link_store.link) > 0 and is_url_valid(link_store.link):
-                    self.set_formatter(link_store)
-                    self.set_tags(link_store)
-                    # print(link_store.link, self.format_)
-                    if "itertag" in self.format_:
-                        self.itertag = self.format_["itertag"]
-                    yield SplashRequest(getattr(link_store, "link"))
+                    format_rules = self.get_suitable_format_rules(formats=formats, source=source, link_store=link_store, default="xml_collection_format")
+                    assumed_tags, compulsory_tags = self.get_tags(source=source, link_store=link_store)
+                    if "itertag" in format_rules:
+                        self.itertag = format_rules["itertag"]
+                    yield self.call_request(url=link_store.link, callback=self._parse, formats=formats, format_rules=format_rules, source=source, 
+                    assumed_tags=assumed_tags, compulsory_tags=compulsory_tags)
                 else:
-                    pass
-
-    def parse_nodes(self, response, nodes):
-        for selector in nodes:
-            ret = iterate_spider_output(self.parse_single_node(
-                response, selector, self.format_))
-            for result_item in self.process_results(response, ret):
-                yield result_item
+                    continue
 
     """
     Every link containing node will be extracted here, the formatter
     will be injected from parent function `parse_nodes` which will query
     """
 
-    def parse_single_node(self, response, node, format_: Dict):
+    def parse_node(self, response, node, **kwargs):
         collected_data = {}
-        for key, value in format_.items():
+        for key, value in kwargs["format_rules"].items():
             if key not in self.non_formattable_tags:
                 try:
                     collected_data[key] = node.xpath(
                         f"///{self.itertag}//{value['parent']}/{value['param']}").get()
                 except Exception as e:
                     self.error_handling(e)
-                    pass
-        # if "link" in collected_data and len(collected_data['link']) > 0:s
-        yield DataLinkContainer(container=collected_data, source_name=self.current_source.source_name, source_id=self.current_source.source_id,
-                                formatter=self.current_source_formatter.format_id, scraped_on=datetime.now(), 
-                                link=collected_data['link'] if 'link' in collected_data else None,
-                                assumed_tags=self.assumed_tags, compulsory_tags=self.compulsory_tags,is_transient=True,
-                                watermarks=self.current_source.watermarks,is_formattable=self.current_source.is_structured_aggregator)
-        # else:
-        #     pass
+                    continue
+        yield self.pack_data_in_container(collected_data, **kwargs)
+
 
     """
     Handles different types of error during parsing

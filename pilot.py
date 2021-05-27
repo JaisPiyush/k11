@@ -3,9 +3,8 @@ from typing import Dict
 from scrapy.crawler import CrawlerRunner
 from twisted.internet import reactor, defer
 from scrapy.utils.log import configure_logging
-from scrapy.utils.project import get_project_settings
-from .spiders import *
-from .youtube.app import YoutubeDigger
+from digger.spiders import *
+from digger.youtube.app import YoutubeDigger
 import sched, time
 
 
@@ -75,4 +74,6 @@ class DiggerPilot:
 
     
 
-
+if __name__ == '__main__':
+    digger = DiggerPilot()
+    digger.start()

@@ -2,8 +2,8 @@
 import json
 
 from vault.exceptions import NoDocumentExists
-from typing import Dict, Generator, List, Union
-from models.main import  ContainerFormat, ContainerIdentity, DataLinkContainer, Format, QuerySelector
+from typing import Dict, Generator, List, Tuple, Union
+from models.main import  ArticleContainer, ContainerFormat, ContainerIdentity, DataLinkContainer, Format, QuerySelector
 from scrapy.spiders import Spider
 from scrapy_splash import SplashRequest
 from urllib.parse import ParseResult, urlparse
@@ -24,6 +24,11 @@ class HTMLArticleSpider(Spider):
     current_format: ContainerFormat = None
     current_container: DataLinkContainer = None
     current_url: str = None
+
+    def reset_configs(self):
+        self.current_format = None
+        self.current_container = None
+        self.current_url = None
 
 
     custom_settings = {
@@ -51,23 +56,25 @@ class HTMLArticleSpider(Spider):
     Get article formatter associated with source_home_link,
     choose default html_article_format if url.part[:-1] is not present in extra_formats
     """
-    def get_format(self, url: str) -> str:
+    def get_format(self, url: str) -> Tuple[str, Union[Format, None]]:
         parsed: ParseResult = urlparse(url)
         # print(f"{parsed.scheme}://{parsed.netloc}")
         try:
             format_: Union[Format, None] = Format.adapter().find_one({"source_home_link": f"{parsed.scheme}://{parsed.netloc}"})
+            
             if len(parsed.path) > 0 and format_.extra_formats != None:
                 ls = parsed.path.split("/")
                 ls = [txt for txt in ls if len(txt) > 0]
+                formatter = None
                 for index in range(len(ls)):
                     if (key := "/".join(ls[:len(ls) - index])) in format_.extra_formats:
                         # return ContainerFormat.from_dict_to_json(**format_.extra_formats[key])
-                        self.current_format = ContainerFormat.from_dict(**format_.extra_formats[key])
+                        formatter = ContainerFormat.from_dict(**format_.extra_formats[key])
             else:
-                self.current_format = format_.html_article_format
-            return self.current_format.to_json_str() if self.current_format is not None else json.dump({})
+                formatter = format_.html_article_format
+            return formatter.to_json_str() if formatter is not None else json.dump({}), formatter
         except NoDocumentExists as e:
-            return json.dumps({})
+            return json.dumps({}), None
 
         
    
@@ -76,29 +83,43 @@ class HTMLArticleSpider(Spider):
     """
     def get_scrappable_links(self) -> Generator[DataLinkContainer, None, None]:
         return DataLinkContainer.adapter().find({})
+ 
+    
+    # Return True if article is present inside the database
+    def is_article_present_in_db(self, article_link: str) -> bool:
+        return ArticleContainer.adapter().find_one({"article_link": article_link}, silent=True) != None
 
     def start_requests(self):
-        for container in list(self.get_scrappable_links()):
-            # print(container.container)
-            self.current_container = container
-            format_ = self.get_format(container.link)
-            SPLASH_ARGS['format'] = format_
-            self.current_url = container.link
-            yield SplashRequest(url=container.link,
+        for container in self.get_scrappable_links():
+            # self.reset_configs()
+            self.log(container.link +" has been scrapped")
+            if self.is_article_present_in_db(container.link):
+                continue
+            else:
+                # self.current_container = container
+                format_str, format_ = self.get_format(container.link)
+                SPLASH_ARGS['format'] = format_str         
+                self.current_url = container.link
+                yield SplashRequest(url=container.link,
         callback=self.parse, endpoint=SPLASH_ENDPOINT,args=SPLASH_ARGS,
-        splash_headers= {'User-Agent': "Mozilla/5.0 (Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"}
+        splash_headers= {'User-Agent': "Mozilla/5.0 (Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"},
+        cb_kwargs={
+            "container": container,
+            "format": format_,
+            "url": container.link
+        }
         
         )
 
     def parse(self, response, **kwargs):
         body = json.loads(response.body)
         yield {
-            "container": self.current_container,
-            "format": self.current_format,
+            "container": kwargs["container"],
+            "format": kwargs["format"],
             "content": body['html'],
             "disabled": body['disabled'],
             "iden": body['iden'],
-            "url": self.current_url
+            "url": kwargs["url"]
         }
 
         

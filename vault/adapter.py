@@ -1,4 +1,5 @@
 from sqlalchemy.orm.session import Session
+from sqlalchemy.sql.base import NO_ARG
 from sqlalchemy.sql.expression import distinct, select
 from sqlalchemy.sql.functions import func
 from sqlalchemy.sql.schema import Index
@@ -63,20 +64,26 @@ class TableAdapter:
 
 
 
-
-     
-    
-
-    
-
 class MongoAdapter:
-    def __init__(self) -> None:
-        self.model_cls = None
-        self.collection_name = None
+    model_cls = None
+    collection_name = None
+    
+    def __eq__(self, o: object) -> bool:
+        return self.model_cls != None and self.model_cls == getattr(o, "model_cls", None) and self.collection_name == getattr(o, "collection_name", None)
+    
+    def __hash__(self) -> int:
+        return hash((self.model_cls, self.collection_name))
     
     def contribute_to_class(self, model_cls) -> None:
         self.model_cls = model_cls
         self.collection_name = model_cls.__collection_name__
+    
+    @classmethod
+    def create_class(cls, model_cls, collection_name):
+        model = cls()
+        model.model_cls = model_cls
+        model.collection_name = collection_name
+        return model
     
     def __hash__(self) -> int:
         return hash((self.model_cls, self.collection_name))

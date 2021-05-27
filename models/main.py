@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from time import asctime
 from typing import Dict, Generator, List,Optional, Any, Tuple, Union
 from datetime import datetime
 from datetime import datetime
@@ -11,7 +10,14 @@ from .mongo import MongoModels
 
 
 
+@dataclass
+class TextDataset(MongoModels):
+    __collection_name__ = "text_dataset"
+    __database__ = "mongo_digger"
 
+    link:str
+    tags: List[str]
+    text: str
 
 class ContentType(Enum):
     Article = "article"
@@ -363,6 +369,7 @@ class ArticleContainer(MongoModels):
     coords: List[Tuple[float]] = field(default_factory=list)
     meta: Optional[dict] = field(default_factory=dict)
     primary_key = "article_id"
+
 
 
 """

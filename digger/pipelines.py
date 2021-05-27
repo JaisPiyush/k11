@@ -9,6 +9,9 @@ from dataclasses import replace
 from hashlib import sha256
 from typing import Dict, List, Union
 from urllib.parse import urlparse
+from scrapy import item
+
+from scrapy.spiders import Spider
 from models.main import ArticleContainer, ContainerFormat, ContainerIdentity, ContentType, DataLinkContainer, Format
 from models.postgres import IndexableArticle, IndexableLinks
 from scrapy.exceptions import DropItem
@@ -78,7 +81,8 @@ class CollectionItemSanitizingPipeline:
     def process_item(self, item: DataLinkContainer, spider):
         if item.link != None and len(item.link) > 0:
             for key, value in item.container.items():
-                item.container[key] = self.sanitize_text(value, watermarks=item.watermarks)
+                if value is not None:
+                    item.container[key] = self.sanitize_text(value, watermarks=item.watermarks)
             return item
         raise DropItem("Link container was fatal, it was incomplete OK!! :(")
 
@@ -127,6 +131,14 @@ The program workflows like
 
 """
 
+"""
+item: {
+    article: str
+    format: ContainerFormat
+    container: DataLinkContainer
+    url: str
+}
+"""
 class ArticleSanitizer:
 
     container: DataLinkContainer = None
@@ -248,8 +260,8 @@ class ArticleSanitizer:
         data["videos"] = body.xpath('///video/@src').getall()
         cleaned_body = Selector(text=self.simple_cleansing(body_unselected))
         if len(texts := "".join(cleaned_body.xpath('///text()').getall())) > 0:
-            print("\n*20",texts,)
-            _steps = 245
+            texts = [txt for txt in texts.split(" ") if len(txt) > 0]
+            _steps = 510
             data["text_set"] = []
             if len(texts) < _steps:
                 data["text_set"] = [self.deferd_cleaning(txt) for txt in texts]
@@ -257,17 +269,16 @@ class ArticleSanitizer:
                 for chunk in range(0, len(texts), _steps):
                     if chunk + _steps < len(texts):
                         print(texts[chunk: chunk + _steps])
-                        data["text_set"].append(self.deferd_cleaning(texts[chunk: chunk + _steps]))
+                        data["text_set"].append(self.deferd_cleaning(" ".join(texts[chunk: chunk + _steps])))
                     else:
                         print(texts[chunk:])
-                        data["text_set"].append(self.deferd_cleaning(texts[chunk:]))
+                        data["text_set"].append(self.deferd_cleaning(" ".join(texts[chunk:])))
             print(data['text_set'])
             # data["text_set"] = self.flush_unrequited(data["text_set"])
         data['title'] = self.get_title(body)
         data["creator"] = self.get_creator(body)
         if self.iden['is_multiple'] and self.original_iden.is_bakeable and (sub_body := self.get_body(body)) != None:
             data['body'] = self.deferd_cleaning(self.simple_cleansing(sub_body))
-        print(data)
         return data
     
     @staticmethod
@@ -297,7 +308,7 @@ class ArticleSanitizer:
             disabled=disabled,
             is_source_present_in_db=self.is_source_present_in_db(f"{parsed.scheme}://{parsed.netloc}"),
             tags=tags,
-            compulsory_tags=self.container.compulsory_tags.split(" ") if self.container.compulsory_tags is not None else [],
+            compulsory_tags=self.container.compulsory_tags if self.container.compulsory_tags is not None else [],
             images=images,
             videos=videos,
             text_set=text_set,
@@ -329,7 +340,7 @@ class ArticleSanitizer:
     def process_multiple_article(self, url: str, body: List[str],) -> List[ArticleContainer]:
         return [self.process_article(content, url, index=index) for index, content in enumerate(body)]
 
-    def process_item(self, item: Dict, spider) -> Union[ArticleContainer, List[ArticleContainer]]:
+    def process_item(self, item: Dict, spider) -> List[ArticleContainer]:
         self.process_attrs(item)
         articles: List[ArticleContainer] = []
         if isinstance(self.content, str):
@@ -353,14 +364,15 @@ Videos :- One or more Images, page transition will not happen if source is youtu
 """
 
 class ArticleDuplicateFilter:
-
+    
+    # Return True if article is present inside the database
     def is_article_present_in_db(self, article_id: str) -> bool:
         return ArticleContainer.adapter().find_one({"article_id": article_id}, silent=True) != None
     
-    def process_item(self, items: List[ArticleContainer], spider):
+    def process_item(self, items: List[ArticleContainer], spider: Spider):
         if len(items) == 0:
             raise DropItem("No One came in")
-        return list(filter(lambda item : not self.is_article_present_in_db(item.article_id), items))
+        return [item for item in items if not self.is_article_present_in_db(item.article_id)]
         
 
 
@@ -402,10 +414,10 @@ class ArticleVaultPipeline:
     next_frame_required: Boolean # does the screep tap required to navigate to next screen in App
     
     """
-
     def process_item(self, items: List[ArticleContainer], spider):
         if len(items) > 0:
             ArticleContainer.adapter().bulk_insert(items)
             DataLinkContainer.delete_containers([item.scraped_from for item in items if item.scraped_from is not None])
-        return items
+            return items
+        raise DropItem("Dropped in ArticleVaultPipeline")
 
