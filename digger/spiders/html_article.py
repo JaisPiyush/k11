@@ -99,7 +99,7 @@ class HTMLArticleSpider(Spider):
                 # self.current_container = container
                 format_str, format_ = self.get_format(container.link)
                 SPLASH_ARGS['format'] = format_str         
-                self.current_url = container.link
+                
                 yield SplashRequest(url=container.link,
         callback=self.parse, endpoint=SPLASH_ENDPOINT,args=SPLASH_ARGS,
         splash_headers= {'User-Agent': "Mozilla/5.0 (Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"},

@@ -1,13 +1,12 @@
 from datetime import datetime
 from typing import Dict, List, Tuple
 from scrapy.spiders import Spider
-
+from urllib.parse import urlparse
 from scrapy_splash.request import SplashRequest
 from models.main import Format, LinkStore, SourceMap, DataLinkContainer
 
 class BaseCollectionScraper(Spider):
-    namespaces = ()
-
+    
     """
         This function will decide which formatting rules to be used for the current link,
         if link_store contains any formatter and the formatter is not equal to default formatter of source
@@ -21,8 +20,8 @@ class BaseCollectionScraper(Spider):
             format_rules = formats.extra_formats[link_store.formatter]
         else:
             format_rules =  getattr(formats, default)
-        if "namespaces" in format_rules:
-            self.namespaces = list(self.namespaces) +  format_rules['namespaces']
+        # if "namespaces" in format_rules:
+        #     self.namespaces = list(self.namespaces) +  format_rules['namespaces']
         return format_rules
     
 
@@ -50,13 +49,17 @@ class BaseCollectionScraper(Spider):
                                 "compulsory_tags": compulsory_tags,
                                 "url": url,
                             })
-                            return SplashRequest(url=url, callback=callback, splash_headers=splash_headers, **kwargs)
+                            return SplashRequest(url=url, args={"wait": 0.8}, callback=callback, splash_headers=splash_headers, **kwargs)
 
     
     def pack_data_in_container(self, data: Dict, **kwargs) -> DataLinkContainer:
         source: SourceMap = kwargs["source"]
         if "link" not in data:
             return None
+        data_link = urlparse(data['link'])
+        if data_link.netloc == "":
+            home_url_parse = urlparse(kwargs['url'])
+            data['link'] = f"{home_url_parse.scheme}://{home_url_parse.netloc}{data_link.geturl()}"
         return DataLinkContainer(container=data,
                                  source_name=source.source_name, source_id=source.source_id,
                                  formatter=kwargs['formats'].format_id, scraped_on=datetime.now(),

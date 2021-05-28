@@ -1,11 +1,8 @@
-from datetime import datetime
+from scrapy import Selector
 from digger.spiders.base import BaseCollectionScraper
 from traceback import format_exc
-from typing import Dict, Generator, List, Tuple
-from vault.exceptions import NoDocumentExists
-from scrapy.spiders import Spider
-from models.main import LinkStore, SourceMap, Format, DataLinkContainer
-from scrapy_splash import SplashRequest
+from typing import Dict, Generator, List
+from models.main import SourceMap, Format, DataLinkContainer
 from utils import is_url_valid
 
 
@@ -63,12 +60,18 @@ class HTMLFeedSpider(BaseCollectionScraper):
                     format_rules = self.get_suitable_format_rules(formats, source, link_store, default="html_collection_format")
                     assumed_tags, compulsory_tags = self.get_tags(source,link_store)
                     yield self.call_request(url=link_store.link,
-                    callback=self.parse_without_itertag if "itertag" not in format_rules or format_rules["itertag"] == None else self.parse_with_itertag,
+                    callback=self.parse,
                     source=source, format_rules=format_rules,formats=formats,
                     assumed_tags=assumed_tags, compulsory_tags=compulsory_tags
                     )
                 else:
                     continue
+
+
+    def parse(self, response, **kwargs):
+        if "itertag" in kwargs["format_rules"] and kwargs["format_rules"]["itertag"] != None:
+            return self.parse_with_itertag(response, **kwargs)
+        return self.parse_without_itertag(response, **kwargs)
 
     """
     Parser should extract all the fields defined in format, present in the html.
@@ -88,7 +91,11 @@ class HTMLFeedSpider(BaseCollectionScraper):
                 length = len(collected_data[key])
         for index in range(length):
             yield self.pack_data_in_container({key: collected_data[key][index]
-                    for key in collected_data.keys()})
+                    for key in collected_data.keys() if collected_data[key][index] != None})
+    
+    def register_namespaces(self, node: Selector):
+        for namespace in self.namespaces:
+            node.register_namespace(namespace[0], namespace[1])
 
     def parse_nodes(self, response, node, **kwargs) -> DataLinkContainer:
         data = {}

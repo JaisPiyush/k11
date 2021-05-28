@@ -14,6 +14,10 @@ from scrapy_splash import SplashRequest
 
 class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper):
 
+    namespaces = (("dc","http://purl.org/dc/elements/1.1/"), ("media","http://search.yahoo.com/mrss/"), ("content", "http://purl.org/rss/1.0/modules/content/"), ("atom", "http://www.w3.org/2005/Atom"))
+
+    
+
     def parse_node(self, response, selector, **kwargs):
         """This method must be overriden with your custom spider functionality"""
         if hasattr(self, 'parse_item'):  # backward compatibility
@@ -44,6 +48,7 @@ class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper):
         elif self.iterator == 'xml':
             selector = Selector(response, type='xml')
             self._register_namespaces(selector)
+            selector.remove_namespaces()
             nodes = selector.xpath(f'//{self.itertag}')
         elif self.iterator == 'html':
             selector = Selector(response, type='html')
@@ -51,7 +56,7 @@ class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper):
             nodes = selector.xpath(f'//{self.itertag}')
         else:
             raise NotSupported('Unsupported node iterator')
-
+        
         return self.parse_nodes(response, nodes, **kwargs)
 
 
@@ -62,7 +67,7 @@ class RSSFeedSpider(XMLCustomImplmentation):
     name = "rss_feed_spider"
     itertag = 'item'
     non_formattable_tags = ['itertag', 'namespaces']
-    namespaces = (('dc', 'http://purl.org/dc/elements/1.1/'), ('media', "http://search.yahoo.com/mrss/"))
+
 
     custom_settings = {
 
@@ -73,16 +78,6 @@ class RSSFeedSpider(XMLCustomImplmentation):
         }
     }
 
-    """
-    Reset all configurations of class instance to default as new Instance.
-    Reset configs functions resets configuration after each source in start_request function,
-    so, to avoid mismatch of source and formatters of link
-    """
-
-    def reset_configs(self):
-        self.non_formattable_tags = ['itertag', 'namespaces']
-        self.itertag = 'item'
-        self.namespaces = (('dc', 'http://purl.org/dc/elements/1.1/'), ('media', "http://search.yahoo.com/mrss/"))
 
     """
     Fetch all the sources from digger(db) and sources (collection) where is_rss = True
