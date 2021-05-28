@@ -3,6 +3,7 @@
 # Moved up on the k11 folder
 echo `pwd`
 source ../../bin/activate
+docker-compose -f docker-compose.yml up -d
 cd digger
 echo `pwd`
 ../../bin/python3 -m scrapy crawl rss_feed_spider
