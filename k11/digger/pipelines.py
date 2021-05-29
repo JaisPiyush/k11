@@ -12,8 +12,8 @@ from urllib.parse import urlparse
 from scrapy import item
 
 from scrapy.spiders import Spider
-from models.main import ArticleContainer, ContainerFormat, ContainerIdentity, ContentType, DataLinkContainer, Format
-from models.postgres import IndexableArticle, IndexableLinks
+from k11.models.main import ArticleContainer, ContainerFormat, ContainerIdentity, ContentType, DataLinkContainer, Format
+from k11.models.postgres import IndexableArticle, IndexableLinks
 from scrapy.exceptions import DropItem
 from bs4 import BeautifulSoup
 import re
@@ -268,13 +268,9 @@ class ArticleSanitizer:
             else:
                 for chunk in range(0, len(texts), _steps):
                     if chunk + _steps < len(texts):
-                        print(texts[chunk: chunk + _steps])
                         data["text_set"].append(self.deferd_cleaning(" ".join(texts[chunk: chunk + _steps])))
                     else:
-                        print(texts[chunk:])
                         data["text_set"].append(self.deferd_cleaning(" ".join(texts[chunk:])))
-            print(data['text_set'])
-            # data["text_set"] = self.flush_unrequited(data["text_set"])
         data['title'] = self.get_title(body)
         data["creator"] = self.get_creator(body)
         if self.iden['is_multiple'] and self.original_iden.is_bakeable and (sub_body := self.get_body(body)) != None:

@@ -30,13 +30,17 @@ class Selection:
     sel: str = 'xpath'
     parent: str = None
     type: Optional[str] = "text"
+    is_multiple: Optional[bool] = False
+    is_cdata: Optional[bool] = False
 
     def to_dict(self):
         return {
             "sel": self.sel,
             "param": self.param,
             "type": self.type,
-            "parent": self.parent
+            "parent": self.parent,
+            "is_multiple": self.is_multiple,
+            "is_cdata": self.is_cdata
         }
     
     @classmethod
@@ -50,12 +54,14 @@ class LinkStore:
     assumed_tags: Optional[str] = None
     formatter: Optional[str] = None
     compulsory_tags: Optional[str] = None
+    content_type: Optional[str] = ContentType.Article
     def to_dict(self):
         return {
             "link": self.link,
             "assumed_tags": self.assumed_tags,
             "compulsory_tags": self.compulsory_tags,
             "formatter": self.formatter,
+            "content_type": self.content_type
         }
     
     @classmethod
@@ -350,6 +356,7 @@ class ArticleContainer(MongoModels):
     pub_date: Optional[datetime]
     scraped_on: datetime
     text_set: Optional[List[str]]
+    # Body maintains copy of text if we do not have to AppView the text content
     body: Optional[str]
     disabled: List[str]
     images: List[str] = field(default_factory=list)

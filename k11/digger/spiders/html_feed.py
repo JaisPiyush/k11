@@ -6,6 +6,8 @@ from k11.models.main import SourceMap, Format, DataLinkContainer
 from k11.utils import is_url_valid
 
 
+#TODO: Need to implement collection to article in this
+
 class HTMLFeedSpider(BaseCollectionScraper):
     name = "html_feed_spider"
     itertag = None
@@ -117,6 +119,6 @@ class HTMLFeedSpider(BaseCollectionScraper):
     def parse_with_itertag(self, response, **kwargs) -> Generator[DataLinkContainer, None, None]:
         if kwargs["url"] == "https://expertphotography.com/category/creative-projects-challenges/":
             self.log(self.itertag)
-        for node in response.xpath(kwargs["format_rules"]["itertag"]):
+        for node in response.xpath('//' + kwargs["format_rules"]["itertag"]):
             self.log(node)
             yield self.parse_nodes(response, node, **kwargs)

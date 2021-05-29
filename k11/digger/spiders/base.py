@@ -3,7 +3,9 @@ from typing import Dict, List, Tuple
 from scrapy.spiders import Spider
 from urllib.parse import urlparse
 from scrapy_splash.request import SplashRequest
-from k11.models.main import Format, LinkStore, SourceMap, DataLinkContainer
+from k11.models.main import Format, LinkStore, SourceMap, DataLinkContainer, ContentType, ArticleContainer
+from urllib.parse import urlparse
+from hashlib import sha256
 
 class BaseCollectionScraper(Spider):
     
@@ -38,7 +40,7 @@ class BaseCollectionScraper(Spider):
         return assumed_tags, compulsory_tags
     
     def call_request(self, url: str, callback, source: SourceMap, format_rules: Dict, formats: Format, assumed_tags: str, compulsory_tags: List[str],
-                            splash_headers={'User-Agent': "Mozilla/5.0 (Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"}, **kwargs):
+                            splash_headers={'User-Agent': "Mozilla/5.0 (Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"}, link_store: LinkStore = None, **kwargs):
                             if "cb_kwargs" not in kwargs:
                                 kwargs['cb_kwargs'] = {}
                             kwargs['cb_kwargs'].update({
@@ -48,6 +50,7 @@ class BaseCollectionScraper(Spider):
                                 "assumed_tags": assumed_tags,
                                 "compulsory_tags": compulsory_tags,
                                 "url": url,
+                                "link_store": link_store
                             })
                             return SplashRequest(url=url, args={"wait": 0.8}, callback=callback, splash_headers=splash_headers, **kwargs)
 
@@ -69,3 +72,77 @@ class BaseCollectionScraper(Spider):
                                  is_formattable=source.is_structured_aggregator,
                                  is_transient=True,
                                  )
+
+
+class MultiplContentFromCollection:
+
+    def create_data(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index: int = 0):
+        if ArticleContainer.adapter().find_one({"article_link" : data["link"]}, silent=True) == None:
+            ArticleContainer.adapter().create(**self.process_single_data(data=data, link_store=link_store, source_map=source_map, index=index))
+
+    def process_single_data(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index : int = 0):
+        data["content_type"] = link_store.content_type
+        if link_store.compulsory_tags is not None:
+            data["compulsory_tags"] = link_store.compulsory_tags
+        if link_store.assumed_tags is not None:
+            data["assumed_tags"] = link_store.assumed_tags.split(" ")
+        data["index"] = index
+        data["scrap_link"] = link_store.link
+        if "image" in data:
+            data["images"] = [data["image"]]
+            del data["image"]
+        if "video" in data:
+            data["videos"] = [data["video"]]
+            del data["video"]
+        if "text" in data:
+            data["body"] = data["text"]
+            del data["text"]
+        return self.pack_container(source=source_map, **data)
+        
+
+    
+    # url must be unique, if it's container of images like pinterest than their src will be url
+    def pack_container(self, link: str, source: SourceMap, title: str="", creator: str ="", images: List[str] = [],
+                        disabled: List[str] = [], videos: List[str] = [], text_set: List[str] = [],compulsory_tags: List[str] = [], tags: List[str] = [],
+                        body: str= None, index: int=0, pub_date: str = None, content_type = ContentType.Article,
+                        scrap_link: str=None):
+                        parsed = urlparse(link)
+
+                        # scrapped url might have possibilites such as
+                        # 1. /app/csdgfgkg?dsfg=34 -- when netloc is missing
+                        # 2. //google.com/sdfjsfg -- when scheme is missing
+                        # 3. everything is fine
+
+                        if parsed.netloc == "":
+                            url  = source.source_home_link + parsed.geturl()
+                            parsed = urlparse(url)
+                        elif parsed.scheme == "":
+                            url = "https:"+ parsed.geturl()
+                            parsed = urlparse(url)
+                        else:
+                            url = link
+
+
+                        return ArticleContainer(
+                            article_id=sha256(url.encode()).hexdigest() + str(index),
+                            source_id=source.source_id,
+                            source_name=source.source_name,
+                            title=title,
+                            article_link=url,
+                            creator=creator,
+                            scraped_from=scrap_link,
+                            home_link=source.source_home_link,
+                            site_name=source.source_name,
+                            pub_date=pub_date,
+                            disabled=disabled,
+                            is_source_present_in_db=True,
+                            tags=source.assumed_tags.split(" ") if len(tags) == 0 and source.assumed_tags is not None else tags,
+                            compulsory_tags=source.compulsory_tags if len(compulsory_tags) == 0 and source.compulsory_tags is not None else compulsory_tags,
+                            images=images,
+                            videos=videos,
+                            text_set=text_set,
+                            body=body,
+                            majority_content_type=content_type,
+                            next_frame_required=False,
+                            scraped_on=datetime.now()
+                        )
