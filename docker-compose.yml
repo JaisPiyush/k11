@@ -5,14 +5,18 @@ services:
     image: rdsubhas/tor-privoxy-alpine
     ports: 
       - 8118:9050
+    networks: 
+      - torprivoxyNetwork
   splash:
     image: scrapinghub/splash
     ports: 
       - 8050:8050
-    volumes: 
-      - ./splash/proxy-profiles:/etc/splash/proxy-profiles:ro
-    links: 
-      - torprivoxy
+    # volumes: 
+    #   - ./splash/proxy-profiles:/etc/splash/proxy-profiles:ro
+    networks: 
+      - splashNetwork
+    # links: 
+    #   - torprivoxy
   
   # mongo:
   #   image: mongo
@@ -28,4 +32,7 @@ services:
 
 # volumes: 
 #   mongo-database:
+networks: 
+  torprivoxyNetwork:
+  splashNetwork: 
 

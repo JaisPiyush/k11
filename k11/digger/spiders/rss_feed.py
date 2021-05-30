@@ -1,27 +1,23 @@
 
-from .base import BaseCollectionScraper, MultiplContentFromCollection
+from .base import BaseCollectionScraper, BaseContentExtraction
 
 from scrapy.exceptions import NotConfigured, NotSupported
 from scrapy.selector.unified import Selector
-from k11.utils import is_url_valid
 from k11.vault.exceptions import NoDocumentExists
-from typing import Dict, Generator, List, Union
+from typing import Dict, Generator
 from scrapy.spiders import XMLFeedSpider
 from scrapy.utils.spider import iterate_spider_output
 from k11.models.main import  SourceMap, Format
 
 
-class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper, MultiplContentFromCollection):
+class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper, BaseContentExtraction):
 
     namespaces = (("dc","http://purl.org/dc/elements/1.1/"), ("media","http://search.yahoo.com/mrss/"), ("content", "http://purl.org/rss/1.0/modules/content/"), ("atom", "http://www.w3.org/2005/Atom"))
 
     
 
     def parse_node(self, response, selector, **kwargs):
-        """This method must be overriden with your custom spider functionality"""
-        if hasattr(self, 'parse_item'):  # backward compatibility
-            return self.parse_item(response, selector, **kwargs)
-        raise NotImplementedError
+        return self._parse_node(response,selector, **kwargs)
 
     def parse_nodes(self, response, nodes, **kwargs):
         """This method is called for the nodes matching the provided tag name
@@ -68,7 +64,7 @@ class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper, MultiplConten
 class RSSFeedSpider(XMLCustomImplmentation):
     name = "rss_feed_spider"
     itertag = 'item'
-    non_formattable_tags = ['itertag', 'namespaces']
+    default_format_rules = "xml_collection_format"
 
 
     custom_settings = {
@@ -85,8 +81,7 @@ class RSSFeedSpider(XMLCustomImplmentation):
     Fetch all the sources from digger(db) and sources (collection) where is_rss = True
     Insert all data into self.source_maps, which later will be used to iterate
     """
-
-    def pull_rss_sources_from_db(self) -> Generator[SourceMap, None, None]:
+    def get_sources_from_database(self) -> Generator[SourceMap, None, None]:
         return SourceMap.pull_all_rss_models()
 
     """
@@ -105,84 +100,15 @@ class RSSFeedSpider(XMLCustomImplmentation):
     Find the format using format_id, in digger(db) and formats(collection) where source.source_id == formatter._id
     """
 
-    def pull_rss_source_formatters(self, format_id: str) -> Format:
+    def get_formatter_from_database(self, format_id: str) -> Format:
         return self._get_xml_source_format_in_db(format_id)
 
-  
-
-    """
-    Every Source Map contains links, which are LinkStore containing link and optionaly assumed_tags, and other params.
-    If any link store contains their personal formatter, than the formatter will be passed into parser,
-    else the default fomatter of source map will be passed
-    """
-
-    def start_requests(self):
-        for source in self.pull_rss_sources_from_db():
-            formats = self.pull_rss_source_formatters(
-                source.source_id)
-            if formats == None:
-                continue
-            for link_store in source.links:
-                if link_store.link != None and len(link_store.link) > 0 and is_url_valid(link_store.link):
-                    format_rules = self.get_suitable_format_rules(formats=formats, source=source, link_store=link_store, default="xml_collection_format")
-                    assumed_tags, compulsory_tags = self.get_tags(source=source, link_store=link_store)
-                    if "itertag" in format_rules:
-                        self.itertag = format_rules["itertag"]
-                    yield self.call_request(url=link_store.link, callback=self._parse, formats=formats, format_rules=format_rules, source=source, 
-                    assumed_tags=assumed_tags, compulsory_tags=compulsory_tags, link_store=link_store)
-                else:
-                    continue
+    def before_requesting(self, **kwargs) -> Dict:
+        if "format_rules" in kwargs and "itertag" in kwargs["format_rules"]:
+            self.itertag = kwargs["format_rules"]["itertag"]
+        return kwargs
     
-    def parse_cdata(self, node: Selector, query: Dict):
-        cdata_text = self.extract_values(node, parent=query["parent"], param='text()', sel="xpath")
-        selected = Selector(text=cdata_text)
-        query_copy = query.copy()
-        del query_copy["param"]
-        del query_copy["parent"]
-        return self.extract_values(node=selected, parent=query["param"], param='', param_prefix='', parent_prefix='./', **query_copy)
-
-    
-    def extract_values(self, node: Selector, parent: str, param: str="text()", parent_prefix=".//", param_prefix="/", **kwargs) -> Union[str, List[str]]:
-        f_str = parent_prefix + parent + param_prefix + param
-        selected = node.css(f_str) if "sel" in kwargs and kwargs["sel"] == "css" else node.xpath(f_str)
-        if "is_multiple" in kwargs and kwargs["is_multiple"]:
-            return selected.getall()
-        return selected.get()
-    
-    def parse_format_rules(self, node: Selector, **kwargs):
-        collected_data = {}
-        for key, value in kwargs["format_rules"].items():
-            if key not in self.non_formattable_tags:
-                try:
-                    if "is_cdata" in value and  value["is_cdata"]:
-                        collected_data[key] = self.parse_cdata(node, value)
-                    else:
-                        collected_data[key] = self.extract_values(node=node, **value)
-                except Exception as e:
-                    if "testing" in kwargs:
-                        print(e)
-                    self.error_handling(e)
-                    continue
-        return collected_data, node
-    """
-    Every link containing node will be extracted here, the formatter
-    will be injected from parent function `parse_nodes` which will query
-    """
-
-    def parse_node(self, response, node, **kwargs):
-        collected_data, node = self.parse_format_rules(node, **kwargs)
-        if "testing" in kwargs and kwargs["testing"]:
-            yield collected_data, node
-        elif "link_store" in kwargs and kwargs["link_store"].is_multiple == True:
-            self.create_data(collected_data, kwargs["link_store"], kwargs["source_map"], index= kwargs["index"] if "index" in kwargs else 0)
-        else:
-            yield self.pack_data_in_container(collected_data, **kwargs)
-
-
-    """
-    Handles different types of error during parsing
-    """
-
     def error_handling(self, e):
         self.log(e)
-        pass
+
+   

@@ -64,10 +64,8 @@ Now waternmark remover only removes from begining or ending of the whole text co
 
 
 class CollectionItemSanitizingPipeline:
-    """
 
-    """
-    def sanitize_text(self, text, watermarks=None):
+    def sanitize_text(self, text, spider: Spider = None, watermarks=None):
         soup = BeautifulSoup(text, 'html.parser')
         cleansed_text = soup.getText()
         if watermarks is not None:
@@ -78,11 +76,14 @@ class CollectionItemSanitizingPipeline:
                     cleansed_text = cleansed_text[:len(text) - len(watermark)]
         return cleansed_text
     
-    def process_item(self, item: DataLinkContainer, spider):
+    def process_item(self, item: DataLinkContainer, spider: Spider):
         if item.link != None and len(item.link) > 0:
             for key, value in item.container.items():
                 if value is not None:
-                    item.container[key] = self.sanitize_text(value, watermarks=item.watermarks)
+                    if isinstance(value, list):
+                        item.container[key] = [self.sanitize_text(val, watermarks=item.watermarks, spider=spider) for val in value]
+                    else:
+                        item.container[key] = self.sanitize_text(value, watermarks=item.watermarks, spider=spider)
             return item
         raise DropItem("Link container was fatal, it was incomplete OK!! :(")
 

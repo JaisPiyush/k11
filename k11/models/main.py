@@ -55,13 +55,15 @@ class LinkStore:
     formatter: Optional[str] = None
     compulsory_tags: Optional[str] = None
     content_type: Optional[str] = ContentType.Article
+    is_multiple: Optional[bool] = False
     def to_dict(self):
         return {
             "link": self.link,
             "assumed_tags": self.assumed_tags,
             "compulsory_tags": self.compulsory_tags,
             "formatter": self.formatter,
-            "content_type": self.content_type
+            "content_type": self.content_type,
+            "is_multiple": self.is_multiple
         }
     
     @classmethod

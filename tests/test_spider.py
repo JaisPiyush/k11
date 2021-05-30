@@ -69,26 +69,22 @@ class TestRssFeedSpider(unittest.TestCase):
             self.assertEqual(data[0]["title"], expected_output[index]["title"])
             self.assertEqual(data[0]["images"], expected_output[index]["images"])
             data[0]["link"] = "random_link"
-            article_container = spider.process_single_data(data=data[0], link_store=link_store, source_map=source_map, index=index)
+            article_container = spider.process_single_article_data(data=data[0], link_store=link_store, source_map=source_map, index=index)
             self.assertEqual(article_container.article_link, "random_link")
             self.assertListEqual(article_container.images, expected_output[index]["images"])
 
             
     
     def test_rss_for_named_source(self):
-        source_name = "android_authority"
+        source_name = "blog.google"
         source_map = self.pull_named_source(source_name)
         formatter = self.pull_rss_source_formatter(source_map.source_id)
         spider = self.spider_class()
         spider.itertag = "item"
-        for link_store in source_map.links:
-            print("Scrapping link "+link_store.link)
-            format_rules = spider.get_suitable_format_rules(formats=formatter, source=source_map, link_store=link_store, default='xml_collection_format')
-            response = requests.get(link_store.link)
-            output = list(spider._parse(response=response.content, format_rules=format_rules, testing=True))
-            # node = output[0][-1]
-            # print(f'//{format_rules["title"]["parent"]}/{format_rules["title"]["param"]}')
-            self.output_test( format_rules=format_rules, output=output)
+        results = spider.run_requests(testing=True)
+        for result in results:
+            print(result.selector)
+        self.assertEqual(1,2)
     
 
 

@@ -6,8 +6,6 @@ from k11.vault.adapter import MongoAdapter
 from typing import List, Dict
 from pymongo import IndexModel
 
-
-@dataclass
 class MongoModels:
     __collection_name__ = None
     __database__ = None
@@ -17,6 +15,10 @@ class MongoModels:
     non_dictables = []
     _non_dictables = ["__service__","__database__","__collection_name__", "indexes", "primary_key", "non_dictables"]
     _adapter = MongoAdapter()
+
+    def __init__(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     
     def get_non_dictables(self) -> List[str]:
@@ -38,7 +40,7 @@ class MongoModels:
     
     def get_database_name(self) -> str:
         return self.__database__
-    
+
     @classmethod
     def adapter(cls):
         return cls._adapter.create_class(cls, cls.__collection_name__)
