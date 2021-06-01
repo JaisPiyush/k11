@@ -1,6 +1,6 @@
 
 import json
-
+from random import shuffle
 from k11.vault.exceptions import NoDocumentExists
 from typing import Dict, Generator, List, Tuple, Union
 from k11.models.main import  ArticleContainer, ContainerFormat, ContainerIdentity, DataLinkContainer, Format, QuerySelector
@@ -90,7 +90,7 @@ class HTMLArticleSpider(Spider):
         return ArticleContainer.adapter().find_one({"article_link": article_link}, silent=True) != None
 
     def start_requests(self):
-        for container in self.get_scrappable_links():
+        for container in shuffle(list(self.get_scrappable_links())):
             # self.reset_configs()
             self.log(container.link +" has been scrapped")
             if self.is_article_present_in_db(container.link):

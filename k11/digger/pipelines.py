@@ -276,6 +276,8 @@ class ArticleSanitizer:
         data["creator"] = self.get_creator(body)
         if self.iden['is_multiple'] and self.original_iden.is_bakeable and (sub_body := self.get_body(body)) != None:
             data['body'] = self.deferd_cleaning(self.simple_cleansing(sub_body))
+        if "tags" in self.container.container and len(self.container.container["tags"]) > 0:
+            data["tags"] = self.container.container["tags"]
         return data
     
     @staticmethod
@@ -318,7 +320,8 @@ class ArticleSanitizer:
     def process_article(self, body:str, url: str, index=0) -> ArticleContainer:
         data = self.extract_contents(body_unselected=body)
         data["index"] = index
-        data["tags"] = self.container.assumed_tags.split(" ") if self.container is not None and self.container.assumed_tags is not None else ""
+        if "tags" not in data:
+            data["tags"] = self.container.assumed_tags.split(" ") if self.container is not None and self.container.assumed_tags is not None else ""
         return self.pack_container(url=url, **data)
     
     """

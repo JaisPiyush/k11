@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from typing import Any, List, Dict, Optional, Union
 
-
 @dataclass
 class DatabaseConfiguration:
-    service: str
     host: str
     port: int
     database: str
+    service: Optional[str] = None
+    driver: Optional[str] = None
     username: Optional[str] = None
     password: Optional[str] = None
     driver: Optional[str] = None

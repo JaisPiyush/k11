@@ -122,6 +122,8 @@ class BaseContentExtraction:
         if data_link.netloc == "":
             home_url_parse = urlparse(kwargs['url'])
             data['link'] = f"{home_url_parse.scheme}://{home_url_parse.netloc}{data_link.geturl()}"
+        if "tags" in data and len(data["tags"]) > 0:
+            kwargs["assumed_tags"] = " ".join(data["tags"])
         return DataLinkContainer(container=data,source_name=source.source_name, source_id=source.source_id,
                                  formatter=kwargs['formats'].format_id, scraped_on=datetime.now(),
                                  link=data['link'],assumed_tags=kwargs["assumed_tags"],

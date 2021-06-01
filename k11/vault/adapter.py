@@ -16,6 +16,7 @@ from .app import register_digger, register_treasure, register_connection
 class TableAdapter:
     def __init__(self, model_cls) -> None:
         self.model_cls = model_cls
+        
     def get_connection(self, db=None):
         if db is not None:
             return register_connection(db)

@@ -1,12 +1,14 @@
 version: "3.3"
 
+#TODO: Implement tor container from scratch to avail easy ip rotation
+
 services: 
-  torprivoxy:
-    image: rdsubhas/tor-privoxy-alpine
-    ports: 
-      - 8118:9050
-    networks: 
-      - torprivoxyNetwork
+  # torprivoxy:
+  #   image: rdsubhas/tor-privoxy-alpine
+  #   ports: 
+  #     - 8118:9050
+  #   networks: 
+  #     - torprivoxyNetwork
   splash:
     image: scrapinghub/splash
     ports: 
