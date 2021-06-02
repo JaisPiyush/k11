@@ -1,6 +1,5 @@
 from k11.models.database import DatabaseConfiguration
 from typing import Callable, List, Union
-from .utils import CursorWrapper
 from sqlalchemy.orm.session import Session
 from pymongo import MongoClient
 
@@ -28,10 +27,6 @@ class BaseDatabaseWrapper:
         """Initialize the database connection settings."""
         raise NotImplementedError("connect() method is needed to be implemented")
     
-    def create_cursor(self, name=None):
-        """Create a cursor of the database"""
-        raise NotImplementedError("create_cursor() method is needed to be implemented")
-    
     def _close(self):
         if self.connection is not None:
             self.connection.close()
@@ -43,10 +38,6 @@ class BaseDatabaseWrapper:
     def is_usable(self):
         """Test if database connection is usable"""
         raise NotImplementedError("is_useable() method is needed to be implemented")
-    
-    def make_cursor(self, cursor):
-        """Create a universal cursor"""
-        return CursorWrapper(cursor, self)
     
     def on_commit(self, func: Callable):
         if not callable(func):
