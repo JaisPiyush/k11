@@ -5,6 +5,8 @@ from typing import Generator, List
 import requests
 import os
 
+API_KEY = os.getenv('GOOGLE_API')
+
 class YoutubeApi:
     def __init__(self, key=None) -> None:
         self.key = key
@@ -68,7 +70,7 @@ class YoutubeDigger(ThirdPartyDigger):
 
     def __init__(self) -> None:
         super().__init__()
-        self.yt_api = os.getenv('GOOGLE_API')
+        self.yt_api = YoutubeApi(key=API_KEY)
 
     
     @staticmethod
