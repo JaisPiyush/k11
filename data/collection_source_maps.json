@@ -1,0 +1,1155 @@
+[{
+  "_id": {
+    "$oid": "60a6b80c1018dfb5e6bd96e7"
+  },
+  "source_name": "Scoop Woop",
+  "source_home_link": "https://www.scoopwhoop.com",
+  "source_id": "WSTvVDLbD-5nbmqOxtkX3A_scoop_woop",
+  "formatter": "html_collection_format",
+  "assumed_tags": "art  entertainment.humor",
+  "links": [
+    {
+      "link": "https://www.scoopwhoop.com/category/humor/",
+      "assumed_tags": "art  entertainment.humor",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.scoopwhoop.com/category/entertainment/",
+      "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood art__entertainment.movies",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [],
+  "is_collection": true,
+  "is_rss": false,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60ae0d68f6f1733fb3461b8b"
+  },
+  "source_name": "Blog Google",
+  "source_home_link": "https://blog.google",
+  "source_id": "CpmrwPAogLtxrSwvsgUrpw_blog.google",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "technology__computing.consumer_electronics.smartphones.android  technology__computing.operating_systems.android",
+  "links": [
+    {
+      "link": "https://blog.google/products/android/rss",
+      "assumed_tags": "technology__computing.consumer_electronics.smartphones.roid  technology__computing.operating_systems.roid",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format"
+    }
+  ],
+  "compulsory_tags": [
+    "google",
+    "technology"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60b070bedec0af409cbece61"
+  },
+  "source_name": "Android Authority",
+  "source_home_link": "https://www.androidauthority.com",
+  "source_id": "I7KrqxeRmV69lxCUi1ztBQ_android_authority",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "technology__computing.consumer_electronics.smartphones.android technology__computing.operating_systems.android technology__computing.consumer_electronics.games__console technology__computing.hardware.computer",
+  "links": [
+    {
+      "link": "https://www.androidauthority.com/feed/",
+      "assumed_tags": "technology__computing.consumer_electronics.smartphones.android technology__computing.operating_systems.android",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format"
+    }
+  ],
+  "compulsory_tags": [
+    "android",
+    "computing",
+    "technology"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60b08ab0f2207ab29ecc5818"
+  },
+  "source_name": "Android Central",
+  "source_home_link": "https://www.androidcentral.com",
+  "source_id": "8MzP6yWJeMBwk0dz2Uh0Vw_android_central",
+  "formatter": "html_collection_format",
+  "assumed_tags": "technology__computing.consumer_electronics technology__computing.operating_systems technology__computing.hardware technology__computing.gaming technology__computing.internet_technology",
+  "links": [
+    {
+      "link": "https://www.androidcentral.com/",
+      "assumed_tags": "technology__computing.consumer_electronics technology__computing.operating_systems technology__computing.hardware technology__computing.gaming technology__computing.internet_technology",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format"
+    }
+  ],
+  "compulsory_tags": [],
+  "is_collection": true,
+  "is_rss": false,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60b09db5f2207ab29ecc581a"
+  },
+  "source_name": "Iso 500px",
+  "source_home_link": "https://iso.500px.com",
+  "source_id": "jCdPRiPUH4HsMlq6s1GL5A_iso_500px",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "hobbies__interests.arts__crafts.photography technology__computing.consumer_electronics.camera",
+  "links": [
+    {
+      "link": "https://iso.500px.com/feed/",
+      "assumed_tags": "hobbies__interests.arts__crafts.photography technology__computing.consumer_electronics.camera",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format"
+    }
+  ],
+  "compulsory_tags": [
+    "photography"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60b240028b25e16adb12f78a"
+  },
+  "source_name": "Big Picture",
+  "source_home_link": "https://www3.bostonglobe.com",
+  "source_id": "US1jqRhBZZWlhDx4GsL9WQ_big_picture",
+  "formatter": "html_collection_format",
+  "assumed_tags": "hobbies__interests.arts__crafts.photography society.welfare.social_service society.life",
+  "links": [
+    {
+      "link": "https://www3.bostonglobe.com/news/bigpicture",
+      "assumed_tags": "hobbies__interests.arts__crafts.photography society.welfare.social_service society.life",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format"
+    }
+  ],
+  "compulsory_tags": [
+    "photography"
+  ],
+  "is_collection": true,
+  "is_rss": false,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60b29b8a8cdf660a37fdad61"
+  },
+  "source_name": "500px",
+  "source_home_link": "https://500px.com",
+  "source_id": "RHdRoADt2A_f-qm5D68fPA_500px",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "hobbies__interests.arts__crafts.photography society.life hobbies__interests.arts__crafts",
+  "links": [
+    {
+      "link": "https://500px.com/editors.rss",
+      "assumed_tags": "hobbies__interests.arts__crafts.photography society.life hobbies__interests.arts__crafts",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": true
+    }
+  ],
+  "compulsory_tags": [
+    "photography",
+    "social_media",
+    "life",
+    "model",
+    "fashion"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60b3a05cee74f6949f0cd0d4"
+  },
+  "source_name": "Peta Pixel",
+  "source_home_link": "https://petapixel.com",
+  "source_id": "h-EJia0rmfbaFRGVyaIp_Q_peta pixel",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "hobbies__interests.arts__crafts.photography society.life technology__computing.consumer_electronics.camera",
+  "links": [
+    {
+      "link": "https://petapixel.com/feed/",
+      "assumed_tags": "hobbies__interests.arts__crafts.photography society.life technology__computing.consumer_electronics.camera",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "photography",
+    "life"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60b793bab52e1af876c11eed"
+  },
+  "source_name": "PinkVilla",
+  "source_home_link": "https://www.pinkvilla.com",
+  "source_id": "ZfRp7PGDuvzNNHh3ti-l2g_pinkvilla",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood",
+  "links": [
+    {
+      "link": "https://www.pinkvilla.com/category/entertainment/news/feed",
+      "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood ",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "entertainment",
+    "celebrity"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60b7cc98b52e1af876c11ef1"
+  },
+  "source_name": "Innfinity",
+  "source_home_link": "https://www.innfinity.in",
+  "source_id": "Yg4og9nS8z3gO7f6EsDMTA_innfinity",
+  "formatter": "html_collection_format",
+  "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood art__entertainment.movies__tv",
+  "links": [
+    {
+      "link": "https://www.innfinity.in/category/entertainment/",
+      "assumed_tags": null,
+      "compulsory_tags": null,
+      "formatter": null,
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.innfinity.in/category/fashion/",
+      "assumed_tags": "style__fashion",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.innfinity.in/category/lifestyle/",
+      "assumed_tags": "style__fashion",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.innfinity.in/category/food/",
+      "assumed_tags": "food__drink",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.innfinity.in/category/travel/",
+      "assumed_tags": "travel",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.innfinity.in/category/relationship/",
+      "assumed_tags": "society.relationship",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.innfinity.in/category/tech/",
+      "assumed_tags": "technology__computing",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.innfinity.in/category/photography/",
+      "assumed_tags": "hobbies__interests.arsts__crafts.photography",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [],
+  "is_collection": true,
+  "is_rss": false,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60b8e4c18280ebb7573607da"
+  },
+  "source_name": "Film Fare",
+  "source_home_link": "https://www.filmfare.com",
+  "source_id": "6AK1ceetYOwGZoYui5TaVw_film fare",
+  "formatter": "html_collection_format",
+  "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood art__entertainment.movies__tv",
+  "links": [
+    {
+      "link": "https://www.filmfare.com/news/bollywood",
+      "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood art__entertainment.movies__tv",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.filmfare.com/reviews",
+      "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood art__entertainment.movies__tv.reviews",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.filmfare.com/interviews",
+      "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood art__entertainment.movies__tv.interviews",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.filmfare.com/videos",
+      "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood art__entertainment.movies__tv",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "entertainment",
+    "celebs"
+  ],
+  "is_collection": true,
+  "is_rss": false,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60b914618280ebb7573607de"
+  },
+  "source_name": "Pink Villa",
+  "source_home_link": "https://www.pinkvilla.com",
+  "source_id": "0iow0sVytXai6cg3K_0oeA_pink villa",
+  "formatter": "html_collection_format",
+  "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood art__entertainment.movies__tv",
+  "links": [
+    {
+      "link": "https://www.pinkvilla.com/entertainment/movie-review",
+      "assumed_tags": "art__entertainment.celebrity_fan__gossip.bollywood art__entertainment.movies__tv",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.pinkvilla.com/fashion/best-dressed",
+      "assumed_tags": "art__entertainment.celebrity_fan__gossip style__fashion.clothing style__fashion.beauty",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.pinkvilla.com/lifestyle/relationships",
+      "assumed_tags": "society.relationship",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.pinkvilla.com/lifestyle/food-travel",
+      "assumed_tags": "food__drink",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.pinkvilla.com/lifestyle/people",
+      "assumed_tags": "society.life",
+      "compulsory_tags": null,
+      "formatter": "html_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [],
+  "is_collection": true,
+  "is_rss": false,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60ba05578280ebb7573607df"
+  },
+  "source_name": "Listverse",
+  "source_home_link": "https://listverse.com",
+  "source_id": "lkaq8JrvwHf2yTcEd0xeNA_listverse",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "hobbies__interests.games misc/facts",
+  "links": [
+    {
+      "link": "https://listverse.com/entertainment/gaming/feed/",
+      "assumed_tags": "hobbies__interests.games",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/science-nature/space/feed/",
+      "assumed_tags": "science.physics.space__astronomy",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/science-nature/animals/feed/",
+      "assumed_tags": "science.biology.zoology",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/science-nature/our-world/feed/",
+      "assumed_tags": "science.enviroment",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/science-nature/technology/feed/",
+      "assumed_tags": "technology__computing",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/science-nature/feed/",
+      "assumed_tags": "science technology__computing",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/bizarre/creepy/feed/",
+      "assumed_tags": "hobbies__interests.paranormal misc.weird misc.anomaly",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/bizarre/mysteries/feed/",
+      "assumed_tags": "misc.mystery",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/bizarre/weird-stuff/feed/",
+      "assumed_tags": "misc.weird",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/leisure-travel/health/feed/",
+      "assumed_tags": "health__fitness",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/leisure-travel/sport/feed/",
+      "assumed_tags": "sports",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/leisure-travel/travel/feed/",
+      "assumed_tags": "travel",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/fact-fiction/facts/feed/",
+      "assumed_tags": "misc.facts",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://listverse.com/fact-fiction/history-fact-fiction/feed/",
+      "assumed_tags": "science.social_science.history misc.facts",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "facts"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60ba42535712624135b23cad"
+  },
+  "source_name": "Luxury Lifestyle Mag",
+  "source_home_link": "https://www.luxurylifestylemag.co.uk",
+  "source_id": "wkfG9nK7n7HdZ4ALSghb_Q_luxury lifestyle mag",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "automotive__vehicle.cars.luxury_cars",
+  "links": [
+    {
+      "link": "https://www.luxurylifestylemag.co.uk/tag/luxury-cars/feed/",
+      "assumed_tags": "automotive__vehicle.cars.luxury_cars",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "cars",
+    "luxury_cars"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60ba5dad5712624135b23caf"
+  },
+  "source_name": "YoutTube",
+  "source_id": "youtube",
+  "source_home_link": "https://www.youtube.com/",
+  "is_third_party": true,
+  "is_collection": false,
+  "is_rss": false,
+  "links": [
+    {
+      "link": "UCKSVUHI9rbbkXhvAXK-2uxA",
+      "assumed_tags": "automotive__vehicles/cars/luxury_cars",
+      "compulsory_tags": [
+        "cars",
+        "luxury_cars"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UC21Kozr_K0yDM-VjoihG9Aw",
+      "assumed_tags": "automotive__vehicles/cars/luxury_cars",
+      "compulsory_tags": [
+        "cars",
+        "luxury_cars"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCj_ARBxhCoF5JxUItcEUs7Q",
+      "assumed_tags": "automotive__vehicles/cars/luxury_cars",
+      "compulsory_tags": [
+        "cars"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCUpC8yomtIEfrTXLjk-wAmw",
+      "assumed_tags": "automotive__vehicles/cars/luxury_cars",
+      "compulsory_tags": [
+        "cars",
+        "luxury_cars"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCIRgR4iANHI2taJdz8hjwLw",
+      "assumed_tags": "automotive__vehicles/cars/luxury_cars",
+      "compulsory_tags": [
+        "cars",
+        "luxury_cars"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCM1b28KhIZfF1-gYFkCiTAQ",
+      "assumed_tags": "automotive__vehicles/cars/luxury_cars",
+      "compulsory_tags": [
+        "cars",
+        "luxury_cars"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCwn0jaGbgMkYioOWBzMog1Q",
+      "assumed_tags": "automotive__vehicles/cars/luxury_cars",
+      "compulsory_tags": [
+        "cars",
+        "luxury_cars"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCyoSWGYKkusssZWzRrsX4RA",
+      "assumed_tags": "automotive__vehicles/cars/luxury_cars",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "assumed_tags": "science/physics/space__astronomy",
+      "compulsory_tags": [
+        "space",
+        "astronomy"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCrMePiHCWG4Vwqv3t7W9EFg",
+      "assumed_tags": "science/physics/space__astronomy",
+      "compulsory_tags": [
+        "science/physics/space__astronomy"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCtI0Hodo5o5dUb67FeUjDeA",
+      "assumed_tags": "science/physics/space__astronomy",
+      "compulsory_tags": [
+        "science/physics/space__astronomy"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCEszlI8-W79IsU8LSAiRbDg",
+      "assumed_tags": "science/physics/space__astronomy",
+      "compulsory_tags": [
+        "science/physics/space__astronomy"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCdgpfQ5snGKcP-eqoVXI0pw",
+      "assumed_tags": "science/physics/space__astronomy",
+      "compulsory_tags": [
+        "science/physics/space__astronomy"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCj0V0aG4LcdHmdPJ7aTtSCQ",
+      "assumed_tags": "health__fitness food__drink/cooking",
+      "compulsory_tags": [
+        "cooking"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCc1eW4k9ultmXa5anz7ZKZA",
+      "assumed_tags": "health__fitness food__drink/cooking",
+      "compulsory_tags": [
+        "health__fitness",
+        "food__drink/cooking"
+      ],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    }
+  ],
+  "formatter": null,
+  "assumed_tags": "",
+  "compulsory_tags": [
+    "luxury_cars",
+    "cooking",
+    "cars"
+  ]
+},{
+  "_id": {
+    "$oid": "60bcd1a1322225a089a5ab91"
+  },
+  "source_name": "Pinterest",
+  "source_home_link": "https://in.pinterest.com",
+  "source_id": "j2wVILgTZ6O5bXwmDWPMAQ_pinterest",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "automotive__vehicle.cars.luxury_cars",
+  "links": [
+    {
+      "link": "https://in.pinterest.com/noorhazin/luxury-cars.rss",
+      "assumed_tags": "automotive__vehicle.cars.luxury_cars",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": true
+    }
+  ],
+  "compulsory_tags": [
+    "luxury_cars"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60bcd828322225a089a5ab93"
+  },
+  "source_name": "The SuperCar Blog",
+  "source_home_link": "https://www.thesupercarblog.com",
+  "source_id": "zKEXrXjVkp48a4SNAWc9AQ_the supercar blog",
+  "formatter": null,
+  "assumed_tags": "automotive__vehicle.cars.luxury_cars",
+  "links": [
+    {
+      "link": "https://www.thesupercarblog.com/feed/",
+      "assumed_tags": "automotive__vehicle.cars.luxury_cars",
+      "compulsory_tags": null,
+      "formatter": null,
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "cars"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60bce26a322225a089a5ab95"
+  },
+  "source_name": "Put That Cheese Burger Down",
+  "source_home_link": "https://putthatcheeseburgerdown.com",
+  "source_id": "0Dg48QyFv6huiHT-5NKZiA_put that cheese burger down",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "health__fitness.mental_health health__fitness.disorders",
+  "links": [
+    {
+      "link": "https://putthatcheeseburgerdown.com/category/mental-health/feed/",
+      "assumed_tags": "health__fitness.mental_health health__fitness.disorders",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://putthatcheeseburgerdown.com/category/holistic-healing/rss/",
+      "assumed_tags": "health__fitness.mental_health health__fitness.disorders",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://putthatcheeseburgerdown.com/category/eat-mindfully/feed/",
+      "assumed_tags": "health__fitness food__drink.healthy_eating",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://putthatcheeseburgerdown.com/category/recipes-2/rss/",
+      "assumed_tags": "health__fitness food__drink.healthy_eating",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://putthatcheeseburgerdown.com/category/movement/feed/",
+      "assumed_tags": "health__fitness food__drink.healthy_eating",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://putthatcheeseburgerdown.com/category/mental-health/healthy-living/rss/",
+      "assumed_tags": "health__fitness food__drink.healthy_eating",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://putthatcheeseburgerdown.com/category/videos-i-love/feed/",
+      "assumed_tags": "health__fitness food__drink.healthy_eating",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "health",
+    "food"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60bcf0c6322225a089a5ab97"
+  },
+  "source_name": "Style Fitness",
+  "source_home_link": "https://stylefitness.in",
+  "source_id": "mZHcnyk4rBO2B-YjPAU9Hw_style fitness",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "health__fitness food__drink.healthy_eating",
+  "links": [
+    {
+      "link": "https://stylefitness.in/feed",
+      "assumed_tags": "health__fitness food__drink.healthy_eating",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "heatlh"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60bdab2b227af5d76e62618c"
+  },
+  "source_name": "Fitness Vs Weight Loss",
+  "source_home_link": "https://www.fitnessvsweightloss.com",
+  "source_id": "Z2y_793O4TSlqC80LcKAxg_fitness vs weight loss",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "health__fitness food__drink.healthy_eating",
+  "links": [
+    {
+      "link": "https://www.fitnessvsweightloss.com/feed/",
+      "assumed_tags": "health__fitness food__drink.healthy_eating",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "health"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60bdaf3e227af5d76e62618e"
+  },
+  "source_name": "Medium",
+  "source_home_link": "https://medium.com",
+  "source_id": "QWKTZzrDx14zZXdfHEK9bA_medium",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "health__fitness.mental_health",
+  "links": [
+    {
+      "link": "https://medium.com/feed/invisible-illness",
+      "assumed_tags": "health__fitness.mental_health",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://medium.com/feed/gethealthy/tagged/weight-loss",
+      "assumed_tags": "health__fitness",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://medium.com/feed/gethealthy/tagged/food",
+      "assumed_tags": "food__drink",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://medium.com/feed/gethealthy/tagged/fitness",
+      "assumed_tags": "health__fitness",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://medium.com/feed/gethealthy/tagged/metabolism",
+      "assumed_tags": "health__fitness",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "drink",
+    "health",
+    "food"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60bdb4eb227af5d76e626190"
+  },
+  "source_name": "Medium",
+  "source_home_link": "https://blog.heartsupport.com",
+  "source_id": "0U21AZEXtlArPCbMNuam2A_medium",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "society.life society.relationship",
+  "links": [
+    {
+      "link": "https://blog.heartsupport.com/feed/tagged/life-lessons",
+      "assumed_tags": "society.life society.relationship",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://blog.heartsupport.com/feed/tagged/relationships",
+      "assumed_tags": "society.life society.relationship",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://blog.heartsupport.com/feed/tagged/mental-health",
+      "assumed_tags": "health__fitness.mental_health",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://blog.heartsupport.com/feed/tagged/spirituality",
+      "assumed_tags": "religion__spirituality",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "life",
+    "religion"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60be3258227af5d76e626192"
+  },
+  "source_name": "Anomalien",
+  "source_home_link": "https://anomalien.com",
+  "source_id": "kQqafwWhpnWpt513_THEtA_anomalien",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "hobbies__interests.paranormal misc.anomaly misc.weird misc.mystery",
+  "links": [
+    {
+      "link": "https://anomalien.com/news/paranormal/feed/",
+      "assumed_tags": "hobbies__interests.paranormal misc.anomaly misc.weird misc.mystery",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://anomalien.com/news/ufo-aliens/feed/",
+      "assumed_tags": "hobbies__interests.paranormal misc.anomaly misc.weird misc.mystery",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://anomalien.com/articles/civilizations-history/feed/",
+      "assumed_tags": "hobbies__interests.paranormal misc.anomaly misc.weird misc.mystery",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    "paranormal"
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+}]
