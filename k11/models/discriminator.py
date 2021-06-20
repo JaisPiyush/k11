@@ -1,6 +1,9 @@
 
 
+from k11.models.main import ArticleContainer
 from typing import Dict, List
+
+from numpy import dot
 
 
 class Topics(object):
@@ -65,3 +68,29 @@ class Topics(object):
             "name_to_target": self.name_to_target,
             "target_to_name": self.target_to_name
         }
+
+
+class TextMeta:
+    
+    def __init__(self, article_id: str, article) -> None:
+        self.article_id = article_id
+        self.per = []
+        self.org = []
+        self.gpe = []
+        self.keywords = []
+        self.article: ArticleContainer = article
+    
+    def adapt_from_dict(self, kwargs):
+        self.per = kwargs["per"]
+        self.org = kwargs["org"]
+        self.gpe = kwargs["gpe"]
+        self.keywords = list(set(kwargs["keywords"]))
+    
+class CorpusHolder:
+    corpus: List = None
+    metas: List[TextMeta] = None
+
+    def __init__(self, corpus, meta=None) -> None:
+        self.corpus = corpus
+        self.meta = meta
+    

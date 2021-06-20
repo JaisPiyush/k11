@@ -128,6 +128,9 @@ class FrozenTopicInterface(TopicsManager):
     def __init__(self) -> None:
         super().__init__()
         self.set_file_name("topics_repository.bin")
+    
+    def num_topics(self):
+        return len(self.topics)
 
     
 

@@ -380,6 +380,11 @@ class ArticleContainer(MongoModels):
     primary_key = "article_id"
 
 
+    @staticmethod
+    def fetch_trainable_articles() -> Generator:
+        return ArticleContainer.adapter().find({})
+
+
 
 """
 ThirdPartyDigger contains all non scrapy spiders.
