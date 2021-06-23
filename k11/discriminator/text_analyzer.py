@@ -145,67 +145,45 @@ class DictionaryManager:
         return [self.dictionary.doc2bow(text) for text in texts]
 
 
-class TextAnalyzer:
-    
+class TextAnalysisAdapter:
     corpus_manager = CorpusManager()
     dictionary_manager = DictionaryManager()
     text_processor = TextProcessor()
-    lda_model: LdaModel = None
+    model = None
     topics_manager = FrozenTopicInterface()
     dir_path = os.path.abspath(dirname(__file__))
-    model_path = os.path.join(dir_path, "lda_model.bin")
     commitable_articles = []
+    re_train = False
 
-    CHUNKSIZE = 100
-    PASSES = 2 
-    ALPHA = 'auto'
-    ETA = 'auto'
-    ITERATIONS= 50
-
-    def load_modal(self):
-        if os.path.exists(self.model_path):
-            self.lda_model = LdaModel.load(self.model_path)
-        else:
-            self.lda_model = LdaModel(
-                num_topics=self.topics_manager.num_topics(),
-                chunksize=self.CHUNKSIZE,
-                passes=self.PASSES,
-                alpha=self.ALPHA,
-                eta=self.ETA,
-                per_word_topics=True,
-                iterations=self.ITERATIONS
-            )
-        if self.lda_model.num_topics != self.topics_manager.num_topics():
-            self.re_train = True
-
-    def save_modal(self):
-        if self.lda_model is not None:
-            self.lda_model.save(self.model_path)
+    @property
+    def model_path(self):
+        raise NotImplementedError("model_path property must be implemented.")
     
-    def __init__(self, re_train: bool = False) -> None:
-        self.re_train = re_train
-
-    def load_corpus(self) -> CorpusHolder:
-        # TODO: Batching in history loading
-        corpus = []
+    def load_model(self):
+        raise NotImplementedError("load_modal is not Implemeneted")
+    
+    def update_model(self, data, chunksize = 100):
+        raise NotImplementedError("update_model method is not implemented")
+    
+    def save_model(self):
+        raise NotImplementedError("save_model is not implemented.")
+    
+    def load_corpus(self) -> Generator[CorpusHolder, None, None]:
         for file_path in self.corpus_manager.get_corpus_file_paths():
-            corpus.append(self.corpus_manager._load_corpus(file_path))
-        return CorpusHolder(corpus)
+            yield CorpusHolder(self.corpus_manager._load_corpus(file_path))
     
-
     def create_article(self, topic, meta: TextMeta):
-        pass
+        raise Exception("create_article has no code to run.")
 
     def flush_articles(self):
         self.commitable_articles = []
 
     def remap_topic_target(self):
-        pass
+        raise Exception("remap_topic_target has no code to run.")
 
     def commit_article_creation(self):
-        pass
-            
-    
+        raise Exception("commit_article_creation has no code to run.")
+
     def process_articles(self) -> CorpusHolder:
         articles = []
         metas = []
@@ -217,19 +195,65 @@ class TextAnalyzer:
             corpus=self.dictionary_manager.get_corpus(articles),
             meta=metas
         )
-
-
-    def corpus_generator(self) -> CorpusHolder:
+    
+    def corpus_generator(self) -> Generator[CorpusHolder]:
         if self.re_train and self.corpus_manager.check_corpus_directory():
             return self.load_corpus()
-        return self.process_articles()
+        yield self.process_articles()
+    
+    def _save_model(self):
+        self.dictionary_manager.save()
+    
+
+
+
+class TextAnalyzer(TextAnalysisAdapter):
+    
+    CHUNKSIZE = 100
+    PASSES = 2 
+    ALPHA = 'auto'
+    ETA = 'auto'
+    ITERATIONS= 50
+
+    @property
+    def model_path(self):
+        return os.path.join(self.dir_path, self.model_file_name)
+
+    def update_model(self, data, chunksize = 100):
+        self.model.update(data, chunksize=chunksize)
+
+    def load_model(self):
+        if os.path.exists(self.model_path):
+            self.model = LdaModel.load(self.model_path)
+        else:
+            self.model = LdaModel(
+                num_topics=self.topics_manager.num_topics(),
+                chunksize=self.CHUNKSIZE,
+                passes=self.PASSES,
+                alpha=self.ALPHA,
+                eta=self.ETA,
+                per_word_topics=True,
+                iterations=self.ITERATIONS
+            )
+        if self.model.num_topics != self.topics_manager.num_topics():
+            self.re_train = True
+
+    def save_model(self):
+        self._save_model()
+        if self.model is not None:
+            self.model.save(self.model_path)
+    
+    def __init__(self, re_train: bool = False) -> None:
+        self.re_train = re_train
+
     
     def train(self):
-        self.load_modal()
+        self.load_model()
         if self.re_train:
-            self.lda_model.clear()
-        corpus_holder = self.corpus_generator()
-        self.lda_model.update(corpus_holder.corpus)
+            self.model.clear()
+        for corpus_holder in self.corpus_generator():
+            self.update_model(corpus_holder)
+        self.save_model()
 
 
 

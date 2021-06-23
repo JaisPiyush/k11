@@ -50,3 +50,9 @@ class IndexableArticle(Base):
     
     def create(self):
         self.adapter()._instance_create(self)
+
+
+class Article(Base):
+    __tablename__ = "article"
+    __database__ = "postgres_treasure"
+    
