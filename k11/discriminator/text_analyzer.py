@@ -182,7 +182,7 @@ class TextAnalysisAdapter:
         raise Exception("remap_topic_target has no code to run.")
 
     def commit_article_creation(self):
-        raise Exception("commit_article_creation has no code to run.")
+        raise Exception("commit_article_creation has no code to run. ")
 
     def process_articles(self) -> CorpusHolder:
         articles = []
