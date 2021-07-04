@@ -1687,4 +1687,2556 @@
       }
     ]
   }
+},{
+  "_id": {
+    "$oid": "60d49620466e850cf36fee16"
+  },
+  "source_name": "Anomalist",
+  "format_id": "YZMZg_0BGOVNxJCZ6jknrg_anomalist",
+  "source_home_link": "https://www.anomalist.com",
+  "created_on": {
+    "$date": "2021-06-24T19:26:23.915Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post.typography",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "exact_class": "subscribe-widget"
+      },
+      {
+        "tag": "table"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d49e61466e850cf36fee18"
+  },
+  "source_name": "Elle",
+  "format_id": "qdkffHGGZV6IPkTy5KHkqw_elle",
+  "source_home_link": "https://www.elle.com",
+  "created_on": {
+    "$date": "2021-06-24T19:26:23.915Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/credit/text()",
+      "parent": "content",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "image": {
+      "sel": "xpath",
+      "param": "@ur",
+      "parent": "content",
+      "type": "image/",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "main.site-content",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "div",
+        "id": "searchoverlay"
+      },
+      {
+        "tag": "div",
+        "exact_class": "content-rail standard-rail"
+      },
+      {
+        "tag": "div",
+        "class_list": [
+          "authors"
+        ]
+      },
+      {
+        "tag": "div",
+        "class_list": [
+          "journey-inline",
+          "spotim-module",
+          "end-of-content-module",
+          "recommended-module",
+          "mobile-adhesion-unit",
+          "open",
+          "transporter",
+          "feed",
+          "feed-transporter",
+          "feed-transporter-with-ads",
+          "leaderboard-ad",
+          "transporter-ad",
+          "seo-tags-container"
+        ]
+      },
+      {
+        "id": "article-marketplace-horizontal"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d4a312466e850cf36fee1a"
+  },
+  "source_name": "Akanksha Redhu",
+  "format_id": "VAjbOD5W4dVDQOwX2Mio3w_akanksha redhu",
+  "source_home_link": "https://akanksharedhu.com",
+  "created_on": {
+    "$date": "2021-06-24T19:26:23.915Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "div",
+        "class_list": [
+          "grid-4"
+        ]
+      },
+      {
+        "exact_class": "single-box comments"
+      },
+      {
+        "tag": "nav",
+        "class_list": [
+          "nav-single"
+        ]
+      },
+      {
+        "id": "tags-box"
+      },
+      {
+        "id": "social-box"
+      },
+      {
+        "class_list": [
+          "ssb",
+          "ssb-wrap",
+          "jp-relatedposts"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d6c9cc54c676f2b5ce1f76"
+  },
+  "source_name": "Indian Wedding Saree",
+  "format_id": "1brQfm8tEBCLPdKKOiO_pw_indian wedding saree",
+  "source_home_link": "https://blog.indianweddingsaree.com",
+  "created_on": {
+    "$date": "2021-06-26T11:57:01.916Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.post-body",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "iframe"
+      },
+      {
+        "exact_class": "social-4i"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d6f739b50a59ac1e044cb5"
+  },
+  "source_name": "The Un Stitchd",
+  "format_id": "GBwdbVIvuaEE6KlvY6TN0Q_the un stitchd",
+  "source_home_link": "http://www.theunstitchd.com",
+  "created_on": {
+    "$date": "2021-06-26T15:08:31.878Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "quads-location"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d6f915b50a59ac1e044cb7"
+  },
+  "source_name": "The Un Stitchd",
+  "format_id": "iO1A5TTQav7gW3Jc8p-OCQ_the un stitchd",
+  "source_home_link": "https://www.theunstitchd.com",
+  "created_on": {
+    "$date": "2021-06-26T15:08:31.878Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "quads-location"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d6fcb4b50a59ac1e044cb9"
+  },
+  "source_name": "Circle Mag",
+  "format_id": "iuZddD5xtsFyOBBXmdNlWw_circle mag",
+  "source_home_link": "https://www.circlemag.in",
+  "created_on": {
+    "$date": "2021-06-26T15:08:31.878Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "div",
+        "class_list": [
+          "td-main-sidebar"
+        ]
+      },
+      {
+        "class_list": [
+          "td-post-sharing-top"
+        ]
+      },
+      {
+        "tag": "footer"
+      },
+      {
+        "tag": "script"
+      },
+      {
+        "class_list": [
+          "td_block_related_posts"
+        ]
+      },
+      {
+        "id": "comments"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d73089b50a59ac1e044cbb"
+  },
+  "source_name": "The Fact Site",
+  "format_id": "8JWvpOHfUUlttxBTb77ygg_the fact site",
+  "source_home_link": "https://www.thefactsite.com",
+  "created_on": {
+    "$date": "2021-06-26T15:08:31.878Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "title",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article > div",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "footer"
+      },
+      {
+        "exact_class": "mv-ad-box"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d733e5b50a59ac1e044cbd"
+  },
+  "source_name": "The Phoblographer",
+  "format_id": "wgKtxlWLlblK0fH5TylRFQ_the phoblographer",
+  "source_home_link": "https://www.thephoblographer.com",
+  "created_on": {
+    "$date": "2021-06-26T15:08:31.878Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "exact_class": "vuukle-powerbar powerBoxDiv"
+      },
+      {
+        "class_list": [
+          "vuukle-powerbar"
+        ]
+      },
+      {
+        "id": "vuukle-emote"
+      },
+      {
+        "id": "sharing"
+      },
+      {
+        "id": "respond"
+      },
+      {
+        "id": "vuukle-comments"
+      },
+      {
+        "tag": "footer"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d7361cb50a59ac1e044cbf"
+  },
+  "source_name": "DIY Photographer",
+  "format_id": "8HpbnMfTAeNKi5aB648eCg_diy photographer",
+  "source_home_link": "https://www.diyphotography.net",
+  "created_on": {
+    "$date": "2021-06-26T15:08:31.878Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "exact_class": "social-sharing"
+      },
+      {
+        "class_list": [
+          "fs_dynamic"
+        ]
+      },
+      {
+        "id": "social_footer"
+      },
+      {
+        "class_list": [
+          "widget-area"
+        ]
+      },
+      {
+        "exact_class": "clearfix"
+      },
+      {
+        "tag": "footer"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d9d2fb341bcd1307192820"
+  },
+  "source_name": "Expert Photography",
+  "format_id": "0FrDbaJwyYn5CKp8roaRdg_expert photography",
+  "source_home_link": "https://expertphotography.com",
+  "created_on": {
+    "$date": "2021-06-28T19:07:08.792Z"
+  },
+  "html_collection_format": {
+    "itertag": "article",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "h4",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "@href",
+      "parent": "a",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "see-guide",
+          "avatar",
+          "size-large"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60d9ddf6341bcd1307192822"
+  },
+  "source_name": "Pedron The World",
+  "format_id": "clMhUOCkEGSphwkDIFc1oA_pedron the world",
+  "source_home_link": "https://www.pedrontheworld.com",
+  "created_on": {
+    "$date": "2021-06-28T19:07:08.792Z"
+  },
+  "html_collection_format": {
+    "itertag": "div[@class=\"slide sqs-gallery-design-grid-slide\"]",
+    "image": {
+      "sel": "xpath",
+      "param": "@src",
+      "parent": "img",
+      "type": "image",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  }
+},{
+  "_id": {
+    "$oid": "60d9efaf341bcd1307192824"
+  },
+  "source_name": "Exposure",
+  "format_id": "ks5BFlhQ05GFUTiGZkx5AA_exposure",
+  "source_home_link": "https://photography.exposure.co",
+  "created_on": {
+    "$date": "2021-06-28T19:07:08.792Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div#post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "id": "lightbox"
+      },
+      {
+        "tag": "script"
+      },
+      {
+        "tag": "noscript"
+      },
+      {
+        "class_list": [
+          "upsell-story-header"
+        ]
+      },
+      {
+        "class_list": [
+          "author-meta"
+        ]
+      },
+      {
+        "class_list": [
+          "storey-footer-wrapper"
+        ]
+      },
+      {
+        "class_list": [
+          "copyright-notice",
+          "footer-actions",
+          "share-enabled",
+          "storey-footer-nav",
+          "icon-word-mark"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60db12842c033a07e86b028e"
+  },
+  "source_name": "Feature Shoot",
+  "format_id": "NLjW4J3m13blvWBNAzzDyw_feature shoot",
+  "source_home_link": "https://www.featureshoot.com",
+  "created_on": {
+    "$date": "2021-06-29T17:58:35.088Z"
+  },
+  "html_collection_format": {
+    "itertag": "div[@class=\"li-a\"]",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "div[@class=\"gridtitle\"]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "@href",
+      "parent": "a",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "image": {
+      "sel": "xpath",
+      "param": "@src",
+      "parent": "img",
+      "type": "image",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div#body",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "sharebtns",
+          "secbreak",
+          "postgrid",
+          "printswap"
+        ]
+      },
+      {
+        "tag": "footer"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60db1a392c033a07e86b0290"
+  },
+  "source_name": "Joe Cnally",
+  "format_id": "3nwET4yL_xfVnQiRb0_u3g_joe cnally",
+  "source_home_link": "https://blog.joemcnally.com",
+  "created_on": {
+    "$date": "2021-06-29T17:58:35.088Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.site-container",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "footer"
+      },
+      {
+        "class_list": [
+          "title-area",
+          "header-widget-area",
+          "nav-primary",
+          "entry-meta",
+          "jb-relatedposts",
+          "mashb-main"
+        ]
+      },
+      {
+        "tag": "aside"
+      },
+      {
+        "class_list": [
+          "entry-comments",
+          "entry-pings",
+          "comment-respond"
+        ]
+      },
+      {
+        "class_list": [
+          "news-workshops",
+          "social-footer",
+          "footer-widgets",
+          "supporters"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60db1f1d2c033a07e86b0292"
+  },
+  "source_name": "Richar Bernabe",
+  "format_id": "02QNi48g4tUI0w86yLyKLQ_richar bernabe",
+  "source_home_link": "https://richardbernabe.com",
+  "created_on": {
+    "$date": "2021-06-29T17:58:35.088Z"
+  },
+  "html_collection_format": {
+    "itertag": "article[@contains(class,'post')]",
+    "title": {
+      "sel": "xpath",
+      "param": "/a/text()",
+      "parent": "h1[@class=\"entry-title\"]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "/a/@href",
+      "parent": "h1[@class=\"entry-title\"]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.entry-content",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "exact_class": "et_pb_row et_pb_row_2"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60db221d2c033a07e86b0294"
+  },
+  "source_name": "David DuChemin",
+  "format_id": "RRaASHjy5NqV4DsQoQPoAQ_david duchemin",
+  "source_home_link": "https://davidduchemin.com",
+  "created_on": {
+    "$date": "2021-06-29T17:58:35.088Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "p-meta"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60db23842c033a07e86b0296"
+  },
+  "source_name": "Deposit Photos",
+  "format_id": "TzYZnwjGM-tSnQUxaPOjww_deposit photos",
+  "source_home_link": "https://blog.depositphotos.com",
+  "created_on": {
+    "$date": "2021-06-29T17:58:35.088Z"
+  },
+  "html_collection_format": {
+    "itertag": "div[@contains(class,\"post\")]",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "a[@class=\"post-ttile\"]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "@href",
+      "parent": "a[@class=\"post-title\"]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "a[@class=\"author-name\"]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pub_date",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.content-wrapper",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "related",
+          "post-subscription-block",
+          "post-footer",
+          "posts-nav",
+          "author",
+          "fb-comments"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60db367c2c033a07e86b0298"
+  },
+  "source_name": "Daily Art Magazine",
+  "format_id": "A6dNJFlgLOrPi_7xe2x9_A_daily art magazine",
+  "source_home_link": "https://www.dailyartmagazine.com",
+  "created_on": {
+    "$date": "2021-06-29T17:58:35.088Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article#mvp-post-content-wrap",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "meta"
+      },
+      {
+        "tag": "div",
+        "id": "mvp-post-info-wrap"
+      },
+      {
+        "class_list": [
+          "is-provider-dailyartmagazine-com-art-history-stories",
+          "donate_form_re",
+          "mvp-post-tags",
+          "mvp-org-wrap"
+        ]
+      },
+      {
+        "tag": "mvp-author-box-wrap"
+      },
+      {
+        "id": "mvp-comments-button"
+      },
+      {
+        "id": "disqus_thread"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60db397c2c033a07e86b029a"
+  },
+  "source_name": "Daily Art Magazine",
+  "format_id": "B5lHNhI22jwnJ5BJM0mA9Q_daily art magazine",
+  "source_home_link": "https://www.damninteresting.com",
+  "created_on": {
+    "$date": "2021-06-29T17:58:35.088Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "main",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "span",
+        "exact_class": "blurb"
+      },
+      {
+        "exact_class": "narrate-container"
+      },
+      {
+        "exact_class": "jump-to-comments"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60dc929d5b74c43c13b3bed2"
+  },
+  "source_name": "Ars Technica",
+  "format_id": "gotaxfwSrXTrauC4UHaadw_ars technica",
+  "source_home_link": "https://arstechnica.com",
+  "created_on": {
+    "$date": "2021-06-30T20:56:19.880Z"
+  },
+  "xml_collection_format": {
+    "itertag": "",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.article-single",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "aside"
+      },
+      {
+        "class_list": [
+          "social-footer",
+          "article-author",
+          "xrail"
+        ]
+      },
+      {
+        "class_list": [
+          "pullbox"
+        ]
+      },
+      {
+        "id": "article-footer-wrap"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60dc96d35b74c43c13b3bed4"
+  },
+  "source_name": "Quanta Magazine",
+  "format_id": "zli83QQ3fchPqkWwIeCD6w_quanta magazine",
+  "source_home_link": "https://www.quantamagazine.org",
+  "created_on": {
+    "$date": "2021-06-30T20:56:19.880Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div#postContent",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "header-space",
+          "post__footer"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60dc9a265b74c43c13b3bed8"
+  },
+  "source_name": "Space",
+  "format_id": "g7X_3iEEDVJ9Os7vMNUlIw_space",
+  "source_home_link": "https://www.space.com",
+  "created_on": {
+    "$date": "2021-06-30T20:56:19.880Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.news-article",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "aside"
+      },
+      {
+        "class_list": [
+          "ad-unit",
+          "breadcrumb",
+          "byline-social",
+          "author-block",
+          "text-copy",
+          "read-more-container",
+          "xenforo-comments-see-all"
+        ]
+      },
+      {
+        "tag": "script"
+      },
+      {
+        "tag": "footer"
+      },
+      {
+        "class_list": [
+          "related-articles-block"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60dca9715b74c43c13b3beda"
+  },
+  "source_name": "Space",
+  "format_id": "nNw8ss-zS3yqRzy-DN3ayQ_space",
+  "source_home_link": "https://science.howstuffworks.com",
+  "created_on": {
+    "$date": "2021-06-30T20:56:19.880Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {
+    "itertag": "",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  }
+},{
+  "_id": {
+    "$oid": "60dcaada5b74c43c13b3bedc"
+  },
+  "source_name": "How Stuff Works",
+  "format_id": "a4GK_xfgskfChlV_v4bmwg_how stuff works",
+  "source_home_link": "https://howstuffworks.com",
+  "created_on": {
+    "$date": "2021-06-30T20:56:19.880Z"
+  },
+  "html_collection_format": {
+    "itertag": "a[contains(@class, \"grid-tile-b\") or contains(@class, \"grid-tile-b\") or contains(@class, \"grid-tile-c\") or contains(@class, \"grid-tile-d\") or contains(@class, \"grid-tile-e\")]",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "h3",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "@href",
+      "parent": "__",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div#content-well",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "id": "related-hero"
+      },
+      {
+        "tag": "script"
+      },
+      {
+        "id": "share-float"
+      },
+      {
+        "class_list": [
+          "sticky-container"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60dcb6335b74c43c13b3bee0"
+  },
+  "source_name": "How Stuff Works",
+  "format_id": "kT8p-WwiDXz636x4tgOUXw_how stuff works",
+  "source_home_link": "https://money.howstuffworks.com",
+  "created_on": {
+    "$date": "2021-06-30T20:56:19.880Z"
+  }
+},{
+  "_id": {
+    "$oid": "60dd9adfc0fb7b68e7206d0e"
+  },
+  "source_name": "Science Daily",
+  "format_id": "x72v5uRl2VRBH_v-TdE9Bg_science daily",
+  "source_home_link": "https://www.sciencedaily.com",
+  "created_on": {
+    "$date": "2021-07-01T16:01:24.974Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.col-md-8.col-md-push-4",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      },
+      {
+        "param": "div.col-md-8.col-md-push-4",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "fullstory",
+          "photo-caption",
+          "mobile-top-rectangle"
+        ]
+      },
+      {
+        "id": "story_source"
+      },
+      {
+        "id": "related_multimedia"
+      },
+      {
+        "id": "journal_references"
+      },
+      {
+        "id": "citations"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60ddb015c0fb7b68e7206d10"
+  },
+  "source_name": "Dan Flying Solo",
+  "format_id": "LVAf8pMHRMo9ZSO9nBFLsw_dan flying solo",
+  "source_home_link": "https://www.danflyingsolo.com",
+  "created_on": {
+    "$date": "2021-07-01T16:01:24.974Z"
+  },
+  "html_collection_format": {
+    "itertag": "div[@id=\"main\"]",
+    "title": {
+      "sel": "xpath",
+      "param": "/a/text()",
+      "parent": "h3",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "/a/@href",
+      "parent": "h3",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "image": {
+      "sel": "xpath",
+      "param": "@src",
+      "parent": "img",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div#main",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "id": "footer"
+      },
+      {
+        "class_list": [
+          "insertextra",
+          "adunitwrapper",
+          "crp_related",
+          "post-meta-infos",
+          "single-big",
+          "comment-entry"
+        ]
+      },
+      {
+        "tag": "aside"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60ddb95cc0fb7b68e7206d12"
+  },
+  "source_name": "Lili's Travel Plans",
+  "format_id": "oWFPyIH9ifPKapqe9mf9yg_lili's travel plans",
+  "source_home_link": "https://www.lilistravelplans.com",
+  "created_on": {
+    "$date": "2021-07-01T16:01:24.974Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creatore",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.sidebar_content",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "fullwidth_comment_wrapper",
+          "jp-relatedposts",
+          "addtoany_share_save_container",
+          "post_share_text",
+          "post_info_cat"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60ddbb9fc0fb7b68e7206d14"
+  },
+  "source_name": "Life Is A Movie",
+  "format_id": "NRy528XFqeFgbQOVOCB-_Q_life is a movie",
+  "source_home_link": "https://mylifesamovie.com",
+  "created_on": {
+    "$date": "2021-07-01T16:01:24.974Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creatore",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "entry-meta",
+          "adunitwrapper",
+          "jp-relatedposts",
+          "entry-tags"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60ddc887c0fb7b68e7206d16"
+  },
+  "source_name": "Back Pack Banter",
+  "format_id": "A9TA1J5_023zB4eoEpA04w_back pack banter",
+  "source_home_link": "https://www.backpackerbanter.com",
+  "created_on": {
+    "$date": "2021-07-01T16:01:24.974Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "mailmunch-forms-before-post",
+          "",
+          "counter-hierarchy",
+          "adunitwrapper",
+          "mailmunch-forms-in-post-middle",
+          "mailmunch-forms-after-post"
+        ]
+      },
+      {
+        "class_list": [
+          "trawell-share-single",
+          "jp-relatedposts"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60ddcb20c0fb7b68e7206d18"
+  },
+  "source_name": "Wandering Earl",
+  "format_id": "t9oShBY_KW_Epw-8ymUl-Q_wandering earl",
+  "source_home_link": "https://feeds.feedburner.com",
+  "created_on": {
+    "$date": "2021-07-01T16:01:24.974Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "fusion-post-title-meta-wrap",
+          "comment-respond",
+          "fusion-fullwidth",
+          "mashsb-container"
+        ]
+      },
+      {
+        "tag": "aside"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60ddd04ac0fb7b68e7206d1a"
+  },
+  "source_name": "WTF Fact",
+  "format_id": "83_Q9YIXIeMgPVrRayHnTQ_wtf fact",
+  "source_home_link": "https://wtffunfact.com",
+  "created_on": {
+    "$date": "2021-07-01T16:01:24.974Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.featured-image",
+        "is_multiple": false,
+        "content_type": "image",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": []
+  }
+},{
+  "_id": {
+    "$oid": "60ddd1b2c0fb7b68e7206d1c"
+  },
+  "source_name": "All That Is Interesting",
+  "format_id": "4DYlmo9pbeOtLGNtupIzMw_all that is interesting",
+  "source_home_link": "https://allthatsinteresting.com",
+  "created_on": {
+    "$date": "2021-07-01T16:01:24.974Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post-content",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "pbh_inline"
+        ]
+      },
+      {
+        "tag": "script"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60ddd3abc0fb7b68e7206d1e"
+  },
+  "source_name": "Oddee",
+  "format_id": "J2hIrEYKC4jdgnDkccPh7A_oddee",
+  "source_home_link": "https://www.oddee.com",
+  "created_on": {
+    "$date": "2021-07-01T16:01:24.974Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "entry-meta",
+          "OUTBRAIN",
+          "at-below-pos"
+        ]
+      },
+      {
+        "tag": "iframe"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60ddd57bc0fb7b68e7206d20"
+  },
+  "source_name": "Kick Ass Facts",
+  "format_id": "RbCTKkEzNHtlh7FpoeC5fg_kick ass facts",
+  "source_home_link": "https://www.kickassfacts.com",
+  "created_on": {
+    "$date": "2021-07-01T16:01:24.974Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "iframe"
+      },
+      {
+        "class_list": [
+          "post-bottom-meta",
+          "single-category-custom",
+          "at-above-post",
+          "at-below-post",
+          "post-navi",
+          "thb-post-bottom-meta"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60dec8ccecd3fda644afc8a5"
+  },
+  "source_name": "Google News",
+  "format_id": "4ocjK1xvQ_hm11C3H6qSeQ_google news",
+  "source_home_link": "https://news.google.com",
+  "created_on": {
+    "$date": "2021-07-02T13:33:10.984Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  }
 }]

@@ -140,6 +140,10 @@ class BaseContentExtraction:
     
 
     def extract_values(self, node: Selector, parent: str, param: str="text()", parent_prefix=".//", param_prefix="/", **kwargs) -> Union[str, List[str]]:
+        # {parent: "__", param: "abv"} will delete the '//' from parent_prefix
+        if parent == "__":
+            parent_prefix = "."
+            parent = ""
         f_str = parent_prefix + parent + param_prefix + param
         selected = node.css(f_str) if "sel" in kwargs and kwargs["sel"] == "css" else node.xpath(f_str)
         if "is_multiple" in kwargs and kwargs["is_multiple"]:
@@ -167,6 +171,7 @@ class BaseContentExtraction:
         if "testing" in kwargs and kwargs["testing"]:
             yield data, node
         elif "link_store" in kwargs and kwargs["link_store"].is_multiple:
+            # is_multiple signifies that the articles are directly baked into collection
             self.create_article(data, kwargs["link_store"], kwargs["source_map"],index= kwargs["index"] if "index" in kwargs else 0)
         else:
             yield self.pack_in_data_link_container(data, **kwargs)
