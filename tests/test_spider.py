@@ -7,6 +7,7 @@ import unittest
 from k11.digger.spiders import RSSFeedSpider, HTMLFeedSpider
 import requests
 from scrapy.http import XmlResponse
+from scrapy.selector import Selector
 
 
 
@@ -76,15 +77,38 @@ class TestRssFeedSpider(unittest.TestCase):
             
     
     def test_rss_for_named_source(self):
-        source_name = "blog.google"
+        source_name = "Primer Magazine"
         source_map = self.pull_named_source(source_name)
-        formatter = self.pull_rss_source_formatter(source_map.source_id)
         spider = self.spider_class()
-        spider.itertag = "item"
-        results = spider.run_requests(testing=True)
-        for result in results:
-            print(result.selector)
-        self.assertEqual(1,2)
+        link_store = source_map.links[0]
+        formats = spider.get_formatter_from_database(source_map.source_id)
+        response = requests.get(link_store.link, headers={'User-Agent': "Mozilla/5.0 (Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"})
+        response = XmlResponse(url=link_store.link, body=response.content)
+        format_ =spider.get_suitable_format_rules(formats, source_map, link_store)
+        kwarg = {
+            "source_map": source_map,
+            "format_rules": format_,
+            "formats": formats,
+            "assumed_tags": "", 
+            "compulsory_tags": [],  
+            "url": link_store.link,
+            "link_store": link_store
+        }
+        spider.iterator = "xml"
+        results1 = list(spider._parse(response, **kwarg))
+        # print(format_)
+        selector = Selector(response, type='xml')
+        spider._register_namespaces(selector)
+        selector.remove_namespaces()  
+        nodes = selector.xpath(f"//{format_['itertag']}")
+        self.assertEqual(type(response), XmlResponse)
+        results2 = []
+        for node in nodes:
+            node = spider.parse_node(response, node, **kwarg)
+            for gen in node:
+                results2.append(gen)
+        self.maxDiff = None
+        self.assertListEqual(results1[0], results2[0])
     
 
 

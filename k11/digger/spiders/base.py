@@ -18,21 +18,24 @@ from hashlib import sha256
 class BaseCollectionScraper(AbstractCollectionScraper):
 
     default_format_rules = None
+    scraped_sources_count = 0
 
-    def get_suitable_format_rules(self, formats: Format, source: SourceMap, link_store: LinkStore, default="") -> Dict:
-        format_rules = None
-        if link_store.formatter != None and len(link_store.formatter) > 0 and link_store.formatter != source.formatter and link_store.formatter in formats.extra_formats:
-            format_rules = formats.extra_formats[link_store.formatter]
-        else:
-            format_rules =  getattr(formats, default)
-        return format_rules
+    def get_suitable_format_rules(self, formats: Format, source_map: SourceMap, link_store: LinkStore, default="") -> Dict:
+        if link_store.formatter != None and len(link_store.formatter) > 0:
+            if link_store.formatter != source_map.formatter and not hasattr(formats,link_store.formatter):
+                return formats.extra_formats[link_store.formatter]
+            default = link_store.formatter
+        elif source_map.formatter is not None and len(source_map.formatter) > 0:
+            default = source_map.formatter
+        return getattr(formats, default)
+     
     
-    def get_tags_for_link_store(self, source: SourceMap, link_store: LinkStore) -> Tuple[str, List[str]]:
+    def get_tags_for_link_store(self, source_map: SourceMap, link_store: LinkStore) -> Tuple[str, List[str]]:
         assumed_tags, compulsory_tags = "", []
         if link_store.assumed_tags != None and len(link_store.assumed_tags) > 0:
             assumed_tags = link_store.assumed_tags
         else:
-            assumed_tags = source.assumed_tags
+            assumed_tags = source_map.assumed_tags
         if link_store.compulsory_tags != None and len(link_store.compulsory_tags) > 0:
             compulsory_tags = link_store.compulsory_tags
         else:
@@ -44,7 +47,7 @@ class BaseCollectionScraper(AbstractCollectionScraper):
                             if "cb_kwargs" not in kwargs:
                                 kwargs['cb_kwargs'] = {}
                             kwargs['cb_kwargs'].update({
-                                "source": source,
+                                "source_map": source,
                                 "format_rules": format_rules,
                                 "formats": formats,
                                 "assumed_tags": assumed_tags,
@@ -52,13 +55,13 @@ class BaseCollectionScraper(AbstractCollectionScraper):
                                 "url": url,
                                 "link_store": link_store
                             })
-                            return SplashRequest(url=url, args={"wait": 0.8}, callback=callback, splash_headers=splash_headers, **kwargs)
+                            return SplashRequest(url=url, args={"wait": 1.8}, splash_headers=splash_headers, **kwargs)
 
     
-    def process_link_store(self, link_store: LinkStore, source: SourceMap, formats: Format, **kwargs) -> Request:
-        format_rules = self.get_suitable_format_rules(formats=formats, source=source, link_store=link_store,default=self.default_format_rules)
-        assumed_tags, compulsory_tags = self.get_tags_for_link_store(source=source, link_store=link_store)
-        data = self.before_requesting(url=link_store.link, callback=self._parse, formats=formats, format_rules=format_rules, source=source, 
+    def process_link_store(self, link_store: LinkStore, source_map: SourceMap, formats: Format, **kwargs) -> Request:
+        format_rules = self.get_suitable_format_rules(formats=formats, source_map=source_map, link_store=link_store,default=self.default_format_rules)
+        assumed_tags, compulsory_tags = self.get_tags_for_link_store(source_map=source_map, link_store=link_store)
+        data = self.before_requesting(url=link_store.link, callback=self._parse, formats=formats, format_rules=format_rules, source=source_map, 
         assumed_tags=assumed_tags, compulsory_tags=compulsory_tags, link_store=link_store)
         if "cb_kwargs" not in data:
             data["cb_kwargs"] = {}
@@ -66,17 +69,25 @@ class BaseCollectionScraper(AbstractCollectionScraper):
         return self.call_request(**data)
 
     def run_requests(self, **kwargs):
-        for source in self.get_sources_from_database():
+        for source in list(self.get_sources_from_database()):
             formats = self.get_formatter_from_database(source.source_id)
             if formats == None:
                 continue
             for link_store in source.links:
                 if link_store.link != None and len(link_store.link) > 0 and is_url_valid(link_store.link):
-                    yield self.process_link_store(link_store, source, formats, **kwargs)
+                    try:
+                        yield self.process_link_store(link_store, source, formats, **kwargs)
+                    except Exception as e:
+                        self.log(e)
+                        continue
                 else:
                     continue
+            self.scraped_sources_count += 1
+        print("RSS Feed Scrapper has scrapped: ", self.scraped_sources_count, "\n")
+        self.log(f"RSS Feed Scrapper has scrapped: f{self.scraped_sources_count}")
     
     def start_requests(self, **kwargs):
+        self.scraped_sources_count = 0
         return self.run_requests(**kwargs)
         
 
@@ -92,7 +103,8 @@ class BaseContentExtraction:
 
     def create_article(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index: int = 0):
         if ArticleContainer.adapter().find_one({"article_link" : data["link"]}, silent=True) == None:
-            ArticleContainer.adapter().create(**self.process_single_article_data(data=data, link_store=link_store, source_map=source_map, index=index))
+            article: ArticleContainer = self.process_single_article_data(data=data, link_store=link_store, source_map=source_map, index=index)
+            ArticleContainer.adapter().create(**(article.to_dict()))
 
     def process_single_article_data(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index : int = 0):
         data["content_type"] = link_store.content_type
@@ -115,7 +127,7 @@ class BaseContentExtraction:
     
 
     def pack_in_data_link_container(self, data: Dict, **kwargs) -> DataLinkContainer:
-        source: SourceMap = kwargs["source"]
+        source: SourceMap = kwargs["source_map"]
         if "link" not in data:
             return None
         data_link = urlparse(data['link'])
@@ -186,7 +198,7 @@ class BaseContentExtraction:
     def pack_in_article_container(self, link: str, source: SourceMap, title: str="", creator: str ="", images: List[str] = [],
                         disabled: List[str] = [], videos: List[str] = [], text_set: List[str] = [],compulsory_tags: List[str] = [], tags: List[str] = [],
                         body: str= None, index: int=0, pub_date: str = None, content_type = ContentType.Article,
-                        scrap_link: str=None) -> ArticleContainer:
+                        scrap_link: str=None, **kwargs) -> ArticleContainer:
                         parsed = urlparse(link)
 
                         # scrapped url might have possibilites such as

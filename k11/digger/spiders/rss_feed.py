@@ -17,7 +17,7 @@ class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper, BaseContentEx
     
 
     def parse_node(self, response, selector, **kwargs):
-        return self._parse_node(response,selector, **kwargs)
+        return self._parse_node(response, selector, **kwargs)
 
     def parse_nodes(self, response, nodes, **kwargs):
         """This method is called for the nodes matching the provided tag name
@@ -35,6 +35,9 @@ class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper, BaseContentEx
 
 
     def _parse(self, response, **kwargs):
+        iterator = self.itertag
+        if "format_rules" in kwargs and "itertag" in kwargs["format_rules"]:
+            iterator = kwargs["format_rules"]["itertag"]
         if not hasattr(self, 'parse_node'):
             raise NotConfigured('You must define parse_node method in order to scrape this XML feed')
 
@@ -44,12 +47,12 @@ class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper, BaseContentEx
         elif self.iterator == 'xml':
             selector = Selector(response, type='xml')
             self._register_namespaces(selector)
-            # selector.remove_namespaces()
-            nodes = selector.xpath(f'//{self.itertag}')
+            selector.remove_namespaces()
+            nodes = selector.xpath(f'//{iterator}')
         elif self.iterator == 'html':
             selector = Selector(response, type='html')
             self._register_namespaces(selector)
-            nodes = selector.xpath(f'//{self.itertag}')
+            nodes = selector.xpath(f'//{iterator}')
         else:
             raise NotSupported('Unsupported node iterator')
         
@@ -64,6 +67,7 @@ class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper, BaseContentEx
 class RSSFeedSpider(XMLCustomImplmentation):
     name = "rss_feed_spider"
     itertag = 'item'
+    iterator = 'xml'
     default_format_rules = "xml_collection_format"
 
 
