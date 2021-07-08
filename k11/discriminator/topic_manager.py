@@ -48,7 +48,7 @@ class TopicsManager:
         load the module file containing pickled object
         {"data": value, "contains_topic_class_values": False}
         data value hold the dict | str | number | list 
-        and contains_topic_class_values if flag indicating whether the data must be de-serialized into Topic objectt
+        and contains_topic_class_values if flag indicating whether the data must be de-serialized into Topic object
         """
         if self.is_path_exist(path):
             with open(path, "rb") as file:
