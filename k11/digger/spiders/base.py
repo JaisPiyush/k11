@@ -70,6 +70,7 @@ class BaseCollectionScraper(AbstractCollectionScraper):
 
     def run_requests(self, **kwargs):
         for source in list(self.get_sources_from_database()):
+            print(source.source_name, " ", source.source_home_link, "\n")
             formats = self.get_formatter_from_database(source.source_id)
             if formats == None:
                 continue
@@ -79,7 +80,6 @@ class BaseCollectionScraper(AbstractCollectionScraper):
                         yield self.process_link_store(link_store, source, formats, **kwargs)
                     except Exception as e:
                         self.log(e)
-                        continue
                 else:
                     continue
             self.scraped_sources_count += 1

@@ -36,7 +36,7 @@ class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper, BaseContentEx
 
     def _parse(self, response, **kwargs):
         iterator = self.itertag
-        if "format_rules" in kwargs and "itertag" in kwargs["format_rules"]:
+        if "format_rules" in kwargs and "itertag" in kwargs["format_rules"] and len(kwargs["format_rules"]["itertag"]) > 0:
             iterator = kwargs["format_rules"]["itertag"]
         if not hasattr(self, 'parse_node'):
             raise NotConfigured('You must define parse_node method in order to scrape this XML feed')
@@ -69,6 +69,7 @@ class RSSFeedSpider(XMLCustomImplmentation):
     itertag = 'item'
     iterator = 'xml'
     default_format_rules = "xml_collection_format"
+    handle_httpstatus_list = [404, 504]
 
 
     custom_settings = {
@@ -77,7 +78,8 @@ class RSSFeedSpider(XMLCustomImplmentation):
             "digger.pipelines.CollectionItemDuplicateFilterPiepline": 300,
             "digger.pipelines.CollectionItemSanitizingPipeline": 356,
             "digger.pipelines.CollectionItemVaultPipeline": 412
-        }
+        },
+        "LOG_LEVEL": "ERROR"
     }
 
 

@@ -106,7 +106,7 @@ class CorpusManager:
 
 class DictionaryManager:
     dir_path = os.path.abspath(dirname(__file__))
-    path = os.path.join( dir_path, "dictionary_state_lda.dict")
+    path = os.path.join( dir_path, "bin/dictionary_state_lda.dict")
     dictionary_class = Dictionary
 
     def __init__(self, forced_empty=False) -> None:
@@ -154,6 +154,10 @@ class TextAnalysisAdapter:
     dir_path = os.path.abspath(dirname(__file__))
     commitable_articles = []
     re_train = False
+    model_file_name = None
+
+    def set_model_file_name(self, file_name: str) -> None:
+        self.model_file_name = file_name
 
     @property
     def model_path(self):

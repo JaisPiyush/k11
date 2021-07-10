@@ -68,12 +68,6 @@ class CollectionItemSanitizingPipeline:
     def sanitize_text(self, text, spider: Spider = None, watermarks=None):
         soup = BeautifulSoup(text, 'html.parser')
         cleansed_text = soup.getText()
-        if watermarks is not None:
-            for watermark in watermarks:
-                if cleansed_text.index(watermark) == 0:
-                    cleansed_text = cleansed_text[len(watermark):]
-                if cleansed_text.index(watermark) == len(cleansed_text) -1:
-                    cleansed_text = cleansed_text[:len(text) - len(watermark)]
         return cleansed_text
     
     def process_item(self, item: DataLinkContainer, spider: Spider):
