@@ -13,9 +13,18 @@ from .app import register_digger, register_treasure, register_connection
 
 
 
+
+
 class TableAdapter:
-    def __init__(self, model_cls) -> None:
+    model_cls = None
+
+    def __init__(self, *model_cls) -> None:
+        if len(model_cls) > 0:
+            self.model_cls = model_cls[0]
+    
+    def add_contribution(self, model_cls):
         self.model_cls = model_cls
+
     def get_connection(self, db=None):
         if db is not None:
             return register_connection(db)
@@ -55,7 +64,7 @@ class TableAdapter:
             yield model
     
     def count(self) -> int:
-        query = self.session.query(func.count(distinct(self.model_cls.get_primary_key())))
+        query = self.session.query(func.count())
         return self.session.execute(query).scalar()
     
     def exists(self, *criterion) -> bool:
@@ -186,11 +195,13 @@ class MongoAdapter:
     
     def count(self, filter, **kwargs):
         collection = self._connect()
-        collection.count_documents(filter, **kwargs)
+        results = collection.find(filter, **kwargs)
+        return results.count()
     
     def delete_many(self, filter, **kwargs):
         collection = self._connect()
-        collection.delete_many(filter, **kwargs)
+        d = collection.delete_many(filter, **kwargs)
+        return d.deleted_count
     
     def update_one(self, filter, **kwargs):
         collection = self._connect()
