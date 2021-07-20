@@ -75,13 +75,13 @@ class YoutubeDigger(ThirdPartyDigger):
     
     @staticmethod
     def is_video_present_in_db(article_id:str) -> bool:
-        return ArticleContainer.adapter().find_one({"article_id": article_id}, silent=True) != None
-
+        return ArticleContainer.objects(article_id = article_id).get()
     
     def store_articles_in_db(self, videos: List[YouTubeVideoModel]):
         for video in videos:
             if not self.is_video_present_in_db(video.article_id):
-                ArticleContainer.adapter().create(**(video.to_article()).to_dict())
+                article = video.to_article()
+                article.save()
     
     def store_all_trending_videos(self):
         for videos in self.yt_api.fetch_all_trending_videos():

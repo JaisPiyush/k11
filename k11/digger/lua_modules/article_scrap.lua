@@ -9,7 +9,7 @@ function main(splash)
                 if (query["tag"] != null && query["tag"].length > 0) {
                   isSimilar = el.nodeName.toLowerCase() == query["tag"];
                 }
-                if (query["id"] != null && el.id.length > 0) {
+                if (query["id"] != null && el.id != undefined && el.id != undefined && el.id.length > 0) {
                   isSimilar =
                     isSimilar == undefined
                       ? el.id == query["id"]
@@ -89,7 +89,7 @@ function main(splash)
             function main(){
               let node = ""
               let iden;
-              if(container === undefined || container.length == 0 || container['idens'] == undefined || container['idens'].length === 0){
+              if(container === undefined || container.length === 0 || container['idens'] === undefined || container['idens'].length === 0){
                   node = document.querySelector('body').outerHTML;
               }else{
                   for(let j = 0; j < container["idens"].length; j++){
@@ -127,7 +127,7 @@ function main(splash)
     ]])
 
     assert(splash:go(splash.args.url))
-    splash:wait(0.5)
+    splash:wait(2.5)
 
     return {
         url=splash.args.url,

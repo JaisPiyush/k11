@@ -6,20 +6,21 @@
 
 # useful for handling different item types with a single interface
 from dataclasses import replace
+from digger.abstracts import BaseSpider
 from hashlib import sha256
+from k11.models.no_sql_models import DataLinkContainer, Format, ArticleContainer
+from k11.models.sql_models import IndexableArticle, IndexableLinks
 from typing import Dict, List, Union
 from urllib.parse import urlparse
-from scrapy import item
 
 from scrapy.spiders import Spider
-from k11.models.main import ArticleContainer, ContainerFormat, ContainerIdentity, ContentType, DataLinkContainer, Format
-from k11.models.postgres import IndexableArticle, IndexableLinks
+from k11.models.main import ContainerFormat, ContainerIdentity, ContentType
 from scrapy.exceptions import DropItem
 from bs4 import BeautifulSoup
 import re
 from scrapy.selector import Selector
 from w3lib.html import remove_comments, remove_tags_with_content, replace_escape_chars, replace_tags
-
+from k11.vault import connection_handler
 
 """
 This pipeline will check each link of Item Dict existance in database,
@@ -28,14 +29,21 @@ and allows only to pass unique one's.
 Class has is_link_exist method which is wrapper around mongo's filter method to check 
 existance inside database.
 """
-class CollectionItemDuplicateFilterPiepline:
+SQL_SESSION = None
+
+def connect_sql_session():
+    connection_handler.mount_sql_engines()
+    SQL_SESSION = connection_handler.create_sql_session()
+class CollectionItemDuplicateFilterPipeline:
      
     """
     This method will check the existance in all travelled links so far.
     Postgres will be used for this work
     """
     def link_already_exist_in_db(self, link: str) -> bool:
-        return IndexableLinks.adapter().exists(IndexableLinks.link == link)
+        query = SQL_SESSION.query(IndexableLinks).filter(link == link)
+        return SQL_SESSION.query(query.exists()).scalar()
+
     
     """
     Process item will check if item['data']['link'] key exists and link_is_present_in_db?
@@ -43,6 +51,12 @@ class CollectionItemDuplicateFilterPiepline:
     else process
     """
     def process_item(self, item: DataLinkContainer, spider):
+        if SQL_SESSION is None and spider.sql_session is not None:
+            SQL_SESSION = spider.sql_session
+        elif spider.sql_session is None and SQL_SESSION is None:
+            SQL_SESSION = connection_handler.create_sql_session()
+
+        
         if item.link != None and len(item.link) > 0 and not self.link_already_exist_in_db(item.link):
             return item
         raise DropItem("Item already exists")
@@ -94,17 +108,23 @@ class CollectionItemVaultPipeline:
     """
     Insert Link container document in mongodb
     """
-    def insert_cotainer_in_db(self, item: DataLinkContainer) -> DataLinkContainer:
-        return DataLinkContainer.adapter().create(**item.to_dict())
+    def insert_container_in_db(self, item: DataLinkContainer) -> DataLinkContainer:
+        if isinstance(item, DataLinkContainer):
+            item.save()
+        else:
+            item = DataLinkContainer(**item)
+            item.save()
 
     def index_link_into_db(self, item: DataLinkContainer):
-        IndexableLinks.adapter().create(link=item.link, scraped_on=item.scraped_on,
+        link = IndexableLinks(link=item.link, scraped_on=item.scraped_on,
                     source_name=item.source_name
         )
+        SQL_SESSION.add(link)
+        SQL_SESSION.commit()
     
     def process_item(self, item: DataLinkContainer, spider):
         if item.link is not None and item.source_name is not None:
-            item = self.insert_cotainer_in_db(item)
+            item = self.insert_container_in_db(item)
             self.index_link_into_db(item)
             return item
         raise DropItem("Previous pipeline is sending lose data")
@@ -147,8 +167,8 @@ class ArticleSanitizer:
     def process_attrs(self, item: Dict):
         self.container = item["container"]
         self.format_  = item['format']
-        self.iden = ContainerIdentity(**item['iden'])
-        self.original_iden = ContainerIdentity(**item["iden"])
+        self.iden = ContainerIdentity(**item['iden']) if 'iden' in item and  item['iden'] is not 'body' else ContainerIdentity('body', is_multiple=False, content_type=ContentType.Article)
+        self.original_iden = self.iden
         self.content = item['content']
         self.disabled = item['disabled']
         self.url = item['url']
@@ -274,7 +294,7 @@ class ArticleSanitizer:
     
     @staticmethod
     def is_source_present_in_db(home_link: str) -> bool:
-        return Format.adapter().find_one({"source_home_link": home_link}, silent=True) != None
+        return Format.objects(source_home_link = home_link)  > 0
 
 
     """
@@ -358,9 +378,14 @@ class ArticleDuplicateFilter:
     
     # Return True if article is present inside the database
     def is_article_present_in_db(self, article_id: str) -> bool:
-        return ArticleContainer.adapter().find_one({"article_id": article_id}, silent=True) != None
+        query = SQL_SESSION.query(IndexableArticle).filter(IndexableArticle.article_id == article_id)
+        return SQL_SESSION.query(query.exists()).scalar()
     
-    def process_item(self, items: List[ArticleContainer], spider: Spider):
+    def process_item(self, items: List[ArticleContainer], spider: BaseSpider):
+        if SQL_SESSION is None and spider.sql_session is not None:
+            SQL_SESSION = spider.sql_session
+        elif SQL_SESSION is None and spider.sql_session is None:
+            SQL_SESSION = connection_handler.create_sql_session()
         if len(items) == 0:
             raise DropItem("No One came in")
         return [item for item in items if not self.is_article_present_in_db(item.article_id)]
@@ -407,8 +432,11 @@ class ArticleVaultPipeline:
     """
     def process_item(self, items: List[ArticleContainer], spider):
         if len(items) > 0:
-            ArticleContainer.adapter().bulk_insert(items)
-            DataLinkContainer.delete_containers([item.scraped_from for item in items if item.scraped_from is not None])
+            ArticleContainer.objects.insert(items)
+            indexable_articles = map(lambda x: IndexableArticle.from_article_container(x), items)
+            SQL_SESSION.bulk_save_objects(indexable_articles)
+            SQL_SESSION.commit()
+            DataLinkContainer.objects.delete_containers([item.scraped_from for item in items if item.scraped_from is not None])
             return items
         raise DropItem("Dropped in ArticleVaultPipeline")
 

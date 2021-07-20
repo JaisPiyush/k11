@@ -1,16 +1,19 @@
 from k11.digger.abstracts import ParsedNodeValue
+from mongoengine.queryset.visitor import Q
 from .base import BaseCollectionScraper, BaseContentExtraction
 from typing import Generator
-from k11.models.main import SourceMap, Format
+from k11.models.no_sql_models import Format, SourceMap
+from k11.vault.app import connection_handler
 
 class HTMLFeedSpider(BaseCollectionScraper, BaseContentExtraction):
     name = "html_feed_spider"
     itertag = None
     default_format_rules = "html_collection_format"
 
+
     custom_settings = {
         "ITEM_PIPELINES": {
-            "digger.pipelines.CollectionItemDuplicateFilterPiepline": 300,
+            "digger.pipelines.CollectionItemDuplicateFilterPipeline": 300,
             "digger.pipelines.CollectionItemSanitizingPipeline": 356,
             "digger.pipelines.CollectionItemVaultPipeline": 412
         }
@@ -22,14 +25,15 @@ class HTMLFeedSpider(BaseCollectionScraper, BaseContentExtraction):
     """
 
     def get_sources_from_database(self) -> Generator[SourceMap, None, None]:
-        return SourceMap.pull_all_html_collections()
+        return SourceMap.objects.pull_all_rss_models()
  
     """
     This function will pull html source formatter using `format_id == source_map.source_id`
     """
 
     def _get_html_source_fromat_in_db(self, format_id: str) -> Format:
-        return Format.adapter().find_one({"$and": [{"format_id": format_id}, {"html_collection_format": {"$exists": True}}]})
+        return Format.objects(Q(format_id=format_id) & Q(html_collection_format__exists=True)).get()
+        
        
 
     """

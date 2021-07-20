@@ -1,12 +1,7 @@
 import unittest
-from k11.vault.connections import get_sql_database, ConnectionHandler
+from k11.vault.connections import ConnectionHandler
 from unittest import TestCase
 
-
-def test_get_database():
-    uri = "postgresql+psycopg2://postgres:piyush@103@localhost:5432/test"
-    database = get_sql_database(uri)
-    assert database != None, "Database creation failed"
 
 
 class TestConnectionHandler(TestCase):
@@ -17,7 +12,8 @@ class TestConnectionHandler(TestCase):
                 "service": "mongodb",
                 "database": "digger",
                 "host": "localhost",
-                "port": 27017
+                "port": 27017,
+                "is_sql": False
 
             },
             "postgres_digger": {
@@ -26,7 +22,8 @@ class TestConnectionHandler(TestCase):
                 "host": "localhost",
                 "port": 5432,
                 "username": "postgres",
-                "password": "piyush@103"
+                "password": "piyush@103",
+                "is_sql": True
             },
         }
         self.handler_class = ConnectionHandler
@@ -44,4 +41,8 @@ class TestConnectionHandler(TestCase):
         real = ['mongodb://localhost:27017/digger', "postgresql+psycopg2://postgres:piyush@103@localhost:5432/postgres"]
         outputs = [self.handler.get_database_uri('mongo_digger'), self.handler.get_database_uri('postgres_digger')]
         self.assertListEqual(outputs, real)
+    
+    def test_mount_no_sql_engines(self):
+        self.handler.mount_mongo_engines()
+        self.assertEqual('mongo_digger' in self.handler.mongo_engines, True)
 

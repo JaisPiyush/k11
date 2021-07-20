@@ -3137,7 +3137,7 @@
     "$date": "2021-06-30T20:56:19.880Z"
   },
   "xml_collection_format": {
-    "itertag": "",
+    "itertag": "item",
     "title": {
       "sel": "xpath",
       "param": "text()",
@@ -3859,7 +3859,7 @@
   },
   "source_name": "Wandering Earl",
   "format_id": "t9oShBY_KW_Epw-8ymUl-Q_wandering earl",
-  "source_home_link": "https://feeds.feedburner.com",
+  "source_home_link": "https://www.wanderingearl.com",
   "created_on": {
     "$date": "2021-07-01T16:01:24.974Z"
   },
@@ -4238,5 +4238,1291 @@
       "is_multiple": false,
       "is_cdata": false
     }
+  }
+},{
+  "_id": {
+    "$oid": "60e3e874dadffc6e675e68b8"
+  },
+  "source_name": "Cinemablend",
+  "format_id": "ovir6lAVy_JccD9WEU0zRQ_cinemablend",
+  "source_home_link": "https://www.cinemablend.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.#slot_main",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "share-toggle",
+          "share-dialog",
+          "page-topic",
+          "details",
+          "mob-article",
+          "disclaimer",
+          "in-content-ad-wrapper",
+          "content_story_pages_nextstory",
+          "form_newsletter_signup"
+        ]
+      },
+      {
+        "class_list": [
+          "ads_widgets_taboola",
+          "content_story_meta_author_contributor_list",
+          "content_story_related",
+          "trending-movies-col"
+        ]
+      },
+      {
+        "tag": "iframe"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e3eebbdadffc6e675e68ba"
+  },
+  "source_name": "Screenrant",
+  "format_id": "lEXyPPtVhKDT8kWqe2d9bQ_screenrant",
+  "source_home_link": "https://screenrant.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.news",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "w-article-info",
+          "tldr-btn-section",
+          "ad-even",
+          "next-single",
+          "release-dates",
+          "sharing",
+          "sentinel-article-nextArticle",
+          "article-tags",
+          "section-sub-title",
+          "w-article-author-bio"
+        ]
+      },
+      {
+        "tag": "aside"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e4032fdadffc6e675e68bc"
+  },
+  "source_name": "Screen Crush",
+  "format_id": "PVK69mV2-Zqi-8LqZDUyew_screen crush",
+  "source_home_link": "https://screencrush.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.entry > article",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "social-share",
+          "bignsexy",
+          "content-footer"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e4082fdadffc6e675e68be"
+  },
+  "source_name": "Movie Web",
+  "format_id": "HOB2mbvlqsDVkRTHbb0oqg_movie web",
+  "source_home_link": "https://movieweb.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.article",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "footer"
+      },
+      {
+        "tag": "ul"
+      },
+      {
+        "class_list": [
+          "article-header-excerpt",
+          "article-header-info",
+          "ads-leaderboard",
+          "article-header-social",
+          "embed-instagram",
+          "related",
+          "article-tags"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e4116edadffc6e675e68c2"
+  },
+  "source_name": "Bollywood Life",
+  "format_id": "21_nf_Y64_LKBe_LQ6q4HQ_bollywood life",
+  "source_home_link": "https://www.bollywoodlife.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "aside.left_block",
+        "content_type": "article",
+        "is_bakeable": false
+      },
+      {
+        "param": "div.videoGallery > div.container > div.row",
+        "is_multiple": false,
+        "content_type": "video",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "exact_class": "right_block"
+      },
+      {
+        "class_list": [
+          "twitter-tweet",
+          "inner_para_adv_blk",
+          "author_update_blk",
+          "alltags",
+          "cmntbox"
+        ]
+      },
+      {
+        "tag": "button"
+      },
+      {
+        "class_list": [
+          "watchNext",
+          "wNextTitle",
+          "rightVideoAds",
+          "tagAnchor"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e41584dadffc6e675e68c4"
+  },
+  "source_name": "Hindustan Times",
+  "format_id": "LaacxY4LkjKvz3NIE7_Exw_hindustan times",
+  "source_home_link": "https://www.hindustantimes.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.fullStory",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "catName",
+          "shareSticky",
+          "sortDesc",
+          "stroyPub",
+          "storyPub",
+          "actionDiv"
+        ]
+      },
+      {
+        "class_list": [
+          "subscribe",
+          "ht_outbrain",
+          "closeStory",
+          "trendingSlider",
+          "section_news"
+        ]
+      },
+      {
+        "class_list": [
+          "adHeight313",
+          "embed_div",
+          "followHT",
+          "shareArticle",
+          "epaper-ad",
+          "storyTopics",
+          "relatedStory"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e43a2fdadffc6e675e68c6"
+  },
+  "source_name": "Malika Basu",
+  "format_id": "zkgkp8JintkcOHRU2IGs5Q_malika basu",
+  "source_home_link": "https://mallikabasu.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "section.container",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "nocomments"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e43fd8dadffc6e675e68ca"
+  },
+  "source_name": "Veg Recipes Of India",
+  "format_id": "im18vAPC60iBGKmVvKEgww_veg recipes of india",
+  "source_home_link": "https://www.vegrecipesofindia.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.type-post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "entry-author",
+          "entry-meta",
+          "shared-counts-wrap",
+          "entry-jump-links"
+        ]
+      },
+      {
+        "class_list": [
+          "adthrive",
+          "adthrive-ad",
+          "block-toc",
+          "block-post-listing",
+          "wprm-recipe-container",
+          "block-pinterest-cta"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e44fa1dadffc6e675e68cc"
+  },
+  "source_name": "Belly Over Mind",
+  "format_id": "Q2lcx5kDPyo60iIGkmKrnw_belly over mind",
+  "source_home_link": "http://bellyovermind.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "cookbook-extras"
+        ]
+      },
+      {
+        "tag": "footer"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e46ea8dadffc6e675e68ce"
+  },
+  "source_name": "Divine Taste",
+  "format_id": "uKrs0ubV09_orVZSdmMTUQ_divine taste",
+  "source_home_link": "https://www.divinetaste.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "entry-meta",
+          "yarpp-related",
+          "related",
+          "entry-footer",
+          "callout"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e47091dadffc6e675e68d0"
+  },
+  "source_name": "Padhus Kitchen",
+  "format_id": "rtnB87S5cvA_IQTWxO7QrA_padhus kitchen",
+  "source_home_link": "https://www.padhuskitchen.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "footer"
+      },
+      {
+        "class_list": [
+          "entry-meta",
+          "wprm-automatic-recipe-snippets",
+          "wprm-recipe-snippets",
+          "addthis_tool",
+          "wprm-recipe-container",
+          "relpost-thumb-wrapper"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e47933dadffc6e675e68d2"
+  },
+  "source_name": "Allergic Living",
+  "format_id": "kjP1Qt1SVfm3RNlhNlVFEw_allergic living",
+  "source_home_link": "https://www.allergicliving.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "main#main",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "article-header__meta",
+          "social-sharing",
+          "wp-block-media-text",
+          "widget_advertisement",
+          "relaed-posts"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e4865fdadffc6e675e68d4"
+  },
+  "source_name": "Snack Safely",
+  "format_id": "RI0PCNh5CjXpWgag5ncEdw_snack safely",
+  "source_home_link": "https://snacksafely.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "meta"
+      },
+      {
+        "class_list": [
+          "td-page-meta"
+        ]
+      },
+      {
+        "id": "login-form"
+      },
+      {
+        "class_list": [
+          "tdb_single_categories",
+          "tdb_single_author",
+          "tdb_single_date",
+          "tdb_single_post_views"
+        ]
+      },
+      {
+        "class_list": [
+          "tdb_single_post_share",
+          "ss-ad-section",
+          "ss-source-annotation",
+          "tdb_single_tags",
+          "tdb_single_next_prev",
+          "tdb_single_author_box"
+        ]
+      },
+      {
+        "class_list": [
+          "tdb_block_title",
+          "tdb_single_related",
+          "tdb_single_comments"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e4a3a7dadffc6e675e68d6"
+  },
+  "source_name": "Mens Journal",
+  "format_id": "8NquIa3fKXzpfBUXJhc1tQ_mens journal",
+  "source_home_link": "https://www.mensjournal.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.article-main",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "footer"
+      },
+      {
+        "class_list": [
+          "ad-slot-banner",
+          "zergnet-widget",
+          "module-features-carousel__wrapper",
+          "ezoic-adpicker-ad"
+        ]
+      },
+      {
+        "class_list": [
+          "content-type",
+          "left-rail",
+          "right-rail"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e4aa10dadffc6e675e68d8"
+  },
+  "source_name": "Good Men Project",
+  "format_id": "3qJlKqU3Ap26PHWtonUQEA_good men project",
+  "source_home_link": "https://goodmenproject.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "entry-subtitle",
+          "entry-meta",
+          "entry-footer"
+        ]
+      },
+      {
+        "class_list": [
+          "gmp-instream-wrap",
+          "footnotes"
+        ]
+      },
+      {
+        "id": "pressboard-ad-sponsorship-tag"
+      },
+      {
+        "id": "pressboard-ad-sponsorship-msg"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e4af3fdadffc6e675e68da"
+  },
+  "source_name": "Primer Magazine",
+  "format_id": "uCy97UwFNUZ21jmW9zUHLg_primer magazine",
+  "source_home_link": "https://www.primermagazine.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "aside"
+      },
+      {
+        "exact_class": "entry-meta"
+      },
+      {
+        "class_list": [
+          "shareaholic-canvas",
+          "jpibfi",
+          "bookdiv",
+          "navigation",
+          "disqus_thread"
+        ]
+      },
+      {
+        "id": "author-box"
+      },
+      {
+        "id": "tags-box"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "60e4b26cdadffc6e675e68dc"
+  },
+  "source_name": "Man Telligence",
+  "format_id": "FnuCgWq5UV_R2Wb1dKsv4Q_man telligence",
+  "source_home_link": "https://www.mantelligence.com",
+  "created_on": {
+    "$date": "2021-07-06T10:45:36.603Z"
+  },
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "/p/text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "adthrive-ad",
+          "adthrive",
+          "author-box-content",
+          "disclosure",
+          "swp_social_panel",
+          "toc-icon-outside-cont",
+          "under-post-container"
+        ]
+      }
+    ]
   }
 }]

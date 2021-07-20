@@ -3,7 +3,6 @@ from .base import BaseCollectionScraper, BaseContentExtraction
 
 from scrapy.exceptions import NotConfigured, NotSupported
 from scrapy.selector.unified import Selector
-from k11.vault.exceptions import NoDocumentExists
 from typing import Dict, Generator
 from scrapy.spiders import XMLFeedSpider
 from scrapy.utils.spider import iterate_spider_output
@@ -99,9 +98,9 @@ class RSSFeedSpider(XMLCustomImplmentation):
     def _get_xml_source_format_in_db(self, format_id: str) -> Format:
         # print(format_id, "from get_xml_source")
         try:
-            return Format.adapter().find_one({"format_id": format_id})
-        except NoDocumentExists:
-            return Format.get_default_rss_format()
+            return Format.objects(format_id=format_id).get()
+        except Exception as e:
+            return Format.objects.get_default_rss_format()
     """
     Find the format using format_id, in digger(db) and formats(collection) where source.source_id == formatter._id
     """

@@ -1,32 +1,38 @@
+from typing import Dict
 from sqlalchemy import create_engine
+from sqlalchemy.engine.base import Engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from k11.logger import log, logging
+from mongoengine import connect, disconnect
+from sqlalchemy.orm.session import Session
 
 
 def create_sql_engine(uri):
     return create_engine(uri)
 
-def create_session(engine, autocommit=False, autoflush=False):
-    return sessionmaker(autocommit=autocommit, autoflush=autoflush, bind=engine)
+def disconnect_mongo_engine(alias):
+    disconnect(alias=alias)
+
+
+def create_session(class_, autocommit=False, autoflush=False):
+    return sessionmaker(autocommit=autocommit, autoflush=autoflush, class_=class_)
 
 
 SqlBase = declarative_base()
 
+class RoutingSession(Session):
+    engines = {}
 
-def get_sql_database(database_uri):
-    engine = create_sql_engine(database_uri)
-    SessionLocal = create_session(engine)
-    db = SessionLocal()
-    try:
-        yield db
-    except Exception as e:
-        log(e, level=logging.ERROR)
-        db.close()
-
+    def get_bind(self, mapper=None, clause=None):
+        # print(mapper.class_)
+        if mapper:
+            return self.engines[mapper.class_.__databasename__]
 
 class ConnectionHandler:
     database_driver = {}
+    engines: Dict[str, Engine] = {}
+    mongo_engines = {}
 
     def __init__(self, settings) -> None:
         self.settings = settings
@@ -58,7 +64,57 @@ class ConnectionHandler:
             conf['driver'] = self.database_driver[conf['service']]
         return self._get_database_uri(conf)
 
+    def bind_sql_engine(self,alias, conf):
+        uri = self._get_database_uri(conf)
+        self.engines[alias] = create_sql_engine(uri)
+    
+    def bind_mongo_engine(self, alias, conf):
+        uri = self._get_database_uri(conf)
+        engine = connect(alias=alias, host=uri)
+        self.mongo_engines[alias] = engine
+    
+    def mount_all_engines(self):
+        for alias, conf in self.settings.items():
+            if conf['is_sql']:
+                self.bind_sql_engine(alias, conf)
+            else:
+                self.bind_mongo_engine(alias, conf)
+    def mount_sql_engines(self):
+        for alias, conf in self.settings.items():
+            if conf['is_sql']:
+                self.bind_sql_engine(alias,conf)
+    
+    def mount_mongo_engines(self):
+        for alias, conf in self.settings.items():
+            if not conf['is_sql']:
+                self.bind_mongo_engine(alias,conf)
+    
+    def disconnect_mongo_engines(self):
+        for alias, conf in self.settings.items():
+            if not conf['is_sql']:
+                disconnect(alias)
+    
+    def dispose_sql_engines(self, session):
+        session.close()
+        for engine in self.engines.values():
+            engine.dispose()
 
+    def create_sql_session(self) -> Session:
+        session_cls = RoutingSession
+        session_cls.engines = self.engines
+        SessionLocal = create_session(session_cls)
+        session = SessionLocal()
+        try:
+            return session
+        except:
+            session.close()
+            
+    
+
+
+
+    
+    
 
     
 

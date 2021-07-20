@@ -1,4 +1,5 @@
 from datetime import datetime
+from k11.vault import connection_handler
 
 from scrapy.http.request import Request
 from k11.utils import is_url_valid
@@ -13,12 +14,28 @@ from urllib.parse import urlparse
 from hashlib import sha256
 
 
-
-
 class BaseCollectionScraper(AbstractCollectionScraper):
 
     default_format_rules = None
     scraped_sources_count = 0
+    sql_session = None
+
+
+    def spider_closed(self):
+        connection_handler.disconnect_mongo_engines()
+        connection_handler.dispose_sql_engines(self.sql_session)
+        self.spider_close()
+    
+    def spider_opened(self):
+        # Almost all spiders use MongoDB. So, its better to create them all here and spider_open hook can be 
+        # used to manipulate Postgres
+        connection_handler.mount_mongo_engines()
+        connection_handler.mount_sql_engines()
+        self.sql_session = connection_handler.create_sql_session()
+        self.spider_open()
+    
+    def spider_open(self): ...
+    def spider_close(self): ...
 
     def get_suitable_format_rules(self, formats: Format, source_map: SourceMap, link_store: LinkStore, default="") -> Dict:
         if link_store.formatter != None and len(link_store.formatter) > 0:
@@ -102,9 +119,9 @@ class BaseContentExtraction:
     def error_handling(self, e): ...
 
     def create_article(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index: int = 0):
-        if ArticleContainer.adapter().find_one({"article_link" : data["link"]}, silent=True) == None:
+        if ArticleContainer.objects(article_link = data["link"]) == 0:
             article: ArticleContainer = self.process_single_article_data(data=data, link_store=link_store, source_map=source_map, index=index)
-            ArticleContainer.adapter().create(**(article.to_dict()))
+            article.save()
 
     def process_single_article_data(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index : int = 0):
         data["content_type"] = link_store.content_type

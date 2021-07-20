@@ -16,10 +16,10 @@ class TestRssFeedSpider(unittest.TestCase):
     spider_class = RSSFeedSpider
 
     def pull_named_source(self, source_name: str) -> SourceMap:
-        return SourceMap.adapter().find_one({"source_name": source_name})
+        return SourceMap.objects(source_name = source_name).get()
     
     def pull_rss_source_formatter(self, format_id: str) -> Format:
-        return Format.adapter().find_one({"format_id": format_id})
+        return Format.objects(format_id=format_id).get()
     
     def null_test(self, output: Dict, format_rules):
         not_null_keys = ["title", "image", "link"]

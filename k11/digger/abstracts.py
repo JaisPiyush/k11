@@ -1,13 +1,47 @@
+from datetime import datetime
+import logging
+# from digger.logger import setup_loggers
 from typing import Dict, Generator, List, Optional, Tuple, Union
+from scrapy import signals
 from scrapy import Spider, Selector
-from k11.models.main import DataLinkContainer, Format, SourceMap, LinkStore
+from k11.models.main import LinkStore
+from k11.models.no_sql_models import DataLinkContainer, Format, SourceMap, ErrorLogs
 from scrapy import Request
+from k11.vault import connection_handler
 
 
 ParsedNodeValue = Optional[Union[Tuple[Dict, Selector], Generator[DataLinkContainer, None, None]]]
 
 
-class AbstractCollectionScraper(Spider):
+logging.basicConfig(filename="scrap_error.log", format="%(asctime)s %(levelname)s: %(message)s", level=logging.ERROR)
+
+class BaseSpider(Spider):
+
+    sql_session = None
+
+    def __init__(self, *arg, **kwargs):
+        # logger = setup_loggers(self.name)
+        super().__init__(*arg, **kwargs)
+    
+    def spider_closed(self): ...
+    def spider_opened(self): ...
+
+    
+    def log(self,message, level=logging.ERROR, only_screen=False, **kwargs):
+        self.logger.log(level, message, **kwargs)
+        if not only_screen:
+            error = ErrorLogs(time=datetime.now(), level=level, message=message)
+            error.save()
+    
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider =  super(BaseSpider, cls).from_crawler(crawler, *args, **kwargs)
+        crawler.signals.connect(spider.spider_opened, signal=signals.spider_opened)
+        crawler.signals.connect(spider.spider_closed, signal=signals.spider_closed)
+        return spider
+    
+
+class AbstractCollectionScraper(BaseSpider):
 
     
     """

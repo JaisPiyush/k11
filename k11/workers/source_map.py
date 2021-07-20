@@ -13,13 +13,14 @@ class SourcemapInterface:
                      compulsory_tags: List[str] = [], is_rss: bool = False, is_collection: bool = True,
                      watermarks: List[str] = [], source_id: str = None, datetime_format: str="", is_third_party: bool = False
                       ):
-                      return SourceMap.adapter().create(source_name=name, source_home_link=home_link,
+                      sm =  SourceMap(source_name=name, source_home_link=home_link,
                       source_id=token_urlsafe(16) + "_"+ name.lower() if source_id is None else source_id, 
                       formatter=formatter, assumed_tags=assumed_tags.strip(), links=links,
                       compulsory_tags=compulsory_tags, is_collection=is_collection,
                       is_rss=is_rss, watermarks=watermarks,
                       datetime_format=datetime_format, is_third_party=is_third_party
                       )
+                      sm.save()
     
     @staticmethod
     def tag_formatter(tag:str) -> Union[str, None]:

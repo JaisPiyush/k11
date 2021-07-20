@@ -1196,6 +1196,110 @@
       "formatter": null,
       "content_type": "video",
       "is_multiple": true
+    },
+    {
+      "link": "UUCgMJGv4cQl8-q71AyFeFmtg",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCkTtNUjvPcSc50HyO7sBtxg",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCCZYoHdqAOXf8WK9oawMCPg",
+      "assumed_tags": "food__drink.food food__drink.cooking food__drink.vegan__vegetarian",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCmoX4QULJ9MB00xW4coMiOw",
+      "assumed_tags": "food__drink.food food__drink.cooking",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCPPIsrNlEkaFQBk-4uNkOaw",
+      "assumed_tags": "food__drink.food food__drink.cooking",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCfwHP1M0AFSPqTdjzXhV0Zg",
+      "assumed_tags": "food__drink.food food__drink.cooking",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCChqsCRFePrP2X897iQkyAA",
+      "assumed_tags": "food__drink.food food__drink.cooking",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCEHCDn_BBnk3uTK1M64ptyw",
+      "assumed_tags": "food__drink.food food__drink.cooking",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCthIcpK06l9bhi9ISgreocw",
+      "assumed_tags": "food__drink.food food__drink.cooking",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCM4vLyVm4MPhS3o5o729Udg",
+      "assumed_tags": "food__drink.food food__drink.cooking",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCE_125yu_QxOM0PXPOKj93w",
+      "assumed_tags": "food__drink.food food__drink.food_allergy",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCg4_1iEPv3IlgTvJh2IZAjQ",
+      "assumed_tags": "food__drink.food food__drink.food_allergy food__drink.cooking",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
+    },
+    {
+      "link": "UCjHEskdNIvQlCtKAJRH_QWQ",
+      "assumed_tags": "food__drink.food food__drink.food_allergy food__drink.vegan__vegetarian travel",
+      "compulsory_tags": [],
+      "formatter": null,
+      "content_type": "video",
+      "is_multiple": true
     }
   ],
   "formatter": null,
@@ -1264,6 +1368,30 @@
     {
       "link": "https://in.pinterest.com/carajourdan/travel.rss",
       "assumed_tags": "travel society.life travel.adventure society.lifestyle",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "image",
+      "is_multiple": true
+    },
+    {
+      "link": "https://in.pinterest.com/loveableeve/indian-food-.rss",
+      "assumed_tags": "food__drink.food",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "image",
+      "is_multiple": true
+    },
+    {
+      "link": "https://in.pinterest.com/whiskaffair/indian-food-recipes.rss",
+      "assumed_tags": "food__drink.food",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "image",
+      "is_multiple": true
+    },
+    {
+      "link": "https://in.pinterest.com/shwetaindkitchn/indian-food.rss",
+      "assumed_tags": "food__drink.food",
       "compulsory_tags": null,
       "formatter": "xml_collection_format",
       "content_type": "image",
@@ -1624,17 +1752,25 @@
       "formatter": "xml_collection_format",
       "content_type": "article",
       "is_multiple": false
+    },
+    {
+      "link": "https://medium.com/feed/topic/food",
+      "assumed_tags": "food__drink.food_allergy food__drink.food food__drink.healthy_eating",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
     }
   ],
   "compulsory_tags": [
-    "science.physics.space__astronomy",
-    "society.crime.sex_offense",
     "drink",
     "society.life.inspiration",
-    "health",
     "food",
     "society.life.happiness",
-    "health__fitness.mental_health"
+    "health",
+    "health__fitness.mental_health",
+    "society.crime.sex_offense",
+    "science.physics.space__astronomy"
   ],
   "is_collection": true,
   "is_rss": true,
@@ -3045,7 +3181,7 @@
     "$oid": "60ddcb20c0fb7b68e7206d17"
   },
   "source_name": "Wandering Earl",
-  "source_home_link": "https://feeds.feedburner.com",
+  "source_home_link": "https://www.wanderingearl.com",
   "source_id": "t9oShBY_KW_Epw-8ymUl-Q_wandering earl",
   "formatter": null,
   "assumed_tags": "travel society.life travel.adventure society.lifestyle society.culture society.people",
@@ -3222,6 +3358,747 @@
     {
       "link": "https://news.google.com/rss/search?hl=en-IN&gl=IN&ceid=IN:en&q=celebs+hollywood",
       "assumed_tags": "art__entertainment.celebrity_fan__gossip.hollywood",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e3e874dadffc6e675e68b7"
+  },
+  "source_name": "Cinemablend",
+  "source_home_link": "https://www.cinemablend.com",
+  "source_id": "ovir6lAVy_JccD9WEU0zRQ_cinemablend",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers",
+  "links": [
+    {
+      "link": "https://www.cinemablend.com/rss/topic/news/movies",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.cinemablend.com/rss/topic/reviews/movies",
+      "assumed_tags": "art__entertainment.movies__tv.reviews__interviews",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e3eebbdadffc6e675e68b9"
+  },
+  "source_name": "Screenrant",
+  "source_home_link": "https://screenrant.com",
+  "source_id": "lEXyPPtVhKDT8kWqe2d9bQ_screenrant",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers",
+  "links": [
+    {
+      "link": "https://screenrant.com/feed/",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e4032fdadffc6e675e68bb"
+  },
+  "source_name": "Screen Crush",
+  "source_home_link": "https://screencrush.com",
+  "source_id": "PVK69mV2-Zqi-8LqZDUyew_screen crush",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers",
+  "links": [
+    {
+      "link": "https://screencrush.com/category/movie-news/feed",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://screencrush.com/category/tv-news/feed",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://screencrush.com/category/movie-reviews/feed",
+      "assumed_tags": "art__entertainment.movies__tv.reviews__interviews",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://screencrush.com/category/trailers/feed",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://screencrush.com/category/original-features/feed",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e4082fdadffc6e675e68bd"
+  },
+  "source_name": "Movie Web",
+  "source_home_link": "https://movieweb.com",
+  "source_id": "HOB2mbvlqsDVkRTHbb0oqg_movie web",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+  "links": [
+    {
+      "link": "https://movieweb.com/rss/movie-news/",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://movieweb.com/rss/tv-news/",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://movieweb.com/rss/casting-news/",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://movieweb.com/rss/celebrity-interviews/",
+      "assumed_tags": "art__entertainment.movies__tv.reviews__interviews art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://movieweb.com/rss/movie-reviews/",
+      "assumed_tags": "art__entertainment.movies__tv.reviews__interviews art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://movieweb.com/rss/movie-trailers/",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e4116edadffc6e675e68c1"
+  },
+  "source_name": "Bollywood Life",
+  "source_home_link": "https://www.bollywoodlife.com",
+  "source_id": "21_nf_Y64_LKBe_LQ6q4HQ_bollywood life",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+  "links": [
+    {
+      "link": "https://www.bollywoodlife.com/tv/feed/",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.bollywoodlife.com/news-gossip/feed/",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.bollywoodlife.com/hollywood/feed/",
+      "assumed_tags": "art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.bollywoodlife.com/interviews/feed",
+      "assumed_tags": "art__entertainment.movies__tv.reviews__interviews art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.bollywoodlife.com/reviews/feed/",
+      "assumed_tags": "art__entertainment.movies__tv.reviews__interviews art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e41584dadffc6e675e68c3"
+  },
+  "source_name": "Hindustan Times",
+  "source_home_link": "https://www.hindustantimes.com",
+  "source_id": "LaacxY4LkjKvz3NIE7_Exw_hindustan times",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "art__entertainment.movies__tv.reviews__interviews art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+  "links": [
+    {
+      "link": "https://www.hindustantimes.com/feeds/rss/entertainment/rssfeed.xml",
+      "assumed_tags": "art__entertainment.movies__tv.reviews__interviews art__entertainment.movies__tv.movies__series_trailers art__emtertainment.celebrity_fan__gossip",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e43a2fdadffc6e675e68c5"
+  },
+  "source_name": "Malika Basu",
+  "source_home_link": "https://mallikabasu.com",
+  "source_id": "zkgkp8JintkcOHRU2IGs5Q_malika basu",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "food__drink.cooking food__drink.food",
+  "links": [
+    {
+      "link": "https://mallikabasu.com/category/vegetarian/feed/",
+      "assumed_tags": "food__drink.cooking food__drink.food food__drink.vegan__vegetarian",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://mallikabasu.com/category/drinks/feed/",
+      "assumed_tags": "food__drink",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://mallikabasu.com/category/meat/feed/",
+      "assumed_tags": "food__drink.food food__drink.cooking",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e43fd8dadffc6e675e68c9"
+  },
+  "source_name": "Veg Recipes Of India",
+  "source_home_link": "https://www.vegrecipesofindia.com",
+  "source_id": "im18vAPC60iBGKmVvKEgww_veg recipes of india",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "food__drink.food food__drink.cooking food__drink.vegan__vegetarian",
+  "links": [
+    {
+      "link": "https://www.vegrecipesofindia.com/feed/",
+      "assumed_tags": "food__drink.food food__drink.cooking food__drink.vegan__vegetarian",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e44fa1dadffc6e675e68cb"
+  },
+  "source_name": "Belly Over Mind",
+  "source_home_link": "http://bellyovermind.com",
+  "source_id": "Q2lcx5kDPyo60iIGkmKrnw_belly over mind",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "food__drink.food food__drink.cooking",
+  "links": [
+    {
+      "link": "http://bellyovermind.com/category/the-recipes/feed/",
+      "assumed_tags": "food__drink.food food__drink.cooking",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e46ea8dadffc6e675e68cd"
+  },
+  "source_name": "Divine Taste",
+  "source_home_link": "https://www.divinetaste.com",
+  "source_id": "uKrs0ubV09_orVZSdmMTUQ_divine taste",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "food__drink.food food__drink.cooking food__drink.healthy_eating",
+  "links": [
+    {
+      "link": "https://www.divinetaste.com/category/recipes/feed/",
+      "assumed_tags": "food__drink.food food__drink.cooking food__drink.healthy_eating",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": false,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e47091dadffc6e675e68cf"
+  },
+  "source_name": "Padhus Kitchen",
+  "source_home_link": "https://www.padhuskitchen.com",
+  "source_id": "rtnB87S5cvA_IQTWxO7QrA_padhus kitchen",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "food__drink.food food__drink.cooking food__drink.healthy_eating",
+  "links": [
+    {
+      "link": "https://www.padhuskitchen.com/feed",
+      "assumed_tags": "food__drink.food food__drink.cooking food__drink.healthy_eating",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e47933dadffc6e675e68d1"
+  },
+  "source_name": "Allergic Living",
+  "source_home_link": "https://www.allergicliving.com",
+  "source_id": "kjP1Qt1SVfm3RNlhNlVFEw_allergic living",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "food__drink.food_allergy",
+  "links": [
+    {
+      "link": "https://www.allergicliving.com/category/food-allergy/feed/",
+      "assumed_tags": "food__drink.food_allergy",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e4865fdadffc6e675e68d3"
+  },
+  "source_name": "Snack Safely",
+  "source_home_link": "https://snacksafely.com",
+  "source_id": "RI0PCNh5CjXpWgag5ncEdw_snack safely",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "food__drink.food_allergy",
+  "links": [
+    {
+      "link": "https://snacksafely.com/feed/",
+      "assumed_tags": "food__drink.food_allergy",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e4a3a7dadffc6e675e68d5"
+  },
+  "source_name": "Mens Journal",
+  "source_home_link": "https://www.mensjournal.com",
+  "source_id": "8NquIa3fKXzpfBUXJhc1tQ_mens journal",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "society.people.mens health__fitness.exercise health__fitness.men_health",
+  "links": [
+    {
+      "link": "https://www.mensjournal.com/health-fitness/rss/",
+      "assumed_tags": "society.people.mens health__fitness.exercise health__fitness.men_health",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.mensjournal.com/travel/rss",
+      "assumed_tags": "society.people.mens travel.adventure",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.mensjournal.com/style/rss/",
+      "assumed_tags": "society.people.mens style__fashion.accessories style__fashion.mens style__fashion.footwear",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.mensjournal.com/life-advice/rss",
+      "assumed_tags": "society.people.mens society.life",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.mensjournal.com/drive/rss",
+      "assumed_tags": "automotive__vehicles.cars",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.mensjournal.com/grooming/rss",
+      "assumed_tags": "style__fashion.mens",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.mensjournal.com/adventure/rss",
+      "assumed_tags": "travel.adventure",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.mensjournal.com/sports/rss",
+      "assumed_tags": "sports",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.mensjournal.com/dads/rss",
+      "assumed_tags": "society.people.mens",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e4aa10dadffc6e675e68d7"
+  },
+  "source_name": "Good Men Project",
+  "source_home_link": "https://goodmenproject.com",
+  "source_id": "3qJlKqU3Ap26PHWtonUQEA_good men project",
+  "formatter": null,
+  "assumed_tags": "society.relationship society.sex",
+  "links": [
+    {
+      "link": "https://goodmenproject.com/category/sex-relationships/feed/",
+      "assumed_tags": "society.relationship society.sex",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://goodmenproject.com/category/families/feed/",
+      "assumed_tags": "society.people",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://goodmenproject.com/category/guy-talk/feed/",
+      "assumed_tags": "society.life careers.advice__job",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e4af3fdadffc6e675e68d9"
+  },
+  "source_name": "Primer Magazine",
+  "source_home_link": "https://www.primermagazine.com",
+  "source_id": "uCy97UwFNUZ21jmW9zUHLg_primer magazine",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "society.life health__fitness.mental_health society.people.mens",
+  "links": [
+    {
+      "link": "https://www.primermagazine.com/category/live/feed",
+      "assumed_tags": "society.life health__fitness.mental_health society.people.mens",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.primermagazine.com/category/earn/feed",
+      "assumed_tags": "society.life finance.personal_finance__investing careers society.people.mens",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.primermagazine.com/category/invest/rss",
+      "assumed_tags": "society.life finance.personal_finance__investing careers society.people.mens",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.primermagazine.com/category/earn/feed",
+      "assumed_tags": "society.life finance.personal_finance__investing style__fashion careers society.work careers society.people.mens",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.primermagazine.com/category/love/feed",
+      "assumed_tags": "society.life society.relationship society.people.mens",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    }
+  ],
+  "compulsory_tags": [
+    ""
+  ],
+  "is_collection": true,
+  "is_rss": true,
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false
+},{
+  "_id": {
+    "$oid": "60e4b26cdadffc6e675e68db"
+  },
+  "source_name": "Man Telligence",
+  "source_home_link": "https://www.mantelligence.com",
+  "source_id": "FnuCgWq5UV_R2Wb1dKsv4Q_man telligence",
+  "formatter": "xml_collection_format",
+  "assumed_tags": "society.life society.relationship society.lifestyle  society.people.mens",
+  "links": [
+    {
+      "link": "https://www.mantelligence.com/articles/feed/",
+      "assumed_tags": "society.life society.relationship society.lifestyle  society.people.mens",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://www.mantelligence.com/our-most-popular-posts/feed/",
+      "assumed_tags": "society.life society.relationship society.lifestyle  society.people.mens",
       "compulsory_tags": null,
       "formatter": "xml_collection_format",
       "content_type": "article",
