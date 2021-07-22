@@ -1,6 +1,6 @@
 
 
-from k11.models.main import ArticleContainer
+from k11.models import ArticleContainer
 from typing import Dict, List
 
 from numpy import dot

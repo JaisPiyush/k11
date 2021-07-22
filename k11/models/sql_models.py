@@ -13,7 +13,7 @@ class IndexableLinks(SqlBase):
 
 class IndexableArticle(SqlBase):
     __tablename__ = "article_indexable_link"
-    __database__ = "postgres_treasure"
+    __database__ = "postgres_digger"
     article_id = Column(String(260),index=True, primary_key=True)
     link = Column(String(2000),index=True)
     site_name = Column(String(70))

@@ -176,3 +176,10 @@ class XMLContainerFormat:
 
 
 
+"""
+ThirdPartyDigger contains all non scrapy spiders.
+The run(self,**kwargs) function will be called by our PilotClass
+"""
+class ThirdPartyDigger:
+
+    def run(self, **kwargs): ...
