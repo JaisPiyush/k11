@@ -2,18 +2,26 @@
 import os
 from posixpath import dirname
 from typing import Dict, List
-from k11.models.main import ContentType, Format, LinkStore, SourceMap
-import unittest
-from k11.digger.spiders import RSSFeedSpider, HTMLFeedSpider
-import requests
-from scrapy.http import XmlResponse
+from k11.models import ContentType, Format, LinkStore, SourceMap
+from unittest import TestCase
+from k11.digger.spiders.collection_spider import CollectionSpider
+from k11.vault import connection_handler
+from scrapy.http import XmlResponse, HtmlResponse
 from scrapy.selector import Selector
 
 
 
 
-class TestRssFeedSpider(unittest.TestCase):
-    spider_class = RSSFeedSpider
+class TestCollectionSpider(TestCase):
+    spider_class = CollectionSpider
+
+
+    def setUp(self) -> None:
+        connection_handler.mount_mongo_engines()
+    
+    def tearDown(self) -> None:
+        connection_handler.disconnect_mongo_engines()
+    
 
     def pull_named_source(self, source_name: str) -> SourceMap:
         return SourceMap.objects(source_name = source_name).get()
@@ -30,6 +38,135 @@ class TestRssFeedSpider(unittest.TestCase):
         for content, node in output:
             self.assertIsNotNone(node.namespaces, "Namespaces registration is not working")
             self.null_test(output=content, format_rules=format_rules)
+    
+
+    def test_xml_scrapper(self):
+        file_path = os.path.abspath(os.path.join(dirname(__file__), "fixtures/xml_scrapper.xml"))
+        with open(file_path, "r") as file:
+            response = XmlResponse("https://www.pinkvilla.com/category/entertainment/news/feed", body=file.read(), encoding='utf-8')
+        format_rules = {
+        "itertag": "item",
+        "title": {
+            "sel": "xpath",
+            "param": "text()",
+            "parent": "title",
+            "type": "text",
+            "is_multiple": False,
+            "is_cdata": False
+        },
+        "link": {
+            "sel": "xpath",
+            "param": "text()",
+            "parent": "link",
+            "type": "text",
+            "is_multiple": False,
+            "is_cdata": False
+        },
+        "creator": {
+            "sel": "xpath",
+            "param": "text()",
+            "parent": "creator",
+            "type": "text",
+            "is_multiple": False,
+            "is_cdata": True
+        },
+        }
+
+        expected_outputs = [{
+            "title": "Raj Kundra Pornography Case: Evidence against accomplice involved in distribution of 90 obscene clips procured",
+            "link": "http://www.pinkvilla.com/entertainment/news/raj-kundra-pornography-case-evidence-against-accomplice-involved-distribution-90-obscene-clips-procured-830617",
+            "creator": None
+        }, {
+            "title": "Kriti Kharbanda on wedding plans with Pulkit Samrat: These are the things meant only for me and my family",
+            "link": "http://www.pinkvilla.com/entertainment/news/kriti-kharbanda-wedding-plans-pulkit-samrat-these-are-things-meant-only-me-and-my-family-830614",
+            "creator": None
+        }]
+
+        link_store = LinkStore(link="https://www.pinkvilla.com/category/entertainment/news/feed", content_type=ContentType.Article, formatter="xml_collection_format")
+        source_map = SourceMap(source_name="500px", source_id="random", source_home_link="",assumed_tags="", 
+                                compulsory_tags=[], is_collection=True, is_rss=True, links=[link_store])
+        spider = self.spider_class()
+        outputs = list(spider._parse(response, format_rules=format_rules, link_store=link_store, source_map=source_map, testing=True, itertype="xml"))
+        self.assertGreater(len(outputs), 0)
+
+        contains_outputs = []
+        for output, node in outputs:
+            print(output)
+            if output in expected_outputs:
+                contains_outputs.append(True)
+        # print(outputs)
+        self.assertEqual(len(expected_outputs), len(contains_outputs))
+    
+
+
+    def test_html_scrapper(self):
+        file_path = os.path.abspath(os.path.join(dirname(__file__), "fixtures/html_scrapper.html"))
+        with open(file_path, "r") as file:
+            response = HtmlResponse("https://www.pinkvilla.com/entertainment/movie-review", body=file.read(), encoding='utf-8')
+        format_rules = {
+        "itertag": "div[@class=\"article-page-teaser\"]",
+        "title": {
+            "sel": "xpath",
+            "param": "text()",
+            "parent": "a[@class=\"section-title\"]",
+            "type": "text",
+            "is_multiple": False,
+            "is_cdata": False
+        },
+        "link": {
+            "sel": "xpath",
+            "param": "@href",
+            "parent": "a",
+            "type": "text",
+            "is_multiple": False,
+            "is_cdata": False
+        },
+        "creator": {
+            "sel": "xpath",
+            "param": "text()",
+            "parent": "creator",
+            "type": "text",
+            "is_multiple": False,
+            "is_cdata": False
+        },
+        # "image": {
+        #     "sel": "xpath",
+        #     "param": "@data-src",
+        #     "parent": "img",
+        #     "type": "image",
+        #     "is_multiple": False,
+        #     "is_cdata": False
+        # }
+    }
+
+        expected_outputs = [{
+            "title": "Ek Duaa Review: Esha Deol's short film on female foeticide is a mediocre take on a significant issue ",
+            "link": "https://www.pinkvilla.com/entertainment/reviews/ek-duaa-review-esha-deols-short-film-female-foeticide-mediocre-take-significant-issue-829560",
+            "creator": None
+        }, {
+            "title": "Hungama 2 Review: Priyadarshan's comedy with Shilpa Shetty, Meezaan & Paresh Rawal is too long to be funny",
+            "link": "https://www.pinkvilla.com/entertainment/reviews/hungama-2-review-priyadarshans-comedy-shilpa-shetty-meezaan-paresh-rawal-too-long-be-funny-827089",
+            "creator": None
+        }]
+
+        link_store = LinkStore(link="https://www.pinkvilla.com/entertainment/movie-review", content_type=ContentType.Article, formatter="html_collection_format")
+        source_map = SourceMap(source_name="500px", source_id="random", source_home_link="",assumed_tags="", 
+                                compulsory_tags=[], is_collection=True, is_rss=True, links=[link_store])
+        spider = self.spider_class()
+        outputs = list(spider._parse(response, format_rules=format_rules, link_store=link_store, source_map=source_map, testing=True, itertype="html"))
+        self.assertGreater(len(outputs), 0)
+
+        contains_outputs = []
+        for output, node in outputs:
+            print(output)
+            if output in expected_outputs:
+                contains_outputs.append(True)
+        # print(outputs)
+        self.assertEqual(len(expected_outputs), len(contains_outputs))
+
+
+
+
 
     
     def test_collection_to_article(self):
@@ -64,7 +201,7 @@ class TestRssFeedSpider(unittest.TestCase):
                                 compulsory_tags=[], is_collection=True, is_rss=True, links=[link_store])
         spider = self.spider_class()
         spider.itertag = "item"
-        output = list(spider._parse(response, format_rules=format_rules, link_store=link_store, testing=True))
+        output = list(spider._parse(response, format_rules=format_rules, link_store=link_store, testing=True, itertype='xml'))
         self.assertEqual(len(output), 3)
         for index, data in enumerate(output):
             self.assertEqual(data[0]["title"], expected_output[index]["title"])
@@ -75,44 +212,6 @@ class TestRssFeedSpider(unittest.TestCase):
             self.assertListEqual(article_container.images, expected_output[index]["images"])
 
             
-    
-    def test_rss_for_named_source(self):
-        source_name = "Wandering Earl"
-        source_map = self.pull_named_source(source_name)
-        spider = self.spider_class()
-        link_store = source_map.links[0]
-        formats = spider.get_formatter_from_database(source_map.source_id)
-        response = requests.get(link_store.link, headers={'User-Agent': "Mozilla/5.0 (Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"})
-        response = XmlResponse(url=link_store.link, body=response.content)
-        format_ =spider.get_suitable_format_rules(formats, source_map, link_store)
-        kwarg = {
-            "source_map": source_map,
-            "format_rules": format_,
-            "formats": formats,
-            "assumed_tags": "", 
-            "compulsory_tags": [],  
-            "url": link_store.link,
-            "link_store": link_store
-        }
-        spider.iterator = "xml"
-        results1 = list(spider._parse(response, **kwarg))
-        # print(format_)
-        selector = Selector(response, type='xml')
-        spider._register_namespaces(selector)
-        selector.remove_namespaces()  
-        nodes = selector.xpath(f"//{format_['itertag']}")
-        self.assertEqual(type(response), XmlResponse)
-        results2 = []
-        for node in nodes:
-            node = spider.parse_node(response, node, **kwarg)
-            for gen in node:
-                results2.append(gen)
-        self.maxDiff = None
-        self.assertListEqual(results1[0], results2[0])
-    
 
 
-
-class TestHTMLFeedSpider(unittest.TestCase):
-    spider_class = HTMLFeedSpider
     

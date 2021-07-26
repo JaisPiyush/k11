@@ -15,23 +15,43 @@ ParsedNodeValue = Optional[Union[Tuple[Dict, Selector], Generator[DataLinkContai
 
 logging.basicConfig(filename="scrap_error.log", format="%(asctime)s %(levelname)s: %(message)s", level=logging.ERROR)
 
+
+
+
 class BaseSpider(Spider):
 
     sql_session = None
+    ObjectManager = None
 
     def __init__(self, *arg, **kwargs):
         # logger = setup_loggers(self.name)
         super().__init__(*arg, **kwargs)
     
-    def spider_closed(self): ...
-    def spider_opened(self): ...
+    
+    def spider_closed(self):
+        connection_handler.disconnect_mongo_engines()
+        connection_handler.dispose_sql_engines()
+        self.spider_close()
+    
+    def spider_opened(self):
+        # Almost all spiders use MongoDB. So, its better to create them all here and spider_open hook can be 
+        # used to manipulate Postgres
+        connection_handler.mount_mongo_engines()
+        self.spider_open()
+    
+    def spider_open(self): ...
+    def spider_close(self): ...
 
     
     def log(self,message, level=logging.ERROR, only_screen=False, **kwargs):
         self.logger.log(level, message, **kwargs)
-        if not only_screen:
-            error = ErrorLogs(time=datetime.now(), level=level, message=message)
-            error.save()
+        if not only_screen and level >= logging.ERROR:
+
+            try:
+                error = ErrorLogs(time=datetime.now(), level=level, message=message)
+                error.save()
+            except Exception as e:
+                pass
     
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):

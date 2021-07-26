@@ -1,4 +1,4 @@
-import unittest
+
 from k11.vault.connections import ConnectionHandler
 from unittest import TestCase
 

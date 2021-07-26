@@ -1,37 +1,27 @@
 from typing import Dict
-from sqlalchemy import create_engine
-from sqlalchemy.engine.base import Engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from k11.logger import log, logging
+from playhouse.postgres_ext import PostgresqlExtDatabase
 from mongoengine import connect, disconnect
-from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.session import Session, sessionmaker
 
 
-def create_sql_engine(uri):
-    return create_engine(uri)
+def create_sql_engine(conf):
+    return PostgresqlExtDatabase(
+        conf["database"],
+        user=conf["username"],
+        password=conf['password'],
+        port=conf['port'],
+        host=conf['host']
+    )
 
 def disconnect_mongo_engine(alias):
     disconnect(alias=alias)
 
 
-def create_session(class_, autocommit=False, autoflush=False):
-    return sessionmaker(autocommit=autocommit, autoflush=autoflush, class_=class_)
-
-
-SqlBase = declarative_base()
-
-class RoutingSession(Session):
-    engines = {}
-
-    def get_bind(self, mapper=None, clause=None):
-        # print(mapper.class_)
-        if mapper:
-            return self.engines[mapper.class_.__databasename__]
+# SqlBase = declarative_base()
 
 class ConnectionHandler:
     database_driver = {}
-    engines: Dict[str, Engine] = {}
+    engines = {}
     mongo_engines = {}
 
     def __init__(self, settings) -> None:
@@ -65,8 +55,7 @@ class ConnectionHandler:
         return self._get_database_uri(conf)
 
     def bind_sql_engine(self,alias, conf):
-        uri = self._get_database_uri(conf)
-        self.engines[alias] = create_sql_engine(uri)
+        self.engines[alias] = create_sql_engine(conf)
     
     def bind_mongo_engine(self, alias, conf):
         uri = self._get_database_uri(conf)
@@ -94,21 +83,10 @@ class ConnectionHandler:
             if not conf['is_sql']:
                 disconnect(alias)
     
-    def dispose_sql_engines(self, session):
-        session.close()
-        for engine in self.engines.values():
-            engine.dispose()
+    def dispose_sql_engines(self):
+        for _,db  in self.engines.items():
+            db.close()
 
-    def create_sql_session(self) -> Session:
-        session_cls = RoutingSession
-        session_cls.engines = self.engines
-        SessionLocal = create_session(session_cls)
-        session = SessionLocal()
-        try:
-            return session
-        except:
-            session.close()
-            
     
 
 

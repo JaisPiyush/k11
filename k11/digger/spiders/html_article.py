@@ -1,4 +1,5 @@
 
+from k11.models.sql_models import IndexableArticle
 from k11.vault import connection_handler
 from k11.digger.abstracts import BaseSpider
 import json
@@ -10,6 +11,7 @@ from scrapy.spiders import Spider
 from scrapy_splash import SplashRequest
 from urllib.parse import ParseResult, urlparse
 import os.path
+import random
 
 
 def get_lua_script(name):
@@ -31,13 +33,6 @@ class HTMLArticleSpider(BaseSpider):
         self.current_format = None
         self.current_container = None
         self.current_url = None
-    
-    def spider_open(self):
-        connection_handler.mount_sql_engines()
-        self.sql_session = connection_handler.create_sql_session()
-    
-    def spider_close(self):
-        connection_handler.dispose_sql_engines(self.sql_session)
 
 
     custom_settings = {
@@ -90,22 +85,26 @@ class HTMLArticleSpider(BaseSpider):
     """
     Pull out all scrappable data link containers out of the database
     """
-    def get_scrappable_links(self) -> Generator[DataLinkContainer, None, None]:
-        return DataLinkContainer.objects
+    def get_scrappable_links(self):
+        qs = list(DataLinkContainer.objects)
+        random.shuffle(qs)
+        return qs
+
  
     
     # Return True if article is present inside the database
     def is_article_present_in_db(self, article_link: str) -> bool:
-        return DataLinkContainer.objects.is_article_present_in_db(article_link)
+        return IndexableArticle.select().where(IndexableArticle.article_id == article_link).exists()
 
     def start_requests(self):
         for container in self.get_scrappable_links():
             # self.reset_configs()
-            self.log(container.link +" is in the process")
+            
             if self.is_article_present_in_db(container.link):
                 continue
             else:
                 # self.current_container = container
+                self.log(container.link +" is in the process", only_screen=True)
                 format_str, format_ = self.get_format(container.link)
                 SPLASH_ARGS['format'] = format_str         
                 

@@ -1,17 +1,21 @@
 from datetime import datetime
-from k11.vault import connection_handler
+import logging
+from k11.digger.abstracts import BaseSpider
+from mongoengine.context_managers import query_counter
+# from k11.vault import connection_handler
 
 from scrapy.http.request import Request
 from k11.utils import is_url_valid
 from k11.digger.abstracts import AbstractCollectionScraper, ParsedNodeValue
-from typing import Dict, Generator, List, Tuple, Union
-from scrapy.spiders import Spider
+from typing import Dict,List, Tuple, Union
+from k11.models.serializer import DataLinkSerializer, ArticleContainerSerializer
 from scrapy import Selector
 from urllib.parse import urlparse
 from scrapy_splash.request import SplashRequest
-from k11.models.main import Format, LinkStore, SourceMap, DataLinkContainer, ContentType, ArticleContainer
+from k11.models import Format, LinkStore, SourceMap, DataLinkContainer, ContentType, ArticleContainer
 from urllib.parse import urlparse
 from hashlib import sha256
+import random
 
 
 class BaseCollectionScraper(AbstractCollectionScraper):
@@ -20,23 +24,9 @@ class BaseCollectionScraper(AbstractCollectionScraper):
     scraped_sources_count = 0
     sql_session = None
 
-
-    def spider_closed(self):
-        connection_handler.disconnect_mongo_engines()
-        connection_handler.dispose_sql_engines(self.sql_session)
-        self.spider_close()
-    
-    def spider_opened(self):
-        # Almost all spiders use MongoDB. So, its better to create them all here and spider_open hook can be 
-        # used to manipulate Postgres
-        connection_handler.mount_mongo_engines()
-        connection_handler.mount_sql_engines()
-        self.sql_session = connection_handler.create_sql_session()
-        self.spider_open()
-    
-    def spider_open(self): ...
-    def spider_close(self): ...
-
+    """
+    Every Link Store is associated with a formatter name such as `xml_collection_format` or `html_collection_format`
+    """
     def get_suitable_format_rules(self, formats: Format, source_map: SourceMap, link_store: LinkStore, default="") -> Dict:
         if link_store.formatter != None and len(link_store.formatter) > 0:
             if link_store.formatter != source_map.formatter and not hasattr(formats,link_store.formatter):
@@ -77,16 +67,28 @@ class BaseCollectionScraper(AbstractCollectionScraper):
     
     def process_link_store(self, link_store: LinkStore, source_map: SourceMap, formats: Format, **kwargs) -> Request:
         format_rules = self.get_suitable_format_rules(formats=formats, source_map=source_map, link_store=link_store,default=self.default_format_rules)
+        
         assumed_tags, compulsory_tags = self.get_tags_for_link_store(source_map=source_map, link_store=link_store)
+
         data = self.before_requesting(url=link_store.link, callback=self._parse, formats=formats, format_rules=format_rules, source=source_map, 
         assumed_tags=assumed_tags, compulsory_tags=compulsory_tags, link_store=link_store)
+
+        # Merging transformed data with all of the arguments to create a data packet
         if "cb_kwargs" not in data:
             data["cb_kwargs"] = {}
+
+        # Defining iterator type for collection scrapper, html/xml
+        if link_store.formatter == "html_collection_format":
+            data['cb_kwargs']['itertype'] = "html"
+        elif link_store.formatter == "xml_collection_format":
+            data['cb_kwargs']['itertype'] = "xml"
         data["cb_kwargs"].update(kwargs)
         return self.call_request(**data)
 
     def run_requests(self, **kwargs):
-        for source in list(self.get_sources_from_database()):
+        sources = list(self.get_sources_from_database())
+        random.shuffle(sources)
+        for source in sources:
             print(source.source_name, " ", source.source_home_link, "\n")
             formats = self.get_formatter_from_database(source.source_id)
             if formats == None:
@@ -101,14 +103,23 @@ class BaseCollectionScraper(AbstractCollectionScraper):
                     continue
             self.scraped_sources_count += 1
         print("RSS Feed Scrapper has scrapped: ", self.scraped_sources_count, "\n")
-        self.log(f"RSS Feed Scrapper has scrapped: f{self.scraped_sources_count}")
+        self.log(f"RSS Feed Scrapper has scrapped: f{self.scraped_sources_count}", only_screen=True)
     
     def start_requests(self, **kwargs):
         self.scraped_sources_count = 0
         return self.run_requests(**kwargs)
         
 
-class BaseContentExtraction:
+
+
+
+
+
+
+
+
+
+class BaseContentExtraction(BaseSpider):
 
     non_formattable_tags = ['itertag', 'namespaces']
 
@@ -119,9 +130,12 @@ class BaseContentExtraction:
     def error_handling(self, e): ...
 
     def create_article(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index: int = 0):
-        if ArticleContainer.objects(article_link = data["link"]) == 0:
-            article: ArticleContainer = self.process_single_article_data(data=data, link_store=link_store, source_map=source_map, index=index)
-            article.save()
+        try:
+            if ArticleContainer.objects(article_link = data["link"]).count() == 0:
+                article: ArticleContainer = self.process_single_article_data(data=data, link_store=link_store, source_map=source_map, index=index)
+                article.save()
+        except KeyError as e:
+            self.log(f"`BaseContentExtraction.create_article` is throwing {e} with data {data}", level=logging.ERROR)
 
     def process_single_article_data(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index : int = 0):
         data["content_type"] = link_store.content_type
@@ -151,20 +165,33 @@ class BaseContentExtraction:
         if data_link.netloc == "":
             home_url_parse = urlparse(kwargs['url'])
             data['link'] = f"{home_url_parse.scheme}://{home_url_parse.netloc}{data_link.geturl()}"
-        return DataLinkContainer(container=data,source_name=source.source_name, source_id=source.source_id,
+        return DataLinkSerializer(DataLinkContainer(container=data,source_name=source.source_name, source_id=source.source_id,
                                  formatter=kwargs['formats'].format_id, scraped_on=datetime.now(),
                                  link=data['link'],assumed_tags=kwargs["assumed_tags"],
                                  compulsory_tags=kwargs['compulsory_tags'], watermarks=source.watermarks,
                                  is_formattable=source.is_structured_aggregator,is_transient=True,
-                                 )
+                                 ))
     
     def parse_cdata(self, node: Selector, query: Dict):
+
+        # TODO: Needs to update creator format rules in database
+        # self.log(f'node={node}, parent={query["parent"]}, n={node.xpath(".//dc:creator//p/text()").get()}')
+        
+        if "creator" in query["parent"]:
+            if ":" not in query["parent"]:
+                query['parent'] = "dc:"+query["parent"]
+            if query["param"] == "/p/text()":
+                query['param'] = "text()"
+            return self.extract_values(node,**query)
         cdata_text = self.extract_values(node, parent=query["parent"], param='text()', sel="xpath")
+        
         selected = Selector(text=cdata_text)
         query_copy = query.copy()
         del query_copy["param"]
         del query_copy["parent"]
+        # self.log(self.extract_values(node=selected, parent=query["param"], param='', param_prefix='', parent_prefix='./', **query_copy), only_screen=True)
         return self.extract_values(node=selected, parent=query["param"], param='', param_prefix='', parent_prefix='./', **query_copy)
+        
     
     
 
@@ -174,7 +201,9 @@ class BaseContentExtraction:
             parent_prefix = "."
             parent = ""
         f_str = parent_prefix + parent + param_prefix + param
+       
         selected = node.css(f_str) if "sel" in kwargs and kwargs["sel"] == "css" else node.xpath(f_str)
+        
         if "is_multiple" in kwargs and kwargs["is_multiple"]:
             return selected.getall()
         return selected.get()
@@ -186,6 +215,7 @@ class BaseContentExtraction:
                 try:
                     if "is_cdata" in value and  value["is_cdata"]:
                         collected_data[key] = self.parse_cdata(node, value)
+                        
                     else:
                         collected_data[key] = self.extract_values(node=node, **value)
                 except Exception as e:

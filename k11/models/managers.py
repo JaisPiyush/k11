@@ -5,9 +5,9 @@ from mongoengine.queryset.visitor import Q
 class SourceMapQuerySet(QuerySet):
 
     def pull_all_rss_models(self):
-        return self.filter(Q(is_rss=True) & Q(is_collection=True) & Q(is_third_party=True))
+        return self.filter(Q(is_rss=True) & Q(is_collection=True) & Q(is_third_party=False))
     
-    def pull_all_html_collections(self):
+    def pull_all_html_models(self):
         return self.filter(Q(is_rss=False) & Q(is_collection=True) & Q(is_third_party=False))
     
     def pull_all_youtube_collections(self):

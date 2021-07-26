@@ -20,21 +20,3 @@ class TestNoSqlWorking(TestCase):
     def tearDown(self) -> None:
         connection_handler.disconnect_mongo_engines()
 
-
-class TestSqlWorking(TestCase):
-    def setUp(self) -> None:
-        connection_handler.mount_sql_engines()
-        self.session = connection_handler.create_sql_session()
-        print(self.session)
-    
-    def test_indexable_links(self):
-        query = self.session.query(func.count(distinct(IndexableLinks.link)))
-        counts = self.session.execute(query).scalar()
-        self.assertGreater(counts, 10)
-
-        query = self.session.query(IndexableLinks).filter(IndexableLinks.link == 'abs')
-        exist = self.session.query(query.exists()).scalar()
-        self.assertEqual(exist, False)
-    
-    def tearDown(self) -> None:
-        connection_handler.dispose_sql_engines(self.session)

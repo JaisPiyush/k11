@@ -1,10 +1,10 @@
 from posixpath import dirname
 from typing import Dict, Generator, Iterable, List, Tuple, NoReturn
 import spacy
-from k11.models.main import ArticleContainer
+from k11.models import ArticleContainer
 from k11.models.discriminator import CorpusHolder, TextMeta
 from string import punctuation
-from datetime import date, datetime
+from datetime import datetime
 from gensim.corpora.mmcorpus import MmCorpus
 from gensim.corpora import Dictionary
 import os
@@ -16,7 +16,7 @@ from gensim.models.ldamodel import LdaModel
 class TextProcessor:
     nlp = None
     
-    def __init__(self, package="en_core_web_trf") -> None:
+    def __init__(self, package="en_core_web_lg") -> None:
         self.nlp = spacy.load(package)
     
     def _is_not_stopword(self, word) -> bool:

@@ -33,16 +33,14 @@ SQL_SESSION = None
 
 def connect_sql_session():
     connection_handler.mount_sql_engines()
-    SQL_SESSION = connection_handler.create_sql_session()
 class CollectionItemDuplicateFilterPipeline:
      
     """
-    This method will check the existance in all travelled links so far.
+    This method will check the exist in all travelled links so far.
     Postgres will be used for this work
     """
     def link_already_exist_in_db(self, link: str) -> bool:
-        query = SQL_SESSION.query(IndexableLinks).filter(link == link)
-        return SQL_SESSION.query(query.exists()).scalar()
+        return IndexableLinks.select().where(IndexableLinks.link == link).exists()
 
     
     """
@@ -51,12 +49,8 @@ class CollectionItemDuplicateFilterPipeline:
     else process
     """
     def process_item(self, item: DataLinkContainer, spider):
-        if SQL_SESSION is None and spider.sql_session is not None:
-            SQL_SESSION = spider.sql_session
-        elif spider.sql_session is None and SQL_SESSION is None:
-            SQL_SESSION = connection_handler.create_sql_session()
-
-        
+        item = DataLinkContainer(**item)
+        # print(item)
         if item.link != None and len(item.link) > 0 and not self.link_already_exist_in_db(item.link):
             return item
         raise DropItem("Item already exists")
@@ -114,14 +108,13 @@ class CollectionItemVaultPipeline:
         else:
             item = DataLinkContainer(**item)
             item.save()
+        return item
 
     def index_link_into_db(self, item: DataLinkContainer):
-        link = IndexableLinks(link=item.link, scraped_on=item.scraped_on,
+        IndexableLinks.create(link=item.link, scraped_on=item.scraped_on,
                     source_name=item.source_name
         )
-        SQL_SESSION.add(link)
-        SQL_SESSION.commit()
-    
+
     def process_item(self, item: DataLinkContainer, spider):
         if item.link is not None and item.source_name is not None:
             item = self.insert_container_in_db(item)
@@ -259,7 +252,7 @@ class ArticleSanitizer:
     """
     This is differed cleaning that is the html tags will be removed completely
     """
-    def deferd_cleaning(self, body: str) -> str:
+    def deffer_cleaning(self, body: str) -> str:
         # body = replace_tags(body)
         return body
 
@@ -275,26 +268,16 @@ class ArticleSanitizer:
         data["videos"] = body.xpath('///video/@src').getall()
         cleaned_body = Selector(text=self.simple_cleansing(body_unselected))
         if len(texts := "".join(cleaned_body.xpath('///text()').getall())) > 0:
-            texts = [txt for txt in texts.split(" ") if len(txt) > 0]
-            _steps = 510
-            data["text_set"] = []
-            if len(texts) < _steps:
-                data["text_set"] = [self.deferd_cleaning(txt) for txt in texts]
-            else:
-                for chunk in range(0, len(texts), _steps):
-                    if chunk + _steps < len(texts):
-                        data["text_set"].append(self.deferd_cleaning(" ".join(texts[chunk: chunk + _steps])))
-                    else:
-                        data["text_set"].append(self.deferd_cleaning(" ".join(texts[chunk:])))
+            data['text_set'] = [texts]
         data['title'] = self.get_title(body)
         data["creator"] = self.get_creator(body)
         if self.iden['is_multiple'] and self.original_iden.is_bakeable and (sub_body := self.get_body(body)) != None:
-            data['body'] = self.deferd_cleaning(self.simple_cleansing(sub_body))
+            data['body'] = self.deffer_cleaning(self.simple_cleansing(sub_body))
         return data
     
     @staticmethod
     def is_source_present_in_db(home_link: str) -> bool:
-        return Format.objects(source_home_link = home_link)  > 0
+        return Format.objects(source_home_link = home_link).count()  > 0
 
 
     """
@@ -378,14 +361,9 @@ class ArticleDuplicateFilter:
     
     # Return True if article is present inside the database
     def is_article_present_in_db(self, article_id: str) -> bool:
-        query = SQL_SESSION.query(IndexableArticle).filter(IndexableArticle.article_id == article_id)
-        return SQL_SESSION.query(query.exists()).scalar()
+        return IndexableArticle.select().where(IndexableArticle.article_id == article_id).exists()
     
     def process_item(self, items: List[ArticleContainer], spider: BaseSpider):
-        if SQL_SESSION is None and spider.sql_session is not None:
-            SQL_SESSION = spider.sql_session
-        elif SQL_SESSION is None and spider.sql_session is None:
-            SQL_SESSION = connection_handler.create_sql_session()
         if len(items) == 0:
             raise DropItem("No One came in")
         return [item for item in items if not self.is_article_present_in_db(item.article_id)]
@@ -434,8 +412,7 @@ class ArticleVaultPipeline:
         if len(items) > 0:
             ArticleContainer.objects.insert(items)
             indexable_articles = map(lambda x: IndexableArticle.from_article_container(x), items)
-            SQL_SESSION.bulk_save_objects(indexable_articles)
-            SQL_SESSION.commit()
+            IndexableArticle.insert_many(indexable_articles).execute()
             DataLinkContainer.objects.delete_containers([item.scraped_from for item in items if item.scraped_from is not None])
             return items
         raise DropItem("Dropped in ArticleVaultPipeline")

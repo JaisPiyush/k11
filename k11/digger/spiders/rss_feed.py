@@ -3,10 +3,10 @@ from .base import BaseCollectionScraper, BaseContentExtraction
 
 from scrapy.exceptions import NotConfigured, NotSupported
 from scrapy.selector.unified import Selector
-from typing import Dict, Generator
+from typing import Dict
 from scrapy.spiders import XMLFeedSpider
 from scrapy.utils.spider import iterate_spider_output
-from k11.models.main import  SourceMap, Format
+from k11.models import  SourceMap, Format
 
 
 class XMLCustomImplmentation(XMLFeedSpider, BaseCollectionScraper, BaseContentExtraction):
@@ -74,7 +74,7 @@ class RSSFeedSpider(XMLCustomImplmentation):
     custom_settings = {
 
         "ITEM_PIPELINES": {
-            "digger.pipelines.CollectionItemDuplicateFilterPiepline": 300,
+            "digger.pipelines.CollectionItemDuplicateFilterPipeline": 300,
             "digger.pipelines.CollectionItemSanitizingPipeline": 356,
             "digger.pipelines.CollectionItemVaultPipeline": 412
         },
@@ -86,8 +86,8 @@ class RSSFeedSpider(XMLCustomImplmentation):
     Fetch all the sources from digger(db) and sources (collection) where is_rss = True
     Insert all data into self.source_maps, which later will be used to iterate
     """
-    def get_sources_from_database(self) -> Generator[SourceMap, None, None]:
-        return SourceMap.pull_all_rss_models()
+    def get_sources_from_database(self):
+        return SourceMap.objects.pull_all_rss_models()
 
     """
     This method will return existing rss format attached with source, otherwise

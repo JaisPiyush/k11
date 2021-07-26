@@ -25,14 +25,18 @@ class HTMLFeedSpider(BaseCollectionScraper, BaseContentExtraction):
     """
 
     def get_sources_from_database(self) -> Generator[SourceMap, None, None]:
-        return SourceMap.objects.pull_all_rss_models()
+        return SourceMap.objects.pull_all_html_models()
  
     """
     This function will pull html source formatter using `format_id == source_map.source_id`
     """
 
     def _get_html_source_fromat_in_db(self, format_id: str) -> Format:
-        return Format.objects(Q(format_id=format_id) & Q(html_collection_format__exists=True)).get()
+        try:
+            return Format.objects(Q(format_id=format_id) & Q(html_collection_format__exists=True)).get()
+        except Exception as e:
+            self.log(f"{format_id} is showing error in html_source_extraction {e}")
+            raise e
         
        
 

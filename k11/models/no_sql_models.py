@@ -8,6 +8,8 @@ import mongoengine as mg
 from k11.vault.app import connection_handler
 from mongoengine.queryset.visitor import Q
 
+from scrapy.item import Item
+
 
 class LinkStoreField(mg.DictField):
 
@@ -124,6 +126,10 @@ class DataLinkContainer(mg.Document):
     }
 
 
+    
+
+
+
 class ArticleContainer(mg.Document):
     article_id = mg.StringField(required=True)
     title = mg.StringField(required=True)
@@ -153,10 +159,14 @@ class ArticleContainer(mg.Document):
     majority_content_type = mg.StringField()
     coords = mg.ListField(mg.ListField(mg.FloatField()))
     meta_data = mg.DictField()
+
+
     meta = {
         "db_alias":"mongo_treasure",
         "collection": "article_containers"
     }
+
+
 
 
 

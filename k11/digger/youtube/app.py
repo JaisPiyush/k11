@@ -1,5 +1,5 @@
 from k11.models.youtube import YouTubeVideoModel, YoutubeVideoCategory
-from k11.models.main import ArticleContainer, SourceMap, ThirdPartyDigger
+from k11.models import ArticleContainer, SourceMap, ThirdPartyDigger
 import json
 from typing import Generator, List
 import requests
