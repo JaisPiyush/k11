@@ -95,6 +95,9 @@ class ContainerIdentity:
             "is_bakeable": self.is_bakeable
         }
     
+    def to_json_str(self):
+        return json.dumps(self.to_dict())
+    
     def __eq__(self, o: object) -> bool:
         return (hasattr(o, "param") and getattr(o, "param") == self.param and
                 hasattr(o, "is_multiple") and getattr(o, "is_multiple") == self.is_multiple and
@@ -118,7 +121,8 @@ class ContainerFormat:
                           QuerySelector(tag="input"),
                           QuerySelector(tag="footer"),
                           QuerySelector(tag="form"),
-                          QuerySelector(tag="header")
+                          QuerySelector(tag="header"),
+                          QuerySelector(tag="textarea")
                           ]
     is_multiple:bool = False
     title_selectors: Optional[List[str]] = None
@@ -126,7 +130,7 @@ class ContainerFormat:
     body_selectors: Optional[List[str]] = None
 
 
-    def get_ignorables(self) -> List[str]:
+    def get_ignoreables(self) -> List[str]:
         return self.default_ignorables + self.ignorables
     
     @classmethod

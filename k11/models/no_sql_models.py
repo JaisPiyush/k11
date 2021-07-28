@@ -45,6 +45,7 @@ class ContainerFormatField(DictField):
             return None
         return value.to_dict()
 
+
 class XMLContainerFormatField(DictField):
     def validate(self, value):
         return isinstance(value, XMLContainerFormat)

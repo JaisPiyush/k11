@@ -5,10 +5,12 @@ from typing import Dict, List
 from k11.models import ContentType, Format, LinkStore, SourceMap
 from unittest import TestCase
 from k11.digger.spiders.collection_spider import CollectionSpider
+from k11.digger.spiders.article_spider import ArticleSpider
 from k11.vault import connection_handler
 from scrapy.http import XmlResponse, HtmlResponse
 from scrapy.selector import Selector
-
+import requests
+from k11.digger.pipelines import ArticlePreprocessor
 
 
 
@@ -214,4 +216,30 @@ class TestCollectionSpider(TestCase):
             
 
 
+class TestArticleScrapper(TestCase):
+    spider_cls = ArticleSpider
+    sanitizer = ArticlePreprocessor()
+
+    def setUp(self) -> None:
+        connection_handler.mount_all_engines()
     
+    def test_extraction(self):
+        url = "https://putthatcheeseburgerdown.com/2021/03/17/these-11-foods-will-supercharge-your-immune-system/"
+        file_path = os.path.abspath(os.path.join(dirname(__file__), "fixtures/ptc_scrap.html"))
+        with open(file_path, "r") as file:
+            response = HtmlResponse("https://www.pinkvilla.com/entertainment/movie-review", body=file.read(), encoding='utf-8')
+        spider = self.spider_cls()
+        selector = Selector(response, type='html')
+        for data in spider.parse(selector,**{"url": url, "container": {}}):
+            cleaned = self.sanitizer.remove_ignoreables(data["content"], data["formatter"])
+            print(cleaned.get_text())
+            print([img['src'] for img in cleaned.find_all("video")])
+            print([img['src'] for img in cleaned.select('iframe.youtube-player')])
+            self.assertEqual(True, False)
+
+
+
+    
+    def tearDown(self) -> None:
+        connection_handler.disconnect_mongo_engines()
+        connection_handler.dispose_sql_engines()

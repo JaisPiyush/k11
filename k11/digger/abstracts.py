@@ -2,6 +2,7 @@ from datetime import datetime
 import logging
 # from digger.logger import setup_loggers
 from typing import Dict, Generator, List, Optional, Tuple, Union
+from urllib.parse import urlparse
 from scrapy import signals
 from scrapy import Spider, Selector
 from k11.models.main import LinkStore
@@ -41,7 +42,12 @@ class BaseSpider(Spider):
     
     def spider_open(self): ...
     def spider_close(self): ...
+    
 
+    @staticmethod
+    def get_source_home_url(url):
+        parsed_url = urlparse(url)
+        return parsed_url.scheme + '://' + parsed_url.netloc
     
     def log(self,message, level=logging.ERROR, only_screen=False, **kwargs):
         self.logger.log(level, message, **kwargs)
