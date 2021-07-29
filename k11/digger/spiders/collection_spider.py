@@ -1,9 +1,10 @@
+from models.serializer import SourceMapSerializer
 from typing import Dict
 from scrapy.selector.unified import Selector
 from .base import BaseCollectionScraper, BaseContentExtraction
 from scrapy.spiders import XMLFeedSpider
 from scrapy.utils.spider import iterate_spider_output
-from k11.models import SourceMap, Format
+from k11.models import SourceMap, Format, QueuedSourceMap
 from scrapy.exceptions import NotConfigured, NotSupported
 
 
@@ -83,7 +84,11 @@ class CollectionSpider(CustomMarkupSpider):
     Fetch all the sources from digger(db) and sources (collection) where is_third_party=False
     """
     def get_sources_from_database(self):
-        return SourceMap.objects
+        if QueuedSourceMap.objects.count() > 0:
+            return QueuedSourceMap.objects
+        else:
+            QueuedSourceMap.objects.insert([SourceMapSerializer(source_map) for source_map in SourceMap.objects])
+        return QueuedSourceMap.objects
     
     """
     This method will return existing rss format attached with source, otherwise
@@ -93,7 +98,7 @@ class CollectionSpider(CustomMarkupSpider):
 
     def _get_source_format_in_db(self, format_id: str) -> Format:
         try:
-            return Format.objects(format_id=format_id).get()
+            return Format.objects(format_id=format_id).first()
         except Exception as e:
             return Format.objects.get_default_rss_format()
     

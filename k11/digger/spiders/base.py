@@ -127,8 +127,8 @@ class BaseContentExtraction(BaseSpider):
     Handles different types of error during parsing
     """
 
-    def error_handling(self, e): ...
-
+    def error_handling(self, e):
+        self.log(e, level=logging.ERROR)
     def create_article(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index: int = 0):
         try:
             if ArticleContainer.objects(article_link = data["link"]).count() == 0:
@@ -154,6 +154,11 @@ class BaseContentExtraction(BaseSpider):
         if "text" in data:
             data["body"] = data["text"]
             del data["text"]
+        # filter None values
+        if "images" in data:
+            data["images"] = set(filter(lambda x: x is not None, data["images"]))
+        if "videos" in data:
+            data["videos"] = set(filter(lambda x: x is not None, data["videos"]))
         return self.pack_in_article_container(source=source_map, **data)
     
 
