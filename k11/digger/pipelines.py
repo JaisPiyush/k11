@@ -8,7 +8,7 @@
 # from dataclasses import replace
 from k11.digger.abstracts import BaseSpider
 from hashlib import sha256
-from k11.models.no_sql_models import DataLinkContainer, Format, ArticleContainer, SourceMap
+from k11.models.no_sql_models import DataLinkContainer, Format, ArticleContainer, QueuedSourceMap, SourceMap
 from k11.models.sql_models import IndexableArticle, IndexableLinks
 from typing import Dict, List, Union
 from urllib.parse import urlparse
@@ -119,6 +119,7 @@ class CollectionItemVaultPipeline:
         if item.link is not None and item.source_name is not None:
             item = self.insert_container_in_db(item)
             self.index_link_into_db(item)
+            
             return item
         raise DropItem("Previous pipeline is sending lose data")
 
@@ -147,204 +148,7 @@ item: {
     url: str
 }
 """
-class ArticleSanitizer:
 
-    container: DataLinkContainer = None
-    format_: ContainerFormat = None
-    iden: ContainerIdentity = None
-    original_iden: ContainerIdentity = None
-    url: str = None
-    content: str = None
-    disabled: List[str] = []
-
-    def process_attrs(self, item: Dict):
-        self.container = item["container"]
-        self.format_  = item['format']
-        self.iden = ContainerIdentity(**item['iden']) if 'iden' in item and  item['iden'] != 'body' else ContainerIdentity('body', is_multiple=False, content_type=ContentType.Article)
-        self.original_iden = self.iden
-        self.content = item['content']
-        self.disabled = item['disabled']
-        self.url = item['url']
-
-    @staticmethod
-    def select_property(key:str, selector: Selector, container: DataLinkContainer = None,format_: ContainerFormat = None, format_key: str = None, default: str = None) -> str:
-        value = None
-        if format_ is not None and format_key is not None and hasattr(format_, format_key) and (properties := getattr(format_, format_key)) != None:
-            for prop in properties:
-                value = selector.xpath(prop).get()
-                if value is not None:
-                    break
-        if value is None and container is not None and container.container is not None and key in container.container:
-            value = container.container[key]
-        else:
-            return default
-        return value
-    
-    """
-    Different methods to extract title, if format has title_selectors, then extract title based on that if any matches,
-    else go for containers default title
-    """
-    def get_title(self, selector: Selector) -> str:
-        return self.select_property("title", selector, container=self.container, format_=self.format_, 
-                                    format_key="title_selectors", default="")
-    
-    """
-    Does similary thing as done above
-    """
-    def get_creator(self, selector: Selector) -> str:
-        return self.select_property("creator", selector, container=self.container, format_=self.format_,
-                                    format_key="creator_selectors", default="")
-        
-    """
-    This function is specially made for bakeable articles, which are broken articles from onee big article,
-    it basically scrap out text from that piece
-    """
-    def get_body(self, selector: Selector) -> Union[str, None]:
-        if self.format_ is not None and self.format_.body_selectors is not None and len(self.format_.body_selectors) > 0:
-            for body_selector in self.format_.body_selectors:
-                # must return string not html
-                value = selector.xpath(body_selector).get()
-                if value is not None:
-                    return value
-        return None
-
-
-    def find_urls(self, text: str) -> List[str]:
-        regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
-        return [x[0] for x in re.findall(regex, text)]
-
-    def flush_urls(self, text: str) -> str:
-        urls = self.find_urls(text)
-        if urls is None or len(urls) == 0:
-            return text
-        for url in urls:
-            text = text.replace(url, "")
-        return text
-    
-    def find_emojis(self, text: str) -> List[str]:
-        regex = r'[\u263a-\U0001f645]'
-        return re.findall(regex, text)
-    
-    def flush_emojis_and_hastag(self, text:str) -> str:
-        matches = self.find_emojis(text)
-        if matches is None or len(matches) == 0:
-            return text
-        for match in matches:
-            text = text.replace(match, "")
-        return text.replace('#',"")
-    
-    def flush_unrequited(self, text_set: List[str]) -> List[str]:
-        # return [self.flush_emojis_and_hastag(self.flush_urls(text)) for text in text_set]
-        return [self.flush_urls(txt) for txt in text_set]
-     
-    """
-    Removes comment, script, noscript, style and b tags and striping all'\n\,\t,\r
-    
-    """
-    def simple_cleansing(self, body:str) -> str:
-        body = remove_comments(body)
-        body = remove_tags_with_content(body, which_ones=('script', 'noscript', 'style'))
-        body = replace_escape_chars(body, which_ones=('\n', '\t','\r'))
-        return body
-    
-    """
-    This is differed cleaning that is the html tags will be removed completely
-    """
-    def deffer_cleaning(self, body: str) -> str:
-        # body = replace_tags(body)
-        return body
-
-    
-    """
-    Extract contents like images, videos, text_set, title, creator, and body
-    """
-    def extract_contents(self, body_unselected: str) -> Dict:
-        body = Selector(text=body_unselected)
-        data = {"images": [], "videos": [], "text_set": None, "disabled": self.disabled, "body": None}
-        data["images"] = body.xpath('///img/@src').getall()
-        data["images"] += body.xpath('///picture//source/@src').getall()
-        data["videos"] = body.xpath('///video/@src').getall()
-        data['text_set'] = [body_unselected]
-        data['title'] = self.get_title(body)
-        data["creator"] = self.get_creator(body)
-        if self.iden['is_multiple'] and self.original_iden.is_bakeable and (sub_body := self.get_body(body)) != None:
-            data['body'] = self.deffer_cleaning(self.simple_cleansing(sub_body))
-        return data
-    
-    @staticmethod
-    def is_source_present_in_db(home_link: str) -> bool:
-        return Format.objects(source_home_link = home_link).count()  > 0
-
-
-    """
-    This function has all the responsibility to pack all the messed data into neat and clean article container
-    """
-    def pack_container(self, url: str,title:str = "", creator: str = "",images: List[str] = [],
-                        disabled: List[str]= [], videos: List[str]= [],
-                        text_set: List[str] = [], body: str= None, index: int = 0, tags: List[str] = []) -> ArticleContainer:
-        parsed = urlparse(url)
-        return ArticleContainer(
-            article_id=sha256(url.encode()).hexdigest() + str(index),
-            title=title,
-            source_name=self.container.source_name,
-            source_id=self.container.source_id,
-            article_link=url,
-            creator=creator,
-            scraped_from=self.container.link,
-            home_link=f"{parsed.scheme}://{parsed.netloc}",
-            site_name=self.container.container['site_name'] if 'site_name' in self.container.container else self.container.source_name,
-            scraped_on=self.container.scraped_on,
-            pub_date=self.container.container['pub_date'] if 'pub_date' in self.container.container else None,
-            disabled=disabled,
-            is_source_present_in_db=self.is_source_present_in_db(f"{parsed.scheme}://{parsed.netloc}"),
-            tags=tags,
-            compulsory_tags=self.container.compulsory_tags if self.container.compulsory_tags is not None else [],
-            images=images,
-            videos=videos,
-            text_set=text_set,
-            body=body,
-            majority_content_type=self.iden['content_type'] if hasattr(self.iden, 'content_type') else ContentType.Article,
-            next_frame_required=self.iden['content_type'] == ContentType.Article
-        )
-
-    
-    def process_article(self, body:str, url: str, index=0) -> ArticleContainer:
-        data = self.extract_contents(body_unselected=body)
-        data["index"] = index
-        data["tags"] = self.container.assumed_tags.split(" ") if self.container is not None and self.container.assumed_tags is not None else ""
-        return self.pack_container(url=url, **data)
-    
-    """
-    This method search for another iden in format which has is_mulitple = True and is available ont the current site
-    """
-    def process_baking(self,url: str, body: str) -> List[ArticleContainer]:
-        _selector = Selector(text=body)
-        for iden in self.format_.idens:
-            if iden != self.original_iden and iden.is_multiple:
-                self.iden = iden
-                return [self.process_article(content=semi_articles, url=url, index=index + 1) for index, semi_articles in enumerate(_selector.css(iden['param']).getall())]
-        return []  
-
-
-    
-    def process_multiple_article(self, url: str, body: List[str],) -> List[ArticleContainer]:
-        return [self.process_article(content, url, index=index) for index, content in enumerate(body)]
-
-    def process_item(self, item: Dict, spider) -> List[ArticleContainer]:
-        self.process_attrs(item)
-        articles: List[ArticleContainer] = []
-        if isinstance(self.content, str):
-            # Single article with possibility of being bakeable
-            # First task is to create the giant article
-            articles.append(self.process_article(body=self.content, url=self.url))
-            if self.iden['is_bakeable']:
-                articles += self.process_baking(ulr=self.url, body=self.content)
-        else:
-            articles = self.process_multiple_article(url=self.url, body=self.content)
-        if len(articles) == 0:
-            DropItem("No item came out eventually.")
-        return articles
-        
 
 """
 Remove duplicate items and define major content type and also remove urls and emojis, '#' from text.

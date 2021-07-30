@@ -1,6 +1,10 @@
-from models.serializer import SourceMapSerializer
+from datetime import datetime
+import logging
+from k11.models.serializer import SourceMapSerializer
 from typing import Dict
+from mongoengine.queryset.visitor import Q
 from scrapy.selector.unified import Selector
+from twisted import logger
 from .base import BaseCollectionScraper, BaseContentExtraction
 from scrapy.spiders import XMLFeedSpider
 from scrapy.utils.spider import iterate_spider_output
@@ -31,7 +35,7 @@ class CustomMarkupSpider(XMLFeedSpider, BaseCollectionScraper, BaseContentExtrac
                     yield result_item
     
     def _parse(self, response, **kwargs):
-
+        self.log(f"scrapping {kwargs['url']} on {datetime.now()} ", level=logging.INFO)
         iterator = self.itertag
 
         itertype = None
@@ -83,11 +87,12 @@ class CollectionSpider(CustomMarkupSpider):
     """
     Fetch all the sources from digger(db) and sources (collection) where is_third_party=False
     """
-    def get_sources_from_database(self):
+    @staticmethod
+    def get_sources_from_database():
         if QueuedSourceMap.objects.count() > 0:
             return QueuedSourceMap.objects
         else:
-            QueuedSourceMap.objects.insert([SourceMapSerializer(source_map) for source_map in SourceMap.objects])
+            QueuedSourceMap.objects.insert([QueuedSourceMap.from_source_map(source_map) for source_map in SourceMap.objects(Q(is_collection = True) & Q(is_third_party=False))])
         return QueuedSourceMap.objects
     
     """

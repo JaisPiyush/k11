@@ -1,7 +1,8 @@
 from datetime import datetime
 import logging
+from models.no_sql_models import QueuedSourceMap
 from k11.digger.abstracts import BaseSpider
-from mongoengine.context_managers import query_counter
+import traceback
 # from k11.vault import connection_handler
 
 from scrapy.http.request import Request
@@ -49,7 +50,7 @@ class BaseCollectionScraper(AbstractCollectionScraper):
             compulsory_tags = link_store.compulsory_tags
         return assumed_tags, compulsory_tags
 
-    def call_request(self, url: str, callback, source: SourceMap, format_rules: Dict, formats: Format, assumed_tags: str, compulsory_tags: List[str],
+    def call_request(self, url: str, source: SourceMap, format_rules: Dict, formats: Format, assumed_tags: str, compulsory_tags: List[str],
                             splash_headers={'User-Agent': "Mozilla/5.0 (Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"}, link_store: LinkStore = None, **kwargs):
                             if "cb_kwargs" not in kwargs:
                                 kwargs['cb_kwargs'] = {}
@@ -94,16 +95,16 @@ class BaseCollectionScraper(AbstractCollectionScraper):
             if formats == None:
                 continue
             for link_store in source.links:
+                # print(link_store, link_store.link != None and len(link_store.link) > 0 and is_url_valid(link_store.link))
                 if link_store.link != None and len(link_store.link) > 0 and is_url_valid(link_store.link):
                     try:
                         yield self.process_link_store(link_store, source, formats, **kwargs)
                     except Exception as e:
-                        self.log(e)
+                        self.log(f"Error from run requests {kwargs} with error {e} ")
                 else:
                     continue
+            QueuedSourceMap.objects(source_id=source.source_id).delete()
             self.scraped_sources_count += 1
-        print("RSS Feed Scrapper has scrapped: ", self.scraped_sources_count, "\n")
-        self.log(f"RSS Feed Scrapper has scrapped: f{self.scraped_sources_count}", only_screen=True)
     
     def start_requests(self, **kwargs):
         self.scraped_sources_count = 0
@@ -129,13 +130,14 @@ class BaseContentExtraction(BaseSpider):
 
     def error_handling(self, e):
         self.log(e, level=logging.ERROR)
+
     def create_article(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index: int = 0):
         try:
-            if ArticleContainer.objects(article_link = data["link"]).count() == 0:
+            if ArticleContainer.objects(article_link = data["link"]).count() == 0 and data['link'] is not None:
                 article: ArticleContainer = self.process_single_article_data(data=data, link_store=link_store, source_map=source_map, index=index)
                 article.save()
         except KeyError as e:
-            self.log(f"`BaseContentExtraction.create_article` is throwing {e} with data {data}", level=logging.ERROR)
+            self.log(f"`BaseContentExtraction.create_article` is throwing {e} with data {data} for {source_map.source_name} on link {link_store.link}", level=logging.ERROR)
 
     def process_single_article_data(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index : int = 0):
         data["content_type"] = link_store.content_type
