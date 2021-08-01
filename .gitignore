@@ -3,3 +3,5 @@ __pycache__/
 .k11.egg-info/
 k11/digger/scrap_error.log
 k11/scrap_error.log
+k11/digger/logs
+k11/logs
