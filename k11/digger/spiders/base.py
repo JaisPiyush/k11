@@ -117,9 +117,10 @@ class ScrapedValueProcessor:
 
 
     @staticmethod
-    def get_post_functions(operation):
+    def run_post_function(operation, kwargs: dict):
         if operation == "replace":
-            return re.sub
+            kwargs["pattern"] = re.compile(kwargs["pattern"])
+            return re.sub(**kwargs)
     
     @staticmethod
     def get_kwarg_formatter(kwargs: dict, injectable_value) -> Dict:
@@ -147,7 +148,7 @@ class ScrapedValueProcessor:
         if post_functions is not None:
             for key, value in post_functions.items():
                 if key in data:
-                    function = lambda arg: self.get_post_functions(value['op'])(**self.get_kwarg_formatter(value["params"], arg))
+                    function = lambda arg: self.run_post_function(value['op'],self.get_kwarg_formatter(value["params"], arg))
                     data[key] = self.apply_function_on_value(func=function, value=data[key])
         return data
 
