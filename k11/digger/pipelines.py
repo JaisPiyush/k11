@@ -6,11 +6,13 @@
 
 # useful for handling different item types with a single interface
 # from dataclasses import replace
+from k11.digger.spiders.base import ScrapedValueProcessor
+from bs4.element import ResultSet
 from k11.digger.abstracts import BaseSpider
 from hashlib import sha256
 from k11.models.no_sql_models import DataLinkContainer, Format, ArticleContainer, QueuedSourceMap, SourceMap
 from k11.models.sql_models import IndexableArticle, IndexableLinks
-from typing import Dict, List, Union
+from typing import Dict, Iterable, List, Optional, Union
 from urllib.parse import urlparse
 
 from scrapy.spiders import Spider
@@ -23,6 +25,9 @@ from w3lib.html import remove_comments, remove_tags_with_content, replace_escape
 from k11.vault import connection_handler
 import re
 
+
+
+
 """
 This pipeline will check each link of Item Dict existance in database,
 and allows only to pass unique one's.
@@ -31,8 +36,7 @@ Class has is_link_exist method which is wrapper around mongo's filter method to 
 existence inside database.
 """
 
-def connect_sql_session():
-    connection_handler.mount_sql_engines()
+
 class CollectionItemDuplicateFilterPipeline:
      
     """
@@ -219,7 +223,7 @@ class ArticleVaultPipeline:
 
 
 
-class ArticlePreprocessor:
+class ArticlePreprocessor(ScrapedValueProcessor):
     """
     Remove all ignoreables from the text, along with comments, tags, urls and escape characters
     Extract All images, videos and text_set.
@@ -235,7 +239,8 @@ class ArticlePreprocessor:
         if ignoreable.class_list is not None and len(ignoreable.class_list) > 0:
             for cls_ in ignoreable.class_list:
                 # print("."+cls_,soup.select(f".{cls_}"))
-                all_ignoreable_elements.extend(list(soup.select(f".{cls_}")))
+                if len(cls_) > 0 and cls_ != " ":
+                    all_ignoreable_elements.extend(list(soup.select(f".{cls_}")))
         if ignoreable.exact_class is not None and len(ignoreable.exact_class) > 0:
             all_ignoreable_elements.extend(list(soup.select(f"{tag}.{ignoreable.exact_class}")))
         if ignoreable.id is None and (ignoreable.class_list is None or len(ignoreable.class_list) == 0) and ignoreable.exact_class is None and ignoreable.tag  is not None:
@@ -265,22 +270,77 @@ class ArticlePreprocessor:
         text = re.sub(r'(\n\r)+', '\n\r', text)
         return text
     
+    @staticmethod
+    def get_src(el) -> Optional[str]:
+        if 'src' in el.attrs and el.attrs['src'] != None and len(el.attrs['src']) > 0:
+            return el.attrs["src"]
+        elif 'srcset' in el.attrs and el.attrs['srcset'] != None and len(el.attrs['srcset']) > 0:
+            return el.attrs["srcset"]
+        return None
+    
+
+    def is_valid_media_resource(self, st):
+        return st != None and len(st) > 0 and "https" in st or "http" in st
+    
+    
+
+    
+    def extract_images(self, soup) -> List[str]:
+        images = []
+        for img in soup.find_all("img"):
+            src = self.get_src(img)
+            if src != None and self.is_valid_media_resource(src):
+                images.append(src)
+        for picture in soup.select('picture'):
+            source = picture.find('source')
+            if source is None:
+                continue
+            src = self.get_src(source)
+            if src != None and self.is_valid_media_resource(src):
+                images.append(src)
+        return set(images)
+    
+    def extract_videos(self, soup) -> List[str]: 
+        videos = []
+        for video in soup.find_all('video'):
+            src = self.get_src(video) 
+            if src is None and self.is_valid_media_resource(src):
+                source  = video.find('source')
+                src = self.get_src(source)
+            if src != None:
+                videos.append(src)
+        for iframe in soup.select("iframe.youtube-player"):
+            src = self.get_src(iframe)
+            if src != None and self.is_valid_media_resource(src):
+                videos.append(src)
+        return set(videos)
+
+
+    
     def extract_items(self, soup: BeautifulSoup) -> Dict[str, List]:
         data = {"images": [], "videos": []}
-        data["images"] = [img["src"] for img in soup.find_all("img")]
-        data["images"] += [source['src'] for source in soup.select('picture > source')]
-        data["videos"] = [video["src"] for video in soup.find_all("video")]
-        #youtube embedded links
-        data["videos"] += [video["src"] for video in soup.select("iframe.youtube-player")]
+        data["images"] = self.extract_images(soup)
+        data["videos"] = self.extract_videos(soup)
+        # print(data)
         return data
     
     def process_item(self, item: dict, spider: BaseSpider):
         if item["content"] is not None and item["formatter"] is not None:
             soup = self.remove_ignoreables(item['content'], item['formatter'])
-            media = self.extract_items(soup)
-            item.update(media)
-            item["body"] = self.clean_residuals(soup.get_text())
-            return [self.pack_container(**item)]
+            try:
+                media = self.extract_items(soup)
+                item.update(media)
+                item["body"] = self.clean_residuals(soup.get_text())
+                item_ = self.process_extracted_data(item, item["formatter"].post_functions)
+                if item_ is not None:
+                    item = item_
+                if item["is_testing"]:
+                    raise DropItem("For Testing purpose")
+                return [self.pack_container(**item)]
+            except Exception as  err:
+                print(f"ArticlePreprocessor.process_item error {err} with data {item}")
+                raise err
+            
         else:
             raise DropItem("Invalid item packing")
     

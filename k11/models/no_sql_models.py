@@ -1,11 +1,11 @@
 from datetime import datetime
+from mongoengine.document import Document
 
-from mongoengine.fields import BooleanField, DictField
-from .managers import DatalinkContainerQuerySet, FormatsQuerySet, SourceMapQuerySet
+from mongoengine.fields import DictField
+from .managers import DatalinkContainerQuerySet, FormatsQuerySet, QueuedSourceMapQuerySet, SourceMapQuerySet
 from typing import Tuple
 from .main import ContainerFormat, LinkStore, XMLContainerFormat
 import mongoengine as mg
-from k11.vault.app import connection_handler
 from mongoengine.queryset.visitor import Q
 
 from scrapy.item import Item
@@ -98,8 +98,44 @@ class SourceMap(mg.Document):
     meta = {
         "db_alias": "mongo_digger",
         "collection": "collection_source_maps",
-        'queryset_class': SourceMapQuerySet
+        'queryset_class': SourceMapQuerySet,
     }
+
+    def get_tags(self, li: str) -> Tuple[str, str]:
+        for link in self.links:
+            if link.link == li:
+                return link.assumed_tags if link.assumed_tags != None else self.assumed_tags, link.compulsory_tags if link.compulsory_tags != None else self.compulsory_tags
+
+
+
+class QueuedSourceMap(Document):
+
+    source_name = mg.StringField(required=True)
+    source_id = mg.StringField(required=True, unique=True)
+    source_home_link = mg.StringField(required=True)
+    assumed_tags = mg.StringField()
+    compulsory_tags = mg.ListField(mg.StringField())
+    is_rss = mg.BooleanField(default=True)
+    is_collection = mg.BooleanField(default=True)
+    links = mg.ListField(LinkStoreField())
+    formatter = mg.StringField()
+    watermarks = mg.ListField(mg.StringField())
+    is_structured_aggregator = mg.BooleanField(default=True)
+    datetime_format = mg.StringField()
+    is_third_party = mg.BooleanField(default=False)
+
+    meta = {
+        "db_alias": "mongo_digger",
+        "collection": "collection_queued_source_maps",
+        'queryset_class': QueuedSourceMapQuerySet,
+        "allow_inheritance": True
+    }
+
+
+    @classmethod
+    def from_source_map(cls, source_map: SourceMap):
+        data = {key: getattr(source_map, key) for key in source_map._db_field_map.keys() if key != "_cls"}
+        return cls(**data)
 
     def get_tags(self, li: str) -> Tuple[str, str]:
         for link in self.links:
@@ -133,8 +169,8 @@ class DataLinkContainer(mg.Document):
 
 class ArticleContainer(mg.Document):
     article_id = mg.StringField(required=True)
-    title = mg.StringField(required=True)
-    creator = mg.StringField(required=True)
+    title = mg.StringField(required=False)
+    creator = mg.StringField(required=False)
     article_link = mg.StringField(required=True)
     source_name = mg.StringField(required=True)
     source_id = mg.StringField(required=True)

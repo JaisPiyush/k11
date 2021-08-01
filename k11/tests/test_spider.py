@@ -9,8 +9,6 @@ from k11.digger.spiders.article_spider import ArticleSpider
 from k11.vault import connection_handler
 from scrapy.http import XmlResponse, HtmlResponse
 from scrapy.selector import Selector
-import requests
-from k11.digger.pipelines import ArticlePreprocessor
 
 
 
@@ -212,34 +210,58 @@ class TestCollectionSpider(TestCase):
             article_container = spider.process_single_article_data(data=data[0], link_store=link_store, source_map=source_map, index=index)
             self.assertEqual(article_container.article_link, "random_link")
             self.assertListEqual(article_container.images, expected_output[index]["images"])
+    
+
+    def test_collection_to_article_pinterest(self):
+        file_path = os.path.abspath(os.path.join(dirname(__file__), "fixtures/pinterest_scrap.xml"))
+        with open( file_path, "r") as file:
+            response = XmlResponse(url="https://in.pinterest.com/", body=file.read(),encoding='utf-8')
+        format_rules = {
+        "itertag": "item",
+        "title": {
+            "sel": "xpath",
+            "param": "text()",
+            "parent": "title",
+            "type": "text",
+            "is_multiple": False,
+            "is_cdata": False
+        },
+        "image": {
+            "sel": "xpath",
+            "param": "/a//img/@src",
+            "parent": "description",
+            "type": "image",
+            "is_multiple": False,
+            "is_cdata": True
+        }
+    }
+        expected_output = [{
+            "title": " ",
+            "image": "https://i.pinimg.com/236x/be/96/ce/be96ce958f2e678cb57b38c26cecac42.jpg"
+        }, {
+            "title": "Porsche 918 Spyder",
+            "image": "https://i.pinimg.com/236x/37/d9/55/37d955792743423b89af8601aeb9d104.jpg"
+        }, {
+            "title": "Random Inspiration 238 - UltraLinx",
+            "image": "https://i.pinimg.com/236x/51/70/a5/5170a54388acfb4469f8fceb64576cc2.jpg"
+        }]
+        link_store = LinkStore(link="https://in.pinterest.com/", content_type=ContentType.Image, is_multiple=True)
+        source_map = SourceMap(source_name="Pinterest", source_id="random", source_home_link="",assumed_tags="", 
+                                compulsory_tags=[], is_collection=True, is_rss=True, links=[link_store])
+        spider = self.spider_class()
+        spider.itertag = "item"
+        output = list(spider._parse(response, format_rules=format_rules, link_store=link_store, testing=True, itertype='xml'))
+        self.assertEqual(len(output), 3)
+        for index, data in enumerate(output):
+            print(data[1].xpath('.//description//a'))
+            self.assertEqual(data[0]["title"], expected_output[index]["title"])
+            self.assertEqual(data[0]["image"], expected_output[index]["image"])
+            data[0]["link"] = "random_link"
+            article_container = spider.process_single_article_data(data=data[0], link_store=link_store, source_map=source_map, index=index)
+            self.assertEqual(article_container.article_link, "random_link")
+            self.assertListEqual(article_container.images, [expected_output[index]["image"]])
 
             
 
 
-class TestArticleScrapper(TestCase):
-    spider_cls = ArticleSpider
-    sanitizer = ArticlePreprocessor()
 
-    def setUp(self) -> None:
-        connection_handler.mount_all_engines()
-    
-    def test_extraction(self):
-        url = "https://putthatcheeseburgerdown.com/2021/03/17/these-11-foods-will-supercharge-your-immune-system/"
-        file_path = os.path.abspath(os.path.join(dirname(__file__), "fixtures/ptc_scrap.html"))
-        with open(file_path, "r") as file:
-            response = HtmlResponse("https://www.pinkvilla.com/entertainment/movie-review", body=file.read(), encoding='utf-8')
-        spider = self.spider_cls()
-        selector = Selector(response, type='html')
-        for data in spider.parse(selector,**{"url": url, "container": {}}):
-            cleaned = self.sanitizer.remove_ignoreables(data["content"], data["formatter"])
-            print(cleaned.get_text())
-            print([img['src'] for img in cleaned.find_all("video")])
-            print([img['src'] for img in cleaned.select('iframe.youtube-player')])
-            self.assertEqual(True, False)
-
-
-
-    
-    def tearDown(self) -> None:
-        connection_handler.disconnect_mongo_engines()
-        connection_handler.dispose_sql_engines()

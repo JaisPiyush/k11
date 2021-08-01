@@ -1,6 +1,7 @@
 from datetime import datetime
 import logging
-from models.no_sql_models import QueuedSourceMap
+import re
+from k11.models.no_sql_models import QueuedSourceMap
 from k11.digger.abstracts import BaseSpider
 import traceback
 # from k11.vault import connection_handler
@@ -112,6 +113,44 @@ class BaseCollectionScraper(AbstractCollectionScraper):
         
 
 
+class ScrapedValueProcessor:
+
+
+    @staticmethod
+    def get_post_functions(operation):
+        if operation == "replace":
+            return re.sub
+    
+    @staticmethod
+    def get_kwarg_formatter(kwargs: dict, injectable_value) -> Dict:
+        rt_kwargs = kwargs.copy()
+        for key, value in kwargs.items():
+            if value == "self":
+                rt_kwargs[key] = injectable_value
+        return rt_kwargs
+    
+    @staticmethod
+    def apply_function_on_value(func, value):
+        if isinstance(value, list) or isinstance(value, set):
+            return list(filter(lambda val: val is not None and len(val) > 0 ,map(func, value)))
+        elif isinstance(value , dict):
+            return {key: func(val) for key,val in value.items() if val is not None }
+        return func(value)
+
+    """
+    Function will remove any restrictive parameter present in url
+    for e.g in Pedron The World urls have `url?format=300w`, which 
+    defines the size of url, i.e needed to be removed
+    """
+    def process_extracted_data(self, data: dict, post_functions) -> List[str]:
+        # print(post_functions)
+        if post_functions is not None:
+            for key, value in post_functions.items():
+                if key in data:
+                    function = lambda arg: self.get_post_functions(value['op'])(**self.get_kwarg_formatter(value["params"], arg))
+                    data[key] = self.apply_function_on_value(func=function, value=data[key])
+        return data
+
 
 
 
@@ -122,7 +161,7 @@ class BaseCollectionScraper(AbstractCollectionScraper):
 
 class BaseContentExtraction(BaseSpider):
 
-    non_formattable_tags = ['itertag', 'namespaces']
+    non_formattable_tags = ['itertag', 'namespaces', "post_functions"]
 
     """
     Handles different types of error during parsing
@@ -131,15 +170,15 @@ class BaseContentExtraction(BaseSpider):
     def error_handling(self, e):
         self.log(e, level=logging.ERROR)
 
-    def create_article(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index: int = 0):
+    def create_article(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index: int = 0, post_functions=None):
         try:
             if ArticleContainer.objects(article_link = data["link"]).count() == 0 and data['link'] is not None:
-                article: ArticleContainer = self.process_single_article_data(data=data, link_store=link_store, source_map=source_map, index=index)
+                article: ArticleContainer = self.process_single_article_data(data=data, link_store=link_store, source_map=source_map, index=index, post_functions=post_functions)
                 article.save()
         except KeyError as e:
             self.log(f"`BaseContentExtraction.create_article` is throwing {e} with data {data} for {source_map.source_name} on link {link_store.link}", level=logging.ERROR)
 
-    def process_single_article_data(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index : int = 0):
+    def process_single_article_data(self, data: Dict, link_store: LinkStore, source_map: SourceMap, index : int = 0, post_functions=None):
         data["content_type"] = link_store.content_type
         if link_store.compulsory_tags is not None:
             data["compulsory_tags"] = link_store.compulsory_tags
@@ -161,6 +200,9 @@ class BaseContentExtraction(BaseSpider):
             data["images"] = set(filter(lambda x: x is not None, data["images"]))
         if "videos" in data:
             data["videos"] = set(filter(lambda x: x is not None, data["videos"]))
+        if post_functions is not None:
+            scp = ScrapedValueProcessor()
+            data = scp.process_extracted_data(data, post_functions=post_functions)
         return self.pack_in_article_container(source=source_map, **data)
     
 
@@ -238,7 +280,7 @@ class BaseContentExtraction(BaseSpider):
             yield data, node
         elif "link_store" in kwargs and kwargs["link_store"].is_multiple:
             # is_multiple signifies that the articles are directly baked into collection
-            self.create_article(data, kwargs["link_store"], kwargs["source_map"],index= kwargs["index"] if "index" in kwargs else 0)
+            self.create_article(data, kwargs["link_store"], kwargs["source_map"],index= kwargs["index"] if "index" in kwargs else 0, post_functions=kwargs["format_rules"].get("post_functions", None))
         else:
             yield self.pack_in_data_link_container(data, **kwargs)
     

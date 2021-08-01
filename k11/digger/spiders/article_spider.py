@@ -3,7 +3,7 @@ from mongoengine.queryset.visitor import Q
 from k11.models.no_sql_models import Format, DataLinkContainer
 from k11.models.sql_models import IndexableArticle
 from k11.models.main import ContainerFormat, ContainerIdentity, QuerySelector
-from typing import List, Tuple
+from typing import List
 from k11.digger.abstracts import BaseSpider
 import random
 from urllib.parse import urlparse
@@ -30,10 +30,12 @@ class ArticleSpider(BaseSpider):
             is_multiple=False
         )
 
-    def get_format(self, url: str) -> ContainerFormat:
+    def get_format(self, container: DataLinkContainer) -> ContainerFormat:
         try: 
-            url = self.get_source_home_url(url)
-            formatter: Format = Format.objects(Q(source_home_link=url)).no_dereference().first()
+            # url = self.get_source_home_url(url)
+            formatter: Format = Format.objects(Q(format_id=container.source_id)).no_dereference().first()
+            if formatter is None:
+                return self.get_default_format()
             return formatter.html_article_format
         except Exception as e:
             self.log(e)
@@ -57,7 +59,8 @@ class ArticleSpider(BaseSpider):
                 self.log(link_container.link +f" is going to be scraped at {datetime.now()}", only_screen=True)
                 yield self.consume_link(link_container.link, **{
             "container": link_container,
-            "url": link_container.link
+            "url": link_container.link,
+            "is_testing": len(self.testing_urls) > 0
         })
     
     def consume_link(self, link: str, callback=None, **kwargs):
@@ -76,22 +79,27 @@ class ArticleSpider(BaseSpider):
     def parse_content(self, response, formatter: ContainerFormat):
         for identity in formatter.idens:
             content = response.css(identity.param)
-            if content is not None:
+            if content != None and len(content) > 0:
                 if identity.is_multiple:
                     return content.getall(), identity
                 return content.get(), identity
-        return response.get(), None
+        return response.text, None
 
 
 
     
     def parse(self, response, **kwargs):
-        formatter = self.get_format(kwargs["url"])
-        content, identity = self.parse_content(response, formatter)
-        yield {
-            "link_container": kwargs["container"],
-            "formatter": formatter,
-            "url": kwargs["url"],
-            "content": content,
-            "iden": identity
-        }
+        
+        try:
+            formatter = self.get_format(kwargs["container"])
+            content, identity = self.parse_content(response, formatter)
+            yield {
+                "link_container": kwargs["container"],
+                "formatter": formatter,
+                "url": kwargs["url"],
+                "content": content,
+                "iden": identity,
+                "is_testing": kwargs["is_testing"]
+            }
+        except Exception as err:
+            self.log(f"Error from parse {kwargs} with msg {err} and values {formatter}")

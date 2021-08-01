@@ -14,6 +14,9 @@ class SourceMapQuerySet(QuerySet):
         return self.filter(Q(source_id='youtube') & Q(is_third_party=True))
 
 
+class QueuedSourceMapQuerySet(SourceMapQuerySet):
+    pass
+
 class DatalinkContainerQuerySet(QuerySet):
 
     def delete_containers(self, links: str):
@@ -25,4 +28,4 @@ class DatalinkContainerQuerySet(QuerySet):
 
 class FormatsQuerySet(QuerySet):
     def get_default_rss_format(self):
-        return self.get(format_id="default_rss_format")
+        return self.filter(format_id="default_rss_format").first()

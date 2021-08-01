@@ -128,6 +128,10 @@ class ContainerFormat:
     title_selectors: Optional[List[str]] = None
     creator_selectors: Optional[List[str]] = None
     body_selectors: Optional[List[str]] = None
+    # {key: {op: "replace", params: {param_: value}}}
+    post_functions: Optional[Dict] = None
+
+    
 
 
     def get_ignoreables(self) -> List[str]:
@@ -160,7 +164,8 @@ class ContainerFormat:
             "is_multiple": self.is_multiple,
             "title_selectors": self.title_selectors,
             "creator_selectors": self.creator_selectors,
-            "body_selectors": self.body_selectors
+            "body_selectors": self.body_selectors,
+            "post_functions": self.post_functions
         }
 
     def to_json_str(self) -> str:

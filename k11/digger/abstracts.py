@@ -14,7 +14,7 @@ from k11.vault import connection_handler
 ParsedNodeValue = Optional[Union[Tuple[Dict, Selector], Generator[DataLinkContainer, None, None]]]
 
 
-logging.basicConfig(filename="scrap_error.log", format="%(asctime)s %(levelname)s: %(message)s", level=logging.ERROR)
+logging.basicConfig(filename=f"logs/scrap_error_{datetime.now().date()}.log", format="%(asctime)s %(levelname)s: %(message)s", level=logging.ERROR)
 
 
 
