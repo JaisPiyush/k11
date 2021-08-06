@@ -178,7 +178,7 @@ class ArticleContainer(mg.Document):
     home_link = mg.StringField(required=True)
     site_name = mg.StringField()
     pub_date = mg.DateTimeField(default=datetime.now())
-    scraped_on = mg.DateTimeField(default=datetime.now())
+    scraped_on = mg.DateTimeField(default=datetime.now()) 
     text_set = mg.ListField(mg.StringField())
     body = mg.StringField()
     disabled = mg.ListField(mg.StringField())
@@ -194,6 +194,8 @@ class ArticleContainer(mg.Document):
     next_frame_required = mg.BooleanField(default=True)
     is_source_present_in_db = mg.BooleanField(default=False)
     majority_content_type = mg.StringField()
+    is_discriminated = mg.BooleanField(default=False)
+    discriminated_on = mg.DateTimeField(default=None)
     coords = mg.ListField(mg.ListField(mg.FloatField()))
     meta_data = mg.DictField()
 
