@@ -240,9 +240,9 @@ class ArticlePreprocessor(ScrapedValueProcessor):
             for cls_ in ignoreable.class_list:
                 # print("."+cls_,soup.select(f".{cls_}"))
                 if len(cls_) > 0 and cls_ != " ":
-                    all_ignoreable_elements.extend(list(soup.select(f".{cls_}")))
+                    all_ignoreable_elements.extend(list(soup.select(f".{cls_.replace(' ','')}")))
         if ignoreable.exact_class is not None and len(ignoreable.exact_class) > 0:
-            all_ignoreable_elements.extend(list(soup.select(f"{tag}.{ignoreable.exact_class}")))
+            all_ignoreable_elements.extend(list(soup.select(f"{tag}.{ignoreable.exact_class.replace(' ', '')}")))
         if ignoreable.id is None and (ignoreable.class_list is None or len(ignoreable.class_list) == 0) and ignoreable.exact_class is None and ignoreable.tag  is not None:
             all_ignoreable_elements.extend(list(soup.select(tag)))
         return set(all_ignoreable_elements)
@@ -280,8 +280,7 @@ class ArticlePreprocessor(ScrapedValueProcessor):
     
 
     def is_valid_media_resource(self, st):
-        return st != None and len(st) > 0 and "https" in st or "http" in st
-    
+        return st != None and len(st) > 0 and ("https" in st or "http" in st)
     
 
     
@@ -289,14 +288,14 @@ class ArticlePreprocessor(ScrapedValueProcessor):
         images = []
         for img in soup.find_all("img"):
             src = self.get_src(img)
-            if src != None and self.is_valid_media_resource(src):
+            if self.is_valid_media_resource(src):
                 images.append(src)
         for picture in soup.select('picture'):
             source = picture.find('source')
             if source is None:
                 continue
             src = self.get_src(source)
-            if src != None and self.is_valid_media_resource(src):
+            if self.is_valid_media_resource(src):
                 images.append(src)
         return set(images)
     
@@ -339,7 +338,7 @@ class ArticlePreprocessor(ScrapedValueProcessor):
                 return [self.pack_container(**item)]
             except Exception as  err:
                 print(f"ArticlePreprocessor.process_item error {err} with data {item}")
-                raise err
+                # raise err
             
         else:
             raise DropItem("Invalid item packing")
@@ -371,7 +370,7 @@ class ArticlePreprocessor(ScrapedValueProcessor):
             videos=videos,
             body=body,
             majority_content_type=iden['content_type'] if hasattr(iden, 'content_type') else ContentType.Article,
-            next_frame_required=iden['content_type'] == ContentType.Article
+            next_frame_required=hasattr(iden, 'content_type') and iden['content_type'] == ContentType.Article
         )
 
         

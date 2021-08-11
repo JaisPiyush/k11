@@ -101,7 +101,7 @@ class BaseCollectionScraper(AbstractCollectionScraper):
                     try:
                         yield self.process_link_store(link_store, source, formats, **kwargs)
                     except Exception as e:
-                        self.log(f"Error from run requests {kwargs} with error {e} ")
+                        self.log(f"Error from run requests {kwargs} with error {e} on link {link_store.link} ")
                 else:
                     continue
             QueuedSourceMap.objects(source_id=source.source_id).delete()

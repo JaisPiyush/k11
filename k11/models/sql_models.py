@@ -48,7 +48,7 @@ class ContentTag(BaseTreasureModel):
     tag_id = AutoField(primary_key=True)
     tag_name = CharField(max_length=75)
     parent = ForeignKeyField('self', backref='children')
-    complete_name = CharField(max_length=300, db_index=True)
+    complete_name = CharField(max_length=300, index=True)
 
 
 

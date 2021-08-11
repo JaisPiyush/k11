@@ -101,5 +101,7 @@ class ArticleSpider(BaseSpider):
                 "iden": identity,
                 "is_testing": kwargs["is_testing"]
             }
+            # self.log(data, only_screen=True)
+            # yield data
         except Exception as err:
-            self.log(f"Error from parse {kwargs} with msg {err} and values {formatter}")
+            self.log(f"Error from parse  {kwargs} with msg {err} and values {formatter}")
