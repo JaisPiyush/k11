@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from ._serializer import InterfaceSerializer
 from typing import Dict, List,Optional
 import json
 
@@ -157,16 +158,25 @@ class ContainerFormat:
         return model.to_json_str()
     
     def to_dict(self) -> Dict:
-        return {
-            "idens": [iden.to_dict(default=self.is_multiple) for iden in self.idens],
-            "ignorables": [query.to_dict() for query in self.ignorables + self.default_ignorables],
-            "terminations": [query.to_dict() for query in self.terminations],
-            "is_multiple": self.is_multiple,
-            "title_selectors": self.title_selectors,
-            "creator_selectors": self.creator_selectors,
-            "body_selectors": self.body_selectors,
-            "post_functions": self.post_functions
-        }
+        # return {
+        #     "idens": [iden.to_dict(default=self.is_multiple) for iden in self.idens],
+        #     "ignorables": [query.to_dict() for query in self.ignorables + self.default_ignorables],
+        #     "terminations": [query.to_dict() for query in self.terminations],
+        #     "is_multiple": self.is_multiple,
+        #     "title_selectors": self.title_selectors,
+        #     "creator_selectors": self.creator_selectors,
+        #     "body_selectors": self.body_selectors,
+        #     "post_functions": self.post_functions
+        # }
+        return InterfaceSerializer(self)
+    
+    @property
+    def get_idens_dict(self):
+        return [iden.to_dict(default=self.is_multiple) for iden in self.idens]
+    
+    @property
+    def get_ignorables_dict(self):
+        return [query.to_dict() for query in self.ignorables]
 
     def to_json_str(self) -> str:
         return json.dumps(self.to_dict())
@@ -174,14 +184,20 @@ class ContainerFormat:
 
 @dataclass
 class XMLContainerFormat:
-    struct: Dict
-    content_type: str
+    struct: Optional[Dict] = field(default=None)
+    content_type: Optional[str] = field(default=None)
 
     def to_dict(self) -> Dict:
-        return {
-            "struct": self.struct,
-            "content_type": self.content_type
-        }
+        data = {}
+        if self.struct is not None:
+            data["struct"] = self.struct
+        if self.content_type is not None:
+            data["content_type"] = self.content_type
+        return data
+    
+    @classmethod
+    def from_dict(cls, **kwargs):
+        return cls(**kwargs)
 
 
 

@@ -1,14 +1,12 @@
 from datetime import datetime
 from mongoengine.document import Document
 
-from mongoengine.fields import DictField
+# from mongoengine.fields import DictField
 from .managers import DatalinkContainerQuerySet, FormatsQuerySet, QueuedSourceMapQuerySet, SourceMapQuerySet
 from typing import Tuple
-from .main import ContainerFormat, LinkStore, XMLContainerFormat
+from .main import *
 import mongoengine as mg
-from mongoengine.queryset.visitor import Q
 
-from scrapy.item import Item
 
 
 class LinkStoreField(mg.DictField):
@@ -29,7 +27,7 @@ class LinkStoreField(mg.DictField):
         return value.to_dict()
 
 
-class ContainerFormatField(DictField):
+class ContainerFormatField(mg.DictField):
 
     def validate(self, value):
         return isinstance(value, ContainerFormat)
@@ -40,13 +38,13 @@ class ContainerFormatField(DictField):
         else:
             return ContainerFormat.from_dict(**value)
     
-    def to_mongo(self, value, use_db_field, fields):
+    def to_mongo(self, value, use_db_field, fields=None):
         if not self.validate(value):
             return None
         return value.to_dict()
 
 
-class XMLContainerFormatField(DictField):
+class XMLContainerFormatField(mg.DictField):
     def validate(self, value):
         return isinstance(value, XMLContainerFormat)
     
@@ -56,7 +54,7 @@ class XMLContainerFormatField(DictField):
         else:
             return XMLContainerFormat.from_dict(**value)
     
-    def to_mongo(self, value, use_db_field, fields):
+    def to_mongo(self, value, use_db_field, fields=None):
         if not self.validate(value):
             return None
         return value.to_dict()
@@ -68,18 +66,32 @@ class Format(mg.Document):
     source_home_link = mg.StringField(required=True)
     xml_collection_format = mg.DictField()
     html_collection_format = mg.DictField()
-    html_article_format = ContainerFormatField()
-    xml_article_format = XMLContainerFormatField()
+    _html_article_format = mg.DictField(db_field="html_article_format") #ContainerFormatField()
+    _xml_article_format = mg.DictField(db_field="xml_article_format") #XMLContainerFormatField()
+    # html_article_format = ContainerFormatField()
+    # xml_article_format = XMLContainerFormatField()
     created_on = mg.DateTimeField()
     extra_formats = mg.DictField()
+
+    @property
+    def html_article_format(self):
+        if hasattr(self, "_html_article_format") and getattr(self, "_html_article_format") is not None:
+            return ContainerFormat.from_dict(**self._html_article_format)
+        return None
+    
+    @property
+    def xml_article_format(self):
+        if hasattr(self, "_xml_article_format") and getattr(self, "_xml_article_format") is not None:
+            return XMLContainerFormat.from_dict(**self._xml_article_format)
+        return None
 
     meta = {
         "db_alias": "mongo_digger",
         "collection": "collection_formats",
-        "queryset_class": FormatsQuerySet
+        "queryset_class": FormatsQuerySet,
     }
 
-
+ 
 class SourceMap(mg.Document):
     source_name = mg.StringField(required=True)
     source_id = mg.StringField(required=True, unique=True)
@@ -94,6 +106,7 @@ class SourceMap(mg.Document):
     is_structured_aggregator = mg.BooleanField(default=True)
     datetime_format = mg.StringField()
     is_third_party = mg.BooleanField(default=False)
+    source_locations = mg.ListField(mg.StringField())
 
     meta = {
         "db_alias": "mongo_digger",
