@@ -7,12 +7,11 @@
 # useful for handling different item types with a single interface
 # from dataclasses import replace
 from k11.digger.spiders.base import ScrapedValueProcessor
-from bs4.element import ResultSet
 from k11.digger.abstracts import BaseSpider
 from hashlib import sha256
-from k11.models.no_sql_models import DataLinkContainer, Format, ArticleContainer, QueuedSourceMap, SourceMap
+from k11.models.no_sql_models import DataLinkContainer, ArticleContainer, SourceMap
 from k11.models.sql_models import IndexableArticle, IndexableLinks
-from typing import Dict, Iterable, List, Optional, Union
+from typing import Dict, List, Optional
 from urllib.parse import urlparse
 
 from scrapy.spiders import Spider
@@ -20,9 +19,6 @@ from k11.models.main import ContainerFormat, ContainerIdentity, ContentType, Que
 from scrapy.exceptions import DropItem
 from bs4 import BeautifulSoup
 import re
-from scrapy.selector import Selector
-from w3lib.html import remove_comments, remove_tags_with_content, replace_escape_chars
-from k11.vault import connection_handler
 import re
 
 
@@ -271,6 +267,15 @@ class ArticlePreprocessor(ScrapedValueProcessor):
         return text
     
     @staticmethod
+    def get_complete_url(home_link: str, url:str) -> str:
+        parsed = urlparse(url)
+        if parsed.netloc == '':
+            url = home_link + url
+        elif parsed.scheme == '':
+            url = 'https://'+url
+        return url
+    
+    @staticmethod
     def get_src(el) -> Optional[str]:
         if 'src' in el.attrs and el.attrs['src'] != None and len(el.attrs['src']) > 0:
             return el.attrs["src"]
@@ -350,6 +355,7 @@ class ArticlePreprocessor(ScrapedValueProcessor):
                         link_container: DataLinkContainer = None,
                         body: str= None, index: int = 0, **kwargs) -> ArticleContainer:
         parsed = urlparse(url)
+        home_link = f"{parsed.scheme}://{parsed.netloc}"
         return ArticleContainer(
             article_id=sha256(url.encode()).hexdigest() + str(index),
             title=link_container.container['title'],
@@ -358,15 +364,15 @@ class ArticlePreprocessor(ScrapedValueProcessor):
             article_link=url,
             creator=link_container.container['creator'],
             scraped_from=link_container.link,
-            home_link=f"{parsed.scheme}://{parsed.netloc}",
+            home_link=home_link,
             site_name=link_container.container['site_name'] if 'site_name' in link_container.container else link_container.source_name,
             scraped_on=link_container.scraped_on,
             pub_date=link_container.container['pub_date'] if 'pub_date' in link_container.container else None,
             disabled=[],
-            is_source_present_in_db=self.is_source_present_in_db(f"{parsed.scheme}://{parsed.netloc}"),
+            is_source_present_in_db=self.is_source_present_in_db(home_link),
             tags=link_container.assumed_tags.split(" "),
             compulsory_tags=link_container.compulsory_tags if link_container.compulsory_tags is not None else [],
-            images=images,
+            images=[self.get_complete_url(home_link, image) for image in images],
             videos=videos,
             body=body,
             majority_content_type=iden['content_type'] if hasattr(iden, 'content_type') else ContentType.Article,

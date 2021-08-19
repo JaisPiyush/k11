@@ -629,7 +629,7 @@
     "$oid": "60b793bab52e1af876c11eee"
   },
   "source_name": "Pink Villa",
-  "format_id": "ZfRp7PGDuvzNNHh3ti-l2g_pinkvilla",
+  "format_id": "0iow0sVytXai6cg3K_0oeA_pink villa",
   "source_home_link": "https://www.pinkvilla.com",
   "created_on": {
     "$date": "2021-06-02T16:34:38.383Z"
@@ -658,10 +658,10 @@
       "parent": "creator",
       "type": "text",
       "is_multiple": false,
-      "is_cdata": false
+      "is_cdata": true
     },
-    "a": {
-      "sel": "pub_date",
+    "pub_date": {
+      "sel": "xpath",
       "param": "text()",
       "parent": "pubDate",
       "type": "text/datetime",
@@ -991,7 +991,7 @@
   "html_article_format": {
     "idens": [
       {
-        "param": ".articlecontentonly",
+        "param": "#articlecontentonly",
         "is_multiple": false,
         "content_type": "article",
         "is_bakeable": false
@@ -1176,7 +1176,7 @@
       "parent": "description",
       "type": "image",
       "is_multiple": false,
-      "is_cdata": false
+      "is_cdata": true
     }
   }
 },{
@@ -1346,6 +1346,9 @@
       },
       {
         "tag": "footer"
+      },
+      {
+        "exact_class": "entry-meta"
       }
     ]
   }
@@ -2533,6 +2536,24 @@
       "type": "image",
       "is_multiple": false,
       "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "@src",
+      "parent": "img",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "post_functions": {
+      "image": {
+        "op": "replace",
+        "params": {
+          "pattern": "(\\?format=\\d+w)+",
+          "repl": "",
+          "string": "self"
+        }
+      }
     }
   }
 },{
@@ -2801,7 +2822,7 @@
     "$date": "2021-06-29T17:58:35.088Z"
   },
   "html_collection_format": {
-    "itertag": "article[@contains(class,'post')]",
+    "itertag": "article[contains(@class,'post')]",
     "title": {
       "sel": "xpath",
       "param": "/a/text()",
@@ -2913,7 +2934,7 @@
     "$date": "2021-06-29T17:58:35.088Z"
   },
   "html_collection_format": {
-    "itertag": "div[@contains(class,\"post\")]",
+    "itertag": "div[contains(@class,\"post\")]",
     "title": {
       "sel": "xpath",
       "param": "text()",
@@ -4287,7 +4308,7 @@
   "html_article_format": {
     "idens": [
       {
-        "param": "div.#slot_main",
+        "param": "#slot_main",
         "is_multiple": false,
         "content_type": "article",
         "is_bakeable": false
@@ -5525,4 +5546,13 @@
       }
     ]
   }
+},{
+  "_id": {
+    "$oid": "61157f04100cfc0dac222c65"
+  },
+  "source_name": "sdjj",
+  "format_id": "sdjg",
+  "source_home_link": "dsjg",
+  "xml_collection_format": {},
+  "html_collection_format": {}
 }]

@@ -3,18 +3,18 @@ import logging
 import re
 from k11.models.no_sql_models import QueuedSourceMap
 from k11.digger.abstracts import BaseSpider
-import traceback
+# import traceback
 # from k11.vault import connection_handler
 
 from scrapy.http.request import Request
 from k11.utils import is_url_valid
 from k11.digger.abstracts import AbstractCollectionScraper, ParsedNodeValue
 from typing import Dict,List, Tuple, Union
-from k11.models.serializer import DataLinkSerializer, ArticleContainerSerializer
+from k11.models.serializer import DataLinkSerializer
 from scrapy import Selector
 from urllib.parse import urlparse
 from scrapy_splash.request import SplashRequest
-from k11.models import Format, LinkStore, SourceMap, DataLinkContainer, ContentType, ArticleContainer
+from k11.models.models import Format, LinkStore, SourceMap, DataLinkContainer, ContentType, ArticleContainer
 from urllib.parse import urlparse
 from hashlib import sha256
 import random

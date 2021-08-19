@@ -140,15 +140,16 @@ class ContainerFormat:
     
     @classmethod
     def from_dict(cls, **kwargs):
-        for index, iden in enumerate(kwargs['idens']):
-            kwargs['idens'][index] = ContainerIdentity(**iden)
+        if "idens" in kwargs:
+            for index, iden in enumerate(kwargs['idens']):
+                kwargs['idens'][index] = ContainerIdentity(**iden) if not isinstance(iden, ContainerIdentity) else iden
         
         if "ignorables" in kwargs:
             for index, query in enumerate(kwargs['ignorables']):
-                kwargs['ignorables'][index] = QuerySelector(**query)
+                kwargs['ignorables'][index] = QuerySelector(**query) if not isinstance(query, QuerySelector) else query
         if "terminations" in kwargs:
             for index, query in enumerate(kwargs['terminations']):
-                kwargs['terminations'][index] = QuerySelector(**query)
+                kwargs['terminations'][index] = QuerySelector(**query) if not isinstance(query, QuerySelector) else query
         
         return cls(**kwargs)
     

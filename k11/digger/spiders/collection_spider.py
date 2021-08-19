@@ -8,8 +8,8 @@ from twisted import logger
 from .base import BaseCollectionScraper, BaseContentExtraction
 from scrapy.spiders import XMLFeedSpider
 from scrapy.utils.spider import iterate_spider_output
-from k11.models import SourceMap, Format, QueuedSourceMap
-from scrapy.exceptions import NotConfigured, NotSupported
+from k11.models.models import SourceMap, Format, QueuedSourceMap
+from scrapy.exceptions import NotConfigured
 
 
 

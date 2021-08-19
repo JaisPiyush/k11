@@ -1,102 +1,87 @@
-,categories
-0,art__entertainment.humor
-1,art__entertainment.celebrity_fan__gossip.bollywood
-2,art__entertainment.movies__tv.movies__series_trailers
-3,travel
-4,science.biology.zoology
-5,sports
-6,society.relationship
-7,technology__computing.tech_news
-8,food__drink.cooking
-9,food__drink.food
-10,society.culture
-11,society.people.mens
-12,society.people.womens
-13,art__entertainment
-14,misc
-15,technology__computing.consumer_electronics.smartphones.android
-16,technology__computing.operating_systems.android
-17,technology__computing.consumer_electronics.games__console
-18,technology__computing.hardware.computer
-19,technology__computing.consumer_electronics
-20,technology__computing.internet_technology
-21,technology__computing.operating_systems
-22,technology__computing.gaming
-23,technology__computing.hardware
-24,hobbies__interests.arts__crafts.photography
-25,technology__computing.consumer_electronics.camera__photo_equipments
-26,society.welfare.social_service
-27,society.life
-28,hobbies__interests.arts__crafts
-29,art__entertainment.movies__tv
-30,style__fashion
-31,food__drink
-32,technology__computing
-33,art__entertainment.movies__tv.reviews__interviews
-34,art__entertainment.celebrity_fan__gossip
-35,style__fashion.clothing
-36,style__fashion.beauty
-37,hobbies__interests.games
-38,misc.facts
-39,science.physics.space__astronomy
-40,science.enviroment
-41,science
-42,misc.weird
-43,hobbies__interests.paranormal
-44,misc.anomaly
-45,misc.mystery
-46,health__fitness
-47,science.social_science.history
-48,automotive__vehicle.cars.luxury_cars
-49,style__fashion.womens
-50,style__fashion.fashion_designers
-51,style__fashion.jewelery
-52,automotive__vehicles.cars.luxury_cars
-53,travel.adventure
-54,society.lifestyle
-55,health__fitness.disorders
-56,health__fitness.mental_health
-57,food__drink.healthy_eating
-58,society.life.inspiraion
-59,society.life.happiness
-60,religion__spirituality
-61,society.crime.sex_offense
-62,society.people
-63,society
-64,food__drink.food_allergy
-65,style__fashion.celebs
-66,style__fashion.mens
-67,style__fashion.accessories
-68,style__fashion.footwear
-69,automotive__vehicles.cars
-70,science.physics
-71,science.environment__nature
-72,business__industrial.agriculture__forestry
-73,science.biology.botany
-74,technology__computing.software.graphics__music__animations
-75,education.art_history
-76,art__entertainment.visual_art__design.painting__sketching
-77,business__industrial.business__operations.startups
-78,business__industrial.aerospace__defence
-79,technology__computing.consumer_electronics.game_systems__consoles
-80,hobbies__interests.games.video__computer_games
-81,business__industrial.aerospace__defence.space_tehnology
-82,science.physics.atomic_physics
-83,business__industrial.aerospace__defense.war_industry__technology
-84,automotive__vehicles
-85,business__industrial.business_news
-86,finance
-87,careers
-88,society.social_institution.marriage
-89,business__industrial.hospitality_industry.event_planning
-90,pets
-91,science.environment__nature.flora__fauna
-92,art__entertainment.celebrity_fan__gossip.hollywood
-93,art__emtertainment.celebrity_fan__gossip
-94,food__drink.vegan__vegetarian
-95,health__fitness.men_health
-96,health__fitness.exercise
-97,society.sex
-98,careers.advice__job
-99,finance.personal_finance__investing
-100,society.work
+sub_topics,topics
+"celebrity and gossips [bollywood, hollywood]",art and entertainment
+dance,art and entertainment
+humor,art and entertainment
+"films and tv and series [bollywood, hollywood]",art and entertainment
+music,art and entertainment
+architecture,art and entertainment
+digital art and graphics design and vfx and software,art and entertainment
+art and craft,art and entertainment
+cars and bike and electric vehicles,vehicles
+ads and marketing,business and industry
+war industry and technology and unrest,business and industry
+space technology and astronomy,business and industry
+agriculture,business and industry
+startups,business and industry
+business operations and reports,business and industry
+non-renewable energy and oil,business and industry
+renewable energy,business and industry
+event planning,business and industry
+study and institute,education and career
+career and job,education and career
+investing and personal finance,finance
+financilal news and economy,finance
+food and cooking,food
+healthy eating,food
+disease and disorders,health and fitness
+exercise and mental health,health and fitness
+health,health and fitness
+photography and cinematography,hobbies and interests
+astrology,hobbies and interests
+video games and games,hobbies and interests
+pets,hobbies and interests
+msical instrument and software,hobbies and interests
+home and interior design,hobbies and interests
+armed forces and defence,law govt and politics and nation
+secret service and surveillance,law govt and politics and nation
+terrorism,law govt and politics and nation
+judiciary and courts,law govt and politics and nation
+parliament and government,law govt and politics and nation
+embassies and consultes,law govt and politics and nation
+law and privacy and penalty,law govt and politics and nation
+legislation and tax,law govt and politics and nation
+policy,law govt and politics and nation
+elections and parties,law govt and politics and nation
+atheism and agnosticism and alternative religions,religion and spirituality
+religion,religion and spirituality
+biotechnology and nanotechnology,science
+botany and cytology and marine biology and zoology and molecular biology,science
+chemistry,science
+enviroment and disaster and pollution and waste,science
+nature and weather and environment,science
+geography and geology,science
+medicine,science
+mathematics,science
+physics,science
+history and philosophy,social science
+stores and products and coupons,retail
+crime and cyber crime,society
+"people and racism [men, women]",society
+life and lifestyle and culture and festival,society
+"relationship (love, marraige, divorce)",society
+sex,society
+welfare,society
+world,society
+work ,society
+sports and events,sports
+mens fashion,fashion
+womens fashion,fashion
+celebirity fashion and contest,fashion
+consumer electronics,technology and computing
+android,technology and computing
+iphone,technology and computing
+gaming system,technology and computing
+latpop and desktop and servers and peripherals,technology and computing
+ecommerce and social network and internet,technology and computing
+linux,technology and computing
+windows and mac os and os,technology and computing
+artificial intelligence,technology and computing
+cryptography and blockchain,technology and computing
+backend and framework and game and software and apps and database,technology and computing
+frontend and ui,technology and computing
+embedded hardware,technology and computing
+innovation and invention,technology and computing
+travel and adventure,travel
+facts,miscellaneous
+weird and mystery and anomaly and paranormal and magic and illusion,miscellaneous
+miscellaneous,miscellaneous

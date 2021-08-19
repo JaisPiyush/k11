@@ -75,13 +75,13 @@ class Format(mg.Document):
 
     @property
     def html_article_format(self):
-        if hasattr(self, "_html_article_format") and getattr(self, "_html_article_format") is not None:
-            return ContainerFormat.from_dict(**self._html_article_format)
+        if hasattr(self, "_html_article_format") and getattr(self, "_html_article_format") is not None and "idens" in self._html_article_format:
+            return ContainerFormat.from_dict(**self._html_article_format) if isinstance(self._html_article_format, dict) else self._html_article_format
         return None
     
     @property
     def xml_article_format(self):
-        if hasattr(self, "_xml_article_format") and getattr(self, "_xml_article_format") is not None:
+        if hasattr(self, "_xml_article_format") and getattr(self, "_xml_article_format") is not None and len(self._xml_article_format) > 0:
             return XMLContainerFormat.from_dict(**self._xml_article_format)
         return None
 
@@ -100,7 +100,7 @@ class SourceMap(mg.Document):
     compulsory_tags = mg.ListField(mg.StringField())
     is_rss = mg.BooleanField(default=True)
     is_collection = mg.BooleanField(default=True)
-    links = mg.ListField(LinkStoreField())
+    _links = mg.ListField(field=mg.DictField(), db_field="links")
     formatter = mg.StringField()
     watermarks = mg.ListField(mg.StringField())
     is_structured_aggregator = mg.BooleanField(default=True)
@@ -118,6 +118,11 @@ class SourceMap(mg.Document):
         for link in self.links:
             if link.link == li:
                 return link.assumed_tags if link.assumed_tags != None else self.assumed_tags, link.compulsory_tags if link.compulsory_tags != None else self.compulsory_tags
+    
+    @property
+    def links(self):
+        if self._links is not None:
+            return [LinkStore.from_dict(**link) if not isinstance(link, LinkStore) else link for link in self._links ]
 
 
 
@@ -148,6 +153,9 @@ class QueuedSourceMap(Document):
     @classmethod
     def from_source_map(cls, source_map: SourceMap):
         data = {key: getattr(source_map, key) for key in source_map._db_field_map.keys() if key != "_cls"}
+        data["links"] = data["_links"]
+        del data["source_locations"]
+        del data["_links"]
         return cls(**data)
 
     def get_tags(self, li: str) -> Tuple[str, str]:

@@ -68,6 +68,8 @@ class YoutubeApi:
 
 class YoutubeDigger(ThirdPartyDigger):
 
+    topic_keywords = ["fashion", "celebrity fashion", "mens fashion"]
+
     def __init__(self) -> None:
         super().__init__()
         self.yt_api = YoutubeApi(key=API_KEY)
