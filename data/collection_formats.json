@@ -5548,11 +5548,871 @@
   }
 },{
   "_id": {
-    "$oid": "61157f04100cfc0dac222c65"
+    "$oid": "611614e47e93e8f944786cff"
   },
-  "source_name": "sdjj",
-  "format_id": "sdjg",
-  "source_home_link": "dsjg",
+  "source_name": "The Fashion Spot",
+  "format_id": "eQ2_spG-mypupT2kTVYrug_the fashion spot",
+  "source_home_link": "https://www.thefashionspot.com",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "dc:creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.article-content",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "exact_class": "listicle-item-header"
+      },
+      {
+        "class_list": [
+          "article-footer"
+        ]
+      },
+      {
+        "id": "pb-listicle-slides"
+      },
+      {
+        "id": "pb-listicle-right"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "6116530b512c30c461d87ec3"
+  },
+  "source_name": "The Curvy Fashionista",
+  "format_id": "LXlPZiH6xXFN5D20Ymdmzw_the curvy fashionista",
+  "source_home_link": "https://thecurvyfashionista.com",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "dc:creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "dpsp-share-text",
+          "dpsp-shape-rectangular",
+          "author-box",
+          "entry-footer"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "61165760512c30c461d87ec5"
+  },
+  "source_name": "A Well Styled Lifestyle",
+  "format_id": "ZbiXspBulvWtTHX95IevIg_a well styled lifestyle",
+  "source_home_link": "https://awellstyledlife.com",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "dc:creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "footer"
+      },
+      {
+        "class_list": [
+          "mailmunch-forms-before-post",
+          "adthrive-ad",
+          "widget-container",
+          "mailmunch-forms-after-post"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "61166138512c30c461d87ec9"
+  },
+  "source_name": "Fabulous After 40",
+  "format_id": "vpKAFY0mBpj1IkR88TzUjw_fabulous after 40",
+  "source_home_link": "https://www.fabulousafter40.com",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "dc:creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "adthrive-ad",
+          "shopthepost-widget",
+          "article-sidebar"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "61168025512c30c461d87ecb"
+  },
+  "source_name": "GQ India",
+  "format_id": "wpYNcxiaFuWA0n2fTuukYw_gq india",
+  "source_home_link": "https://www.gqindia.com",
   "xml_collection_format": {},
-  "html_collection_format": {}
+  "html_collection_format": {
+    "itertag": "div[contains(@class,'summary-item')]",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "h2[@class='summary-item__hed']",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "@href",
+      "parent": "a[contains(@class,'summary-item__hed-link')]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "span[contains(@class,'byline__name')]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "div[@class=\"summary-item__publish-date\"]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.article",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "content-header__row",
+          "content-header__title-block",
+          "wide-adrail"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "611914f1512c30c461d87ecf"
+  },
+  "source_name": "Men Style Fashion",
+  "format_id": "RyzwHXQL9r9IHigKdkbMkQ_men style fashion",
+  "source_home_link": "https://www.menstylefashion.com",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "adsense-responsive-ad"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "61191c90512c30c461d87ed1"
+  },
+  "source_name": "Valet Mag",
+  "format_id": "zhE6DTh7w3yOiquZHAhJVQ_valet mag",
+  "source_home_link": "https://www.valetmag.com",
+  "xml_collection_format": {},
+  "html_collection_format": {
+    "itertag": "div[contains(@class, 'articlePromo-container')]",
+    "title": {
+      "sel": "xpath",
+      "param": "@title",
+      "parent": "a",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "@href",
+      "parent": "a",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.main-section",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "facebook",
+          "twitter",
+          "email"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "61192484512c30c461d87ed3"
+  },
+  "source_name": "Vogue India",
+  "format_id": "meiNY_BeHP5ZmKx3N2t64Q_vogue india",
+  "source_home_link": "https://www.vogue.in",
+  "xml_collection_format": {},
+  "html_collection_format": {
+    "itertag": "div[@class='summary-item__content']",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "h2",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "@href",
+      "parent": "a[contains(@class,'summary-item__hed-link')]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "span[contains(@class,'byline__name')]",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "div[@class='summary-item__publish-date']",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.article",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "grid-layout__aside",
+          "social-icons"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "61193124512c30c461d87ed5"
+  },
+  "source_name": "The Fashionisto",
+  "format_id": "FCY-gM6zCHgeWnPnwblHIQ_the fashionisto",
+  "source_home_link": "https://www.thefashionisto.com",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "dc:creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.editorial",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "editorial-pub",
+          "editorial-credits",
+          "entry-footer",
+          "jp-relatedposts"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "611abb96512c30c461d87ed7"
+  },
+  "source_name": "Ape To Gentleman",
+  "format_id": "01y_w3KCHKUlaDlKwi9TFA_ape to gentleman",
+  "source_home_link": "https://www.apetogentleman.com",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "dc:creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "posts-pagination",
+          "custome-content",
+          "section-carousel",
+          "post-meta"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "611d5df2370daa951539a079"
+  },
+  "source_name": "Bonobology",
+  "format_id": "AyplxL2K5-yw0xkmZbwVhQ_bonobology",
+  "source_home_link": "https://www.bonobology.com",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "dc:creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "article.post",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "blockquote"
+      },
+      {
+        "class_list": [
+          "penci-standard-cat",
+          "post-box-meta-single",
+          "post-comments",
+          "penci-google-adsense-2",
+          "post-pagination",
+          "post-tags",
+          "penci-single-link-pages",
+          "schema-faq"
+        ]
+      },
+      {
+        "id": "ex-toc-container"
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "611ea17150dba5b1bb01eac1"
+  },
+  "source_name": "Universe Today",
+  "format_id": "vs0HJ4OnxN1EeoNLSgnJCA_universe today",
+  "source_home_link": "https://www.universetoday.com",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "dc:creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div#page",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "tag": "aside"
+      },
+      {
+        "tag": "footer"
+      },
+      {
+        "id": "comments"
+      },
+      {
+        "class_list": [
+          "navigation",
+          "sharedaddy",
+          "entry-footer"
+        ]
+      }
+    ]
+  }
+},{
+  "_id": {
+    "$oid": "611ea34850dba5b1bb01eac3"
+  },
+  "source_name": "Daily Galaxy",
+  "format_id": "ceja3Uc6j7GvIsnHHqXfVQ_daily galaxy",
+  "source_home_link": "https://dailygalaxy.com",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "dc:creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {
+    "idens": [
+      {
+        "param": "div.post-wrapper",
+        "is_multiple": false,
+        "content_type": "article",
+        "is_bakeable": false
+      }
+    ],
+    "title_selectors": [],
+    "creator_selectors": [],
+    "body_selectors": [],
+    "ignorables": [
+      {
+        "class_list": [
+          "wp-image-40072"
+        ]
+      },
+      {
+        "id": "disqus_thread"
+      }
+    ]
+  }
 }]
