@@ -34,7 +34,7 @@
     },
     {
       "link": "https://www.scoopwhoop.com/category/animals/",
-      "assumed_tags": "botany__cytology__marine_biology__zoology__molecular_biology",
+      "assumed_tags": "biology",
       "compulsory_tags": null,
       "formatter": "html_collection_format",
       "content_type": "article",
@@ -582,7 +582,7 @@
     },
     {
       "link": "https://listverse.com/science-nature/animals/feed/",
-      "assumed_tags": "botany__cytology__marine_biology__zoology__molecular_biology",
+      "assumed_tags": "biology",
       "compulsory_tags": null,
       "formatter": "xml_collection_format",
       "content_type": "article",
@@ -2572,7 +2572,7 @@
     },
     {
       "link": "https://www.pedrontheworld.com/environmental-1",
-      "assumed_tags": "photography__cinematography nature__weather__environment",
+      "assumed_tags": "photography__cinematography environment__nature__disaster__pollution__waste",
       "compulsory_tags": null,
       "formatter": "html_collection_format",
       "content_type": "image",
@@ -2660,11 +2660,11 @@
   "source_home_link": "https://www.featureshoot.com",
   "source_id": "NLjW4J3m13blvWBNAzzDyw_feature shoot",
   "formatter": "html_collection_format",
-  "assumed_tags": "photography__cinematography nature__weather__environment",
+  "assumed_tags": "photography__cinematography environment__nature__disaster__pollution__waste",
   "links": [
     {
       "link": "https://www.featureshoot.com/category/nature/",
-      "assumed_tags": "photography__cinematography nature__weather__environment",
+      "assumed_tags": "photography__cinematography environment__nature__disaster__pollution__waste",
       "compulsory_tags": null,
       "formatter": "html_collection_format",
       "content_type": "article",
@@ -2688,7 +2688,7 @@
     },
     {
       "link": "https://www.featureshoot.com/category/landscape/",
-      "assumed_tags": "photography__cinematography nature__weather__environment botany__cytology__marine_biology__zoology__molecular_biology",
+      "assumed_tags": "photography__cinematography environment__nature__disaster__pollution__waste biology",
       "compulsory_tags": null,
       "formatter": "html_collection_format",
       "content_type": "article",
@@ -3120,7 +3120,7 @@
     },
     {
       "link": "https://animals.howstuffworks.com/",
-      "assumed_tags": "pets nature__weather__environment",
+      "assumed_tags": "pets environment__nature__disaster__pollution__waste",
       "compulsory_tags": null,
       "formatter": "html_collection_format",
       "content_type": "article",
@@ -3184,7 +3184,7 @@
     },
     {
       "link": "https://www.sciencedaily.com/rss/top/environment.xml",
-      "assumed_tags": "nature__weather__environment",
+      "assumed_tags": "environment__nature__disaster__pollution__waste",
       "compulsory_tags": null,
       "formatter": "xml_collection_format",
       "content_type": "article",
@@ -4681,7 +4681,7 @@
     },
     {
       "link": "https://www.gqindia.com/get-smart/gadgets",
-      "assumed_tags": "consumer_electronic android iphone innovation__invention",
+      "assumed_tags": "consumer_electronics android iphone innovation__invention",
       "compulsory_tags": null,
       "formatter": "html_collection_format",
       "content_type": "article",
@@ -5308,9 +5308,36 @@
       "formatter": "xml_collection_format",
       "content_type": "article",
       "is_multiple": false
+    },
+    {
+      "link": "https://dailygalaxy.com/category/physics/feed/",
+      "assumed_tags": "space_technology__astronomy physics",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://dailygalaxy.com/category/climate-change/feed/",
+      "assumed_tags": "space_technology__astronomy environment__nature__disaster__pollution__waste",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
+    },
+    {
+      "link": "https://dailygalaxy.com/category/evolution/feed/",
+      "assumed_tags": "space_technology__astronomy biology",
+      "compulsory_tags": null,
+      "formatter": "xml_collection_format",
+      "content_type": "article",
+      "is_multiple": false
     }
   ],
   "watermarks": [
+    "",
+    "",
+    "",
     "",
     "",
     "",
@@ -5322,4 +5349,26 @@
     "US"
   ],
   "formatter": "xml_collection_format"
+},{
+  "_id": {
+    "$oid": "611eabe050dba5b1bb01eac4"
+  },
+  "source_name": "Sky And Telescope",
+  "source_id": "rpvpWJncPig5AZFTRrry_Q_sky and telescope",
+  "source_home_link": "https://skyandtelescope.org",
+  "assumed_tags": "space_technology__astronomy",
+  "compulsory_tags": [
+    ""
+  ],
+  "is_rss": true,
+  "is_collection": true,
+  "links": [],
+  "watermarks": [
+    ""
+  ],
+  "datetime_format": "",
+  "is_third_party": false,
+  "source_locations": [
+    "US"
+  ]
 }]

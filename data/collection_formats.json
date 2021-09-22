@@ -6415,4 +6415,48 @@
       }
     ]
   }
+},{
+  "_id": {
+    "$oid": "611eabe050dba5b1bb01eac5"
+  },
+  "source_name": "Sky And Telescope",
+  "format_id": "rpvpWJncPig5AZFTRrry_Q_sky and telescope",
+  "source_home_link": "https://skyandtelescope.org",
+  "xml_collection_format": {
+    "itertag": "item",
+    "title": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "title",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "link": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "link",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    },
+    "creator": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "dc:creator",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": true
+    },
+    "pub_date": {
+      "sel": "xpath",
+      "param": "text()",
+      "parent": "pubDate",
+      "type": "text",
+      "is_multiple": false,
+      "is_cdata": false
+    }
+  },
+  "html_collection_format": {},
+  "html_article_format": {}
 }]
